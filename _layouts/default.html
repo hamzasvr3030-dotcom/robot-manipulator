@@ -10,7 +10,7 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 {% include head-custom.html %}
 </head>
 <body>
@@ -18,7 +18,7 @@
   <button class="iconbtn" id="menuBtn" aria-label="Menüyü aç">☰</button>
   <a class="brand" href="{{ '/' | relative_url }}"><span class="logo">🦾</span><span>Robot Manipülatörleri</span></a>
   <span class="spacer"></span>
-  <a class="iconbtn" href="https://github.com/hamzasvr3030-dotcom/robot-manipulator" title="GitHub deposu">GitHub</a>
+  <a class="iconbtn gh" href="https://github.com/hamzasvr3030-dotcom/robot-manipulator" title="GitHub deposu">GitHub</a>
   <button class="iconbtn" id="temaBtn" aria-label="Temayı değiştir" title="Açık / koyu tema">◐</button>
 </header>
 <div class="shell">

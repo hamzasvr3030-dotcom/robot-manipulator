@@ -61,11 +61,13 @@ a:hover { text-decoration: underline; }
 .sidebar a .n { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 1.1em; font-weight: 600; }
 .sidebar a.on .n { color: var(--accent); }
 .content { min-width: 0; padding: 30px 44px 70px; }
+.content canvas { max-width: 100%; }
 .prose { max-width: 860px; }
 .wide { max-width: 1180px; }
 
 @media (max-width: 960px) {
-  .shell { grid-template-columns: 1fr; }
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .topbar .gh { display: none; }
   #menuBtn { display: inline-flex; }
   .sidebar { position: fixed; z-index: 30; left: 0; top: 58px; width: min(86vw, 320px); background: var(--surface);
     transform: translateX(-102%); transition: transform .2s ease; box-shadow: var(--shadow); }

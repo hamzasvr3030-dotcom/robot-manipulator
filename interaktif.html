@@ -20,6 +20,7 @@ genis: true
   .intro .box h3 { margin: 0 0 4px; font-size: .98rem; }
   .intro .box p, .intro .box ul { margin: 0; color: var(--muted); }
   .intro .box ul { padding-left: 18px; }
+  .labgrid > *, .twocol > *, .intro > * { min-width: 0; }
   .labgrid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 14px; align-items: start; }
   .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
   .panel h3 { margin: 0 0 8px; font-size: 1rem; }
@@ -73,8 +74,8 @@ genis: true
   table.mini th:first-child, table.mini td:first-child { text-align: left; }
   table.mini thead th { background: var(--surface-2); }
   .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
-  @media (max-width: 1060px) { .labgrid { grid-template-columns: 1fr; } }
-  @media (max-width: 720px) { .intro, .twocol { grid-template-columns: 1fr; } .labtabs button small { display: none; } }
+  @media (max-width: 1060px) { .labgrid { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 720px) { .intro, .twocol { grid-template-columns: minmax(0, 1fr); } .labtabs { position: static; } .labtabs button small { display: none; } }
 </style>
 
 <div class="lab">
@@ -654,23 +655,25 @@ function tkCalc() {
   return { p, masses, res };
 }
 function tkDraw() {
-  const { p, masses, res } = tkCalc(), sc = scene($("tkC"), 0.6, { ox: 0.42, oy: 0.62, span: 1.45 }), { ctx, P, S } = sc;
+  const { p, masses, res } = tkCalc(), sc = scene($("tkC"), 0.6, { ox: 0.4, oy: 0.58, span: 1.4 }), { ctx, P, S } = sc;
   // yerçekimi oku
   ctx.strokeStyle = css("--muted"); ctx.fillStyle = css("--muted"); const [gx, gy] = P(-0.55, 0.5);
   ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx, gy + 40); ctx.stroke(); ctx.beginPath(); ctx.moveTo(gx - 5, gy + 32); ctx.lineTo(gx, gy + 42); ctx.lineTo(gx + 5, gy + 32); ctx.fill(); label(ctx, "g", gx + 8, gy + 24, css("--muted"));
   drawArm(sc, TK.q.map(rad), { width: 8 });
-  masses.forEach(M => {
+  masses.forEach((M, idx) => {
     const [x, y] = P(...M.pos), r = 5 + 9 * Math.sqrt(M.m);
     ctx.strokeStyle = css("--c4"); ctx.lineWidth = 1.3; ctx.setLineDash([3, 3]);
     ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, P(0, 0)[1]); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle = css("--c5"); ctx.globalAlpha = .55; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
-    label(ctx, f(M.m, 2) + " kg", x - 16, y - r - 5, css("--text"));
+    const alt = idx % 2 === 1; ctx.strokeStyle = css("--muted"); ctx.lineWidth = 1;
+    const ly = alt ? y + r + 30 : y - r - 22; ctx.beginPath(); ctx.moveTo(x, alt ? y + r : y - r); ctx.lineTo(x, alt ? ly - 12 : ly + 4); ctx.stroke();
+    label(ctx, f(M.m, 2) + " kg", x - 16, alt ? ly : ly, css("--text"));
   });
   // eklem 1 kaldıraçları (yatay)
   const [bx, by] = P(0, 0);
   ctx.strokeStyle = css("--c4"); ctx.lineWidth = 2;
   const xs = masses.map(M => M.pos[0]); ctx.beginPath(); ctx.moveTo(bx, by + 18); ctx.lineTo(P(Math.max(...xs, 0), 0)[0], by + 18); ctx.moveTo(bx, by + 18); ctx.lineTo(P(Math.min(...xs, 0), 0)[0], by + 18); ctx.stroke();
-  label(ctx, "yatay kaldıraç kolları →", bx + 6, by + 34, css("--c4"));
+  label(ctx, "yatay kaldıraç kolları", bx - 150, by + 22, css("--c4"));
   // çubuk grafik
   const g = prep($("tkB"), 0.36), c = g.ctx, maxv = Math.max(25, ...res.map(r => r.tot)) * 1.1, X0 = 70, W = g.w - X0 - 70, bh = 22;
   c.font = "12px Inter, system-ui";
