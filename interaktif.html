@@ -12,8 +12,8 @@ genis: true
   .labtabs button { border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 10px;
     padding: 8px 14px; font: inherit; font-weight: 600; cursor: pointer; display: flex; gap: 8px; align-items: center; }
   .labtabs button small { color: var(--muted); font-weight: 500; }
-  .labtabs button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .labtabs button.on small { color: rgba(255,255,255,.8); }
+  .labtabs button.on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .labtabs button.on small { color: var(--on-accent); opacity: .75; }
   .labpane[hidden] { display: none; }
   .intro { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
   .intro .box { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; font-size: .93rem; }
@@ -53,7 +53,7 @@ genis: true
   .steps ol { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 8px; }
   .steps li { counter-increment: s; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start;
     background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
-  .steps li::before { content: counter(s); width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff;
+  .steps li::before { content: counter(s); width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--on-accent);
     display: grid; place-items: center; font-weight: 700; font-size: .85rem; }
   .steps li .h { font-weight: 650; }
   .steps li .f { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .86rem; color: var(--text); margin-top: 2px; overflow-x: auto; white-space: nowrap; }
@@ -65,7 +65,7 @@ genis: true
   .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; color: var(--muted); font-size: .84rem; }
   .legend i { display: inline-block; width: 18px; height: 4px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
   .play { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
-  .play button { border: 1px solid var(--accent); background: var(--accent); color: #fff; border-radius: 9px; padding: 7px 14px; font: inherit; font-weight: 600; cursor: pointer; }
+  .play button { border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); border-radius: 9px; padding: 7px 14px; font: inherit; font-weight: 600; cursor: pointer; }
   .play input { flex: 1; }
   .play span { font-variant-numeric: tabular-nums; color: var(--muted); font-size: .86rem; min-width: 64px; text-align: right; }
   table.mini { width: 100%; border-collapse: collapse; font-size: .88rem; margin-top: 10px; font-variant-numeric: tabular-nums; }
@@ -287,7 +287,7 @@ function scene(cv, aspect, opt = {}) {
     const [gx] = P(v, 0), [, gy] = P(0, v);
     ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke();
   }
-  if (opt.ws) ctx.drawImage(wsImage(S), ox - REACH * S - 2, oy - REACH * S - 2);
+  if (opt.ws) { ctx.fillStyle = css("--ws"); ctx.beginPath(); ctx.arc(ox, oy, REACH * S, 0, 2 * Math.PI); ctx.arc(ox, oy, RMIN * S, 0, 2 * Math.PI, true); ctx.fill("evenodd"); }
   ctx.strokeStyle = css("--muted"); ctx.globalAlpha = .7;
   ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.moveTo(ox, 0); ctx.lineTo(ox, h); ctx.stroke();
   ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.arc(ox, oy, REACH * S, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
@@ -301,7 +301,10 @@ function scene(cv, aspect, opt = {}) {
   ctx.fillRect(ox - 20, oy, 40, 9);
   return sc;
 }
-// çalışma uzayı görüntüsü (ölçeğe ve temaya göre önbellek)
+// çalışma uzayının iç yarıçapı (eklem sınırları yüzünden merkezde kalan boşluk), bir kez örneklenir
+const RMIN = (() => { let m = 1, seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let k = 0; k < 60000; k++) { const p = fk([0, 1, 2].map(i => rad(QMIN[i] + rnd() * (QMAX[i] - QMIN[i])))); m = Math.min(m, Math.hypot(p.x, p.y)); } return m; })();
+// (eski) çalışma uzayı görüntüsü
 let wsCache = { key: "", img: null };
 function wsImage(S) {
   const key = Math.round(S) + css("--ws");
@@ -409,7 +412,7 @@ const FK_P = [
 ];
 function fkSync() { [1, 2, 3].forEach(i => { $("fk" + i).value = Math.round(FK.q[i - 1]); $("fkv" + i).textContent = f(FK.q[i - 1], 1) + "°"; }); }
 function fkDraw() {
-  const sc = scene($("fkC"), 0.72, { ws: true, ox: 0.5, oy: 0.55 }), q = FK.q.map(rad), { ctx, P } = sc;
+  const sc = scene($("fkC"), 0.8, { ws: true, ox: 0.5, oy: 0.6 }), q = FK.q.map(rad), { ctx, P } = sc;
   const p = fk(q);
   if ($("fkShadow").checked) {
     const cols = [css("--c1"), css("--c2"), css("--c3")];
@@ -469,7 +472,7 @@ function ikSync() {
 }
 let ikLast = { q: [rad(7.2), rad(92.4), rad(-119.6)] };
 function ikDraw() {
-  const cv = $("ikC"), sc = scene(cv, 0.72, { ws: true, ox: 0.5, oy: 0.55 }), { ctx, P, S } = sc;
+  const cv = $("ikC"), sc = scene(cv, 0.8, { ws: true, ox: 0.5, oy: 0.6 }), { ctx, P, S } = sc;
   const phi = rad(IK.phi), s = ik(IK.x, IK.y, phi, IK.e), o = ik(IK.x, IK.y, phi, -IK.e);
   // bilek çemberi
   const [hx, hy] = P(IK.x, IK.y); ctx.strokeStyle = css("--c5"); ctx.globalAlpha = .35; ctx.setLineDash([3, 4]);
@@ -515,7 +518,7 @@ function ikDraw() {
 function ikPick(ev) {
   const r = $("ikC").getBoundingClientRect(), w = r.width, S = w / 1.5;
   IK.x = Math.max(-0.7, Math.min(0.7, (ev.clientX - r.left - w * 0.5) / S));
-  IK.y = Math.max(-0.7, Math.min(0.7, (r.height * 0.55 - (ev.clientY - r.top)) / S));
+  IK.y = Math.max(-0.7, Math.min(0.7, (r.height * 0.6 - (ev.clientY - r.top)) / S));
   clearOn("ikP"); explain("ikE", "Serbest deneme", "Hedefi gri çemberin dışına sürükle: Çözüm kayboluyor. Tabana çok yaklaştır: Eklem sınırı uyarısı çıkıyor. Arada her yerde iki çözüm var."); ikSync(); ikDraw();
 }
 let ikDown = false;
@@ -571,7 +574,7 @@ function yrCompute() {
 }
 function yrDraw() {
   if (!YRD) yrCompute();
-  const D = YRD, k = Math.round(YR.u * (D.N - 1)), sc = scene($("yrC"), 0.62, { ws: true, ox: 0.5, oy: 0.6, span: 1.55 }), { ctx, P } = sc;
+  const D = YRD, k = Math.round(YR.u * (D.N - 1)), sc = scene($("yrC"), 0.66, { ws: true, ox: 0.5, oy: 0.66, span: 1.55 }), { ctx, P } = sc;
   const path = (pts, col, okArr) => { ctx.lineWidth = 3; for (let i = 1; i < pts.length; i++) { ctx.strokeStyle = okArr && !okArr[i] ? css("--bad") : col;
     ctx.beginPath(); ctx.moveTo(...P(...pts[i - 1])); ctx.lineTo(...P(...pts[i])); ctx.stroke(); } };
   if (YR.showJ) path(D.tipJ, css("--c1"));
