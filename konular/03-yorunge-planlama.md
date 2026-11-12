@@ -12,6 +12,8 @@
 >
 > **Eklem uzayı** planlamada her eklem kendi rahat hızında döner ve uç bir **eğri** çizer. **Kartezyen** planlamada uç **cetvelle çizilmiş gibi düz** gider, ama bunun için her an ters kinematik hesaplanması gerekir.
 
+<a class="lab-link" href="../interaktif.html#yr">🎮 Yörünge laboratuvarı: hareketi oynat, profilleri karşılaştır →</a>
+
 **Yol (path)** yalnızca geometridir: hangi noktalardan geçileceğini söyler. **Yörünge (trajectory)** bu yola zamanı da ekler: her an konum, hız ve ivme bellidir [3, Bölüm 9], [8].
 
 ## 3.1 İki yaklaşım

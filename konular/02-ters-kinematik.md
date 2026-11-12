@@ -15,7 +15,7 @@
 | **Analitik** | Geometri (üçgen + kosinüs teoremi) ile cevabı formülle **bir seferde** bulur | Haritaya bakıp adresi doğrudan bulmak |
 | **Sayısal** | Bir tahminle başlar, "sıcak-soğuk" oyunu gibi her adımda hedefe biraz yaklaşır | Karanlıkta duvara dokuna dokuna kapıyı bulmak |
 
-> 🎮 Hedefe tıklayıp iki çözümü kendin görmek için: **[İnteraktif kol](../interaktif.html)**
+<a class="lab-link" href="../interaktif.html#ik">🎮 Ters kinematik laboratuvarı: hedefe tıkla, iki çözümü gör →</a>
 
 **Ters kinematik (IK):** İstenen uç efektör pozu $(x, y, \varphi)$ verildiğinde bu pozu sağlayan eklem açılarını $q$ bulma problemidir. Düz kinematiğin aksine:
 

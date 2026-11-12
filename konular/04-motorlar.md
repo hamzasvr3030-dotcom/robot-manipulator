@@ -12,6 +12,8 @@
 >
 > 🧠 **Benzetme 2 — Redüktör:** Bisikletteki vites gibidir. Küçük viteste pedal kolay döner ama yavaş gidersin. Redüktör de motorun hızlı ve zayıf dönüşünü, **yavaş ve güçlü** bir dönüşe çevirir.
 
+<a class="lab-link" href="../interaktif.html#tk">🎮 Tork laboratuvarı: duruşu ve yükü değiştir, torku izle →</a>
+
 ## 4.1 Motor tipleri
 
 | Tip | Çalışma ilkesi | Artı | Eksi | Robotta kullanım |

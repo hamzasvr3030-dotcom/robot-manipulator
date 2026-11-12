@@ -1,248 +1,811 @@
-<!doctype html>
-<html lang="tr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>İnteraktif Robot Kol</title>
+---
+layout: default
+title: İnteraktif Laboratuvar
+genis: true
+---
+{% raw %}
 <style>
-  :root {
-    --bg: #f6f7f9; --panel: #ffffff; --text: #1d2330; --muted: #5c6578; --line: #d9dde5;
-    --grid: #eceef2; --link1: #4C72B0; --link2: #DD8452; --link3: #55A868; --target: #C44E52;
-    --ws: rgba(85,168,104,0.10); --ghost: rgba(221,132,82,0.35); --accent: #4C72B0;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #12151b; --panel: #1b2029; --text: #e6e9ef; --muted: #9aa3b5; --line: #2c3340;
-      --grid: #222833; --ws: rgba(85,168,104,0.14); --ghost: rgba(221,132,82,0.45); --accent: #7aa2e0;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #12151b; --panel: #1b2029; --text: #e6e9ef; --muted: #9aa3b5; --line: #2c3340;
-    --grid: #222833; --ws: rgba(85,168,104,0.14); --ghost: rgba(221,132,82,0.45); --accent: #7aa2e0;
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--text);
-         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  header { padding: 18px 16px 6px; max-width: 1100px; margin: 0 auto; }
-  header h1 { margin: 0 0 4px; font-size: 1.45rem; }
-  header p { margin: 0; color: var(--muted); }
-  header a { color: var(--accent); }
-  main { max-width: 1100px; margin: 0 auto; padding: 12px 16px 32px;
-         display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 16px; }
-  @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
-  canvas { width: 100%; height: auto; display: block; border-radius: 8px; touch-action: none; cursor: crosshair; }
-  .tabs { display: flex; gap: 6px; margin-bottom: 12px; }
-  .tabs button { flex: 1; padding: 8px; border: 1px solid var(--line); background: transparent;
-                 color: var(--text); border-radius: 8px; cursor: pointer; font: inherit; }
-  .tabs button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .row { margin: 10px 0; }
-  .row label { display: flex; justify-content: space-between; font-weight: 600; }
-  .row label span { font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 500; }
+  .lab h1 { font-size: 1.9rem; margin: 0 0 6px; letter-spacing: -.01em; }
+  .lab .lead { color: var(--muted); margin: 0 0 18px; max-width: 820px; }
+  .labtabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; position: sticky; top: 58px; z-index: 5;
+    background: var(--bg); padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .labtabs button { border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 10px;
+    padding: 8px 14px; font: inherit; font-weight: 600; cursor: pointer; display: flex; gap: 8px; align-items: center; }
+  .labtabs button small { color: var(--muted); font-weight: 500; }
+  .labtabs button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .labtabs button.on small { color: rgba(255,255,255,.8); }
+  .labpane[hidden] { display: none; }
+  .intro { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .intro .box { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; font-size: .93rem; }
+  .intro .box h3 { margin: 0 0 4px; font-size: .98rem; }
+  .intro .box p, .intro .box ul { margin: 0; color: var(--muted); }
+  .intro .box ul { padding-left: 18px; }
+  .labgrid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 14px; align-items: start; }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .panel h3 { margin: 0 0 8px; font-size: 1rem; }
+  .panel h4 { margin: 14px 0 6px; font-size: .78rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+  .panel h4:first-child { margin-top: 0; }
+  canvas { width: 100%; display: block; border-radius: 8px; touch-action: none; }
+  canvas.click { cursor: crosshair; }
+  .ctl { margin: 8px 0; }
+  .ctl label { display: flex; justify-content: space-between; font-weight: 600; font-size: .92rem; }
+  .ctl label span { font-variant-numeric: tabular-nums; color: var(--accent); }
+  .ctl small { display: block; color: var(--muted); font-size: .8rem; margin-top: -2px; }
   input[type=range] { width: 100%; accent-color: var(--accent); }
-  .out { font-variant-numeric: tabular-nums; background: var(--bg); border-radius: 8px; padding: 10px; margin-top: 10px; }
-  .out div { display: flex; justify-content: space-between; }
-  .hint { color: var(--muted); font-size: 0.9rem; margin: 8px 0 0; }
-  .msg { margin-top: 8px; padding: 8px 10px; border-radius: 8px; font-size: 0.92rem; }
-  .msg.ok { background: rgba(85,168,104,0.15); }
-  .msg.bad { background: rgba(196,78,82,0.15); }
-  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
-  details { margin-top: 12px; }
-  summary { cursor: pointer; font-weight: 600; }
+  .seg { display: flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; margin: 4px 0 8px; }
+  .seg button { flex: 1; border: 0; background: transparent; color: var(--text); padding: 7px 4px; font: inherit; font-size: .88rem; cursor: pointer; }
+  .seg button + button { border-left: 1px solid var(--line); }
+  .seg button.on { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+  .chk { display: flex; gap: 8px; align-items: center; font-size: .9rem; margin: 4px 0; cursor: pointer; }
+  .chk input { accent-color: var(--accent); width: 16px; height: 16px; }
+  .presets { display: flex; flex-direction: column; gap: 6px; }
+  .presets button { text-align: left; border: 1px solid var(--line); background: var(--surface-2); color: var(--text);
+    border-radius: 9px; padding: 8px 10px; font: inherit; font-size: .9rem; cursor: pointer; }
+  .presets button:hover { border-color: var(--accent); }
+  .presets button.on { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+  .explain { margin-top: 12px; padding: 12px 14px; border-radius: 10px; background: var(--idea-soft); font-size: .92rem; line-height: 1.55; }
+  .explain b.t { display: block; margin-bottom: 4px; }
+  .readout { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-top: 12px; }
+  .readout div { background: var(--surface-2); border-radius: 9px; padding: 8px 10px; }
+  .readout small { display: block; color: var(--muted); font-size: .76rem; }
+  .readout b { font-variant-numeric: tabular-nums; font-size: 1.02rem; }
+  .steps { margin-top: 14px; }
+  .steps ol { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 8px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start;
+    background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
+  .steps li::before { content: counter(s); width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff;
+    display: grid; place-items: center; font-weight: 700; font-size: .85rem; }
+  .steps li .h { font-weight: 650; }
+  .steps li .f { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .86rem; color: var(--text); margin-top: 2px; overflow-x: auto; white-space: nowrap; }
+  .steps li .w { color: var(--muted); font-size: .86rem; margin-top: 2px; }
+  .steps li.bad { background: var(--bad-soft); } .steps li.bad::before { background: var(--bad); }
+  .steps li.ok { background: var(--ok-soft); } .steps li.ok::before { background: var(--ok); }
+  .msg { margin-top: 10px; padding: 9px 12px; border-radius: 9px; font-size: .9rem; }
+  .msg.ok { background: var(--ok-soft); } .msg.bad { background: var(--bad-soft); } .msg.warn { background: var(--warn-soft); }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; color: var(--muted); font-size: .84rem; }
+  .legend i { display: inline-block; width: 18px; height: 4px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+  .play { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+  .play button { border: 1px solid var(--accent); background: var(--accent); color: #fff; border-radius: 9px; padding: 7px 14px; font: inherit; font-weight: 600; cursor: pointer; }
+  .play input { flex: 1; }
+  .play span { font-variant-numeric: tabular-nums; color: var(--muted); font-size: .86rem; min-width: 64px; text-align: right; }
+  table.mini { width: 100%; border-collapse: collapse; font-size: .88rem; margin-top: 10px; font-variant-numeric: tabular-nums; }
+  table.mini th, table.mini td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: right; }
+  table.mini th:first-child, table.mini td:first-child { text-align: left; }
+  table.mini thead th { background: var(--surface-2); }
+  .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+  @media (max-width: 1060px) { .labgrid { grid-template-columns: 1fr; } }
+  @media (max-width: 720px) { .intro, .twocol { grid-template-columns: 1fr; } .labtabs button small { display: none; } }
 </style>
-</head>
-<body>
-<header>
-  <h1>🎮 İnteraktif Robot Kol</h1>
-  <p>Kaydırıcılarla eklemleri çevir (<b>düz kinematik</b>) ya da şekle tıklayıp kolu hedefe gönder (<b>ters kinematik</b>).
-     Uzuvlar: L1 = 0.30 m, L2 = 0.25 m, L3 = 0.10 m · <a href="./">← Ana sayfa</a></p>
-</header>
-<main>
-  <div class="card"><canvas id="c" width="720" height="560" aria-label="Robot kol çizimi"></canvas>
-    <p class="hint"><span class="swatch" style="background:var(--ws)"></span>Yeşil alan: kolun ulaşabildiği bölge (çalışma uzayı) ·
-       IK modunda soluk turuncu kol: aynı hedefe giden <b>diğer</b> çözüm</p>
+
+<div class="lab">
+  <h1>🎮 İnteraktif Laboratuvar</h1>
+  <p class="lead">Konuları okuduktan sonra burada <b>kendin dene</b>. Her bölümde hazır örnekler var. Bir örneğe tıkla, ne olduğunu oku,
+    sonra kaydırıcıları oynatıp sonucun nasıl değiştiğini izle. Bütün hesaplar tarayıcında, <b>Python koduyla aynı formüllerle</b> yapılıyor.</p>
+
+  <div class="labtabs" role="tablist">
+    <button data-tab="fk" class="on">1 · Düz kinematik <small>açı → konum</small></button>
+    <button data-tab="ik">2 · Ters kinematik <small>konum → açı</small></button>
+    <button data-tab="yr">3 · Yörünge <small>A'dan B'ye</small></button>
+    <button data-tab="tk">4 · Tork <small>motor seçimi</small></button>
+    <button data-tab="pid">5 · PID <small>kontrol</small></button>
   </div>
-  <div class="card">
-    <div class="tabs">
-      <button id="tFK" class="on">Düz kinematik</button>
-      <button id="tIK">Ters kinematik</button>
-    </div>
 
-    <div id="pFK">
-      <div class="row"><label>q1 (omuz) <span id="v1"></span></label><input id="q1" type="range" min="-180" max="180" value="30"></div>
-      <div class="row"><label>q2 (dirsek) <span id="v2"></span></label><input id="q2" type="range" min="-150" max="150" value="45"></div>
-      <div class="row"><label>q3 (bilek) <span id="v3"></span></label><input id="q3" type="range" min="-150" max="150" value="-30"></div>
-      <p class="hint">İpucu: q2'yi 0°'ye getir. Kol tamamen açılır ve <b>tekil</b> olur (det J = 0).</p>
+  <!-- ============ 1. DÜZ KİNEMATİK ============ -->
+  <section class="labpane" id="pane-fk">
+    <div class="intro">
+      <div class="box"><h3>🎯 Ne öğreneceksin?</h3><p>Eklem açıları verildiğinde kolun ucunun nerede olduğunu. Her uzuv bir <b>ok</b>'tur. Okları uç uca eklediğinde varılan nokta, kolun ucudur.</p></div>
+      <div class="box"><h3>🕹️ Nasıl kullanılır?</h3><ul><li>Kaydırıcılarla q1 (omuz), q2 (dirsek) ve q3 (bilek) açılarını değiştir.</li><li>"Gölgeler" kutusunu aç: Her okun yatay ve dikey bileşenini görürsün.</li><li>Aşağıdaki adım adım hesap sen kaydırdıkça güncellenir.</li></ul></div>
     </div>
-
-    <div id="pIK" hidden>
-      <p class="hint" style="margin-top:0">Şekilde bir noktaya <b>tıkla</b> ya da sürükle. Kol o noktaya uzanır.</p>
-      <div class="row"><label>Uç açısı φ <span id="vphi"></span></label><input id="phi" type="range" min="-180" max="180" value="-20"></div>
-      <div class="row"><label><span style="color:var(--text);font-weight:600">Dirsek</span></label>
-        <div class="tabs" style="margin:4px 0 0"><button id="eDown" class="on">aşağı</button><button id="eUp">yukarı</button></div></div>
-      <div id="ikmsg" class="msg ok"></div>
+    <div class="labgrid">
+      <div class="panel"><canvas id="fkC"></canvas>
+        <div class="legend"><span><i style="background:var(--c1)"></i>Uzuv 1</span><span><i style="background:var(--c2)"></i>Uzuv 2</span><span><i style="background:var(--c3)"></i>Uzuv 3</span><span><i style="background:var(--ws)"></i>Çalışma uzayı</span><span>Kesikli çember: maks. erişim 0.65 m</span></div>
+      </div>
+      <div class="panel">
+        <h4>Eklem açıları</h4>
+        <div class="ctl"><label>q1 · omuz <span id="fkv1"></span></label><input id="fk1" type="range" min="-180" max="180" step="1"></div>
+        <div class="ctl"><label>q2 · dirsek <span id="fkv2"></span></label><input id="fk2" type="range" min="-150" max="150" step="1"></div>
+        <div class="ctl"><label>q3 · bilek <span id="fkv3"></span></label><input id="fk3" type="range" min="-150" max="150" step="1"></div>
+        <label class="chk"><input type="checkbox" id="fkShadow" checked> Gölgeleri göster (yatay ve dikey bileşenler)</label>
+        <div class="readout"><div><small>Uç x</small><b id="fkx"></b></div><div><small>Uç y</small><b id="fky"></b></div><div><small>Uç açısı φ</small><b id="fkphi"></b></div><div><small>det J</small><b id="fkdet"></b></div></div>
+        <h4>Hazır örnekler</h4><div class="presets" id="fkP"></div>
+        <div class="explain" id="fkE"></div>
+      </div>
     </div>
+    <div class="panel steps"><h3>🧮 Adım adım hesap</h3><ol id="fkS"></ol></div>
+  </section>
 
-    <div class="out">
-      <div><b>Uç x</b><span id="ox"></span></div>
-      <div><b>Uç y</b><span id="oy"></span></div>
-      <div><b>Uç açısı φ</b><span id="ophi"></span></div>
-      <div><b>q1, q2, q3</b><span id="oq"></span></div>
-      <div><b>det J</b><span id="odet"></span></div>
+  <!-- ============ 2. TERS KİNEMATİK ============ -->
+  <section class="labpane" id="pane-ik" hidden>
+    <div class="intro">
+      <div class="box"><h3>🎯 Ne öğreneceksin?</h3><p>Ucu istediğin bir noktaya götürmek için gereken eklem açılarını. Çoğu hedefe <b>iki farklı duruşla</b> (dirsek yukarı ve aşağı) ulaşılır, bazı hedeflere ise <b>hiç</b> ulaşılamaz.</p></div>
+      <div class="box"><h3>🕹️ Nasıl kullanılır?</h3><ul><li>Şekle <b>tıkla veya sürükle</b>: Kol o noktaya uzanır.</li><li>φ kaydırıcısıyla ucun yöneceği açıyı seç.</li><li>Soluk kol, aynı hedefe giden <b>diğer</b> çözümü gösterir. Mor nokta bilek noktasıdır.</li></ul></div>
     </div>
+    <div class="labgrid">
+      <div class="panel"><canvas id="ikC" class="click"></canvas>
+        <div class="legend"><span><i style="background:var(--c4)"></i>Hedef</span><span><i style="background:var(--c5)"></i>Bilek noktası</span><span><i style="background:var(--c2);opacity:.4"></i>Diğer çözüm</span><span>Kesikli üçgen: kosinüs teoreminin kullanıldığı üçgen</span></div>
+      </div>
+      <div class="panel">
+        <h4>Hedef</h4>
+        <div class="ctl"><label>Hedef x <span id="ikvx"></span></label><input id="ikx" type="range" min="-0.7" max="0.7" step="0.005"></div>
+        <div class="ctl"><label>Hedef y <span id="ikvy"></span></label><input id="iky" type="range" min="-0.7" max="0.7" step="0.005"></div>
+        <div class="ctl"><label>Uç açısı φ <span id="ikvphi"></span></label><input id="ikphi" type="range" min="-180" max="180" step="1"></div>
+        <h4>Hangi çözüm?</h4>
+        <div class="seg"><button id="ikDown" class="on">Dirsek aşağı (q2 &gt; 0)</button><button id="ikUp">Dirsek yukarı (q2 &lt; 0)</button></div>
+        <div id="ikMsg" class="msg ok"></div>
+        <div class="readout"><div><small>q1</small><b id="ikq1"></b></div><div><small>q2</small><b id="ikq2"></b></div><div><small>q3</small><b id="ikq3"></b></div></div>
+        <h4>Hazır örnekler</h4><div class="presets" id="ikP"></div>
+        <div class="explain" id="ikE"></div>
+      </div>
+    </div>
+    <div class="panel steps"><h3>🧮 Adım adım çözüm (analitik yöntem)</h3><ol id="ikS"></ol></div>
+  </section>
 
-    <details>
-      <summary>Hesap nasıl yapılıyor?</summary>
-      <p class="hint"><b>Düz:</b> x = L1·cos q1 + L2·cos(q1+q2) + L3·cos(q1+q2+q3). y için aynı formül sin ile yazılır.<br>
-      <b>Ters:</b> Önce uçtan L3 kadar geri gidilip bilek noktası bulunur. Sonra kosinüs teoremiyle q2, atan2 ile q1 hesaplanır. En son q3 = φ − q1 − q2.<br>
-      Ayrıntılar: Konu 1 ve Konu 2 sayfaları.</p>
-    </details>
-  </div>
-</main>
+  <!-- ============ 3. YÖRÜNGE ============ -->
+  <section class="labpane" id="pane-yr" hidden>
+    <div class="intro">
+      <div class="box"><h3>🎯 Ne öğreneceksin?</h3><p>Aynı A→B hareketinin iki planlama yöntemiyle nasıl farklı göründüğünü. <b>Eklem uzayında</b> uç bir eğri çizer. <b>Kartezyende</b> uç düz gider. Ayrıca kübik ve quintic profillerin ivmeyi nasıl etkilediğini.</p></div>
+      <div class="box"><h3>🕹️ Nasıl kullanılır?</h3><ul><li>▶ düğmesiyle hareketi oynat ya da zaman çubuğunu sürükle.</li><li>Süreyi kısalt: Hız ve ivmenin nasıl büyüdüğünü izle.</li><li>Alttaki grafiklerde eklem açılarını ve q1'in ivmesini görürsün.</li></ul></div>
+    </div>
+    <div class="labgrid">
+      <div class="panel"><canvas id="yrC"></canvas>
+        <div class="play"><button id="yrPlay">▶ Oynat</button><input id="yrT" type="range" min="0" max="1000" value="0"><span id="yrTv"></span></div>
+        <div class="legend"><span><i style="background:var(--c1)"></i>Eklem uzayı (uç eğri çizer)</span><span><i style="background:var(--c2)"></i>Kartezyen (uç düz çizgi)</span><span><i style="background:var(--bad)"></i>Ulaşılamayan kısım</span></div>
+      </div>
+      <div class="panel">
+        <h4>Ayarlar</h4>
+        <div class="ctl"><label>Hareket süresi T <span id="yrvT"></span></label><input id="yrDur" type="range" min="0.5" max="4" step="0.1"></div>
+        <div class="ctl"><label style="margin-bottom:2px">Hız profili</label>
+          <div class="seg"><button id="yrQuin" class="on">Quintic (5. derece)</button><button id="yrCub">Kübik (3. derece)</button></div></div>
+        <label class="chk"><input type="checkbox" id="yrShowJ" checked> Eklem uzayını göster</label>
+        <label class="chk"><input type="checkbox" id="yrShowC" checked> Kartezyeni göster</label>
+        <table class="mini"><thead><tr><th></th><th>Eklem uzayı</th><th>Kartezyen</th></tr></thead><tbody id="yrTab"></tbody></table>
+        <h4>Hazır örnekler</h4><div class="presets" id="yrP"></div>
+        <div class="explain" id="yrE"></div>
+      </div>
+    </div>
+    <div class="twocol">
+      <div class="panel"><h3>Eklem açıları q(t)</h3><canvas id="yrQ"></canvas><div class="legend"><span>Düz çizgi: eklem uzayı · kesikli çizgi: kartezyen</span></div></div>
+      <div class="panel"><h3>q1'in ivmesi — profil karşılaştırması</h3><canvas id="yrA"></canvas><div class="legend"><span>Kübik profilde ivme başta ve sonda sıfır değildir. Bu <b>sıçrama</b> titreşim yaratır.</span></div></div>
+    </div>
+  </section>
+
+  <!-- ============ 4. TORK ============ -->
+  <section class="labpane" id="pane-tk" hidden>
+    <div class="intro">
+      <div class="box"><h3>🎯 Ne öğreneceksin?</h3><p>Her eklemin ne kadar tork istediğini. <b>Tork = kuvvet × kaldıraç kolu.</b> Kaldıraç kolu, kütlenin ekleme olan <b>yatay</b> uzaklığıdır. Kol kalktıkça bu uzaklık kısalır, tork da düşer.</p></div>
+      <div class="box"><h3>🕹️ Nasıl kullanılır?</h3><ul><li>Kolun duruşunu, yük kütlesini ve bilek motorunun kütlesini değiştir.</li><li>Çubuk grafikte her eklemin <b>statik</b> (yerçekimi) ve <b>dinamik</b> (hızlanma) torku gösterilir.</li><li>Alttaki adım adım hesap eklem 1 içindir.</li></ul></div>
+    </div>
+    <div class="labgrid">
+      <div class="panel"><canvas id="tkC"></canvas>
+        <div class="legend"><span>● Daireler: kütleler (büyüklük ∝ kg)</span><span><i style="background:var(--c4)"></i>Eklem 1'e yatay kaldıraç kolları</span></div>
+        <h3 style="margin-top:14px">Eklem torkları</h3><canvas id="tkB"></canvas>
+        <div class="legend"><span><i style="background:var(--c1)"></i>Statik (yerçekimi)</span><span><i style="background:var(--c2)"></i>Dinamik (J·α)</span><span><i style="background:var(--text)"></i>× emniyet = tasarım torku</span></div>
+      </div>
+      <div class="panel">
+        <h4>Kolun duruşu</h4>
+        <div class="ctl"><label>q1 <span id="tkv1"></span></label><input id="tk1" type="range" min="-90" max="90" step="1"></div>
+        <div class="ctl"><label>q2 <span id="tkv2"></span></label><input id="tk2" type="range" min="-150" max="150" step="1"></div>
+        <div class="ctl"><label>q3 <span id="tkv3"></span></label><input id="tk3" type="range" min="-150" max="150" step="1"></div>
+        <h4>Kütleler ve seçimler</h4>
+        <div class="ctl"><label>Yük + tutucu <span id="tkvm"></span></label><input id="tkm" type="range" min="0" max="2" step="0.05"></div>
+        <div class="ctl"><label>Bilek motoru kütlesi <span id="tkvmm"></span></label><input id="tkmm" type="range" min="0.05" max="1" step="0.05"><small>Eklem 3'teki motor. Eklem 2'deki motor 0.40 kg alındı.</small></div>
+        <div class="ctl"><label>Emniyet katsayısı <span id="tkvsf"></span></label><input id="tksf" type="range" min="1" max="3" step="0.1"></div>
+        <div class="ctl"><label>Eklem 1 redüktörü N <span id="tkvn"></span></label><input id="tkn" type="range" min="10" max="160" step="5"><small>Verim 0.80. Eklem 2 için N = 50, eklem 3 için N = 30 sabit.</small></div>
+        <table class="mini"><thead><tr><th>Eklem</th><th>Tasarım [N·m]</th><th>Motor [N·m]</th><th>Motor [rpm]</th></tr></thead><tbody id="tkTab"></tbody></table>
+        <h4>Hazır örnekler</h4><div class="presets" id="tkP"></div>
+        <div class="explain" id="tkE"></div>
+      </div>
+    </div>
+    <div class="panel steps"><h3>🧮 Eklem 1 — adım adım tork hesabı</h3><ol id="tkS"></ol></div>
+  </section>
+
+  <!-- ============ 5. PID ============ -->
+  <section class="labpane" id="pane-pid" hidden>
+    <div class="intro">
+      <div class="box"><h3>🎯 Ne öğreneceksin?</h3><p>Bir eklemin istenen açıya nasıl götürülüp orada tutulduğunu. <b>P</b> hataya orantılı iter, <b>I</b> kalan hatayı zamanla siler, <b>D</b> salınımı frenler. Simülasyon 1 ms adımlarla, 4096 adımlık enkoderle ve yerçekimiyle yapılıyor.</p></div>
+      <div class="box"><h3>🕹️ Nasıl kullanılır?</h3><ul><li>Bir örnek seç ve açıklamayı oku.</li><li>Kp, Ki ve Kd'yi değiştir. Grafikler anında yeniden hesaplanır.</li><li>▶ ile kolun hareketini canlı izle. Sağdaki ölçümlere bak: aşma, kalıcı hata, oturma süresi.</li></ul></div>
+    </div>
+    <div class="labgrid">
+      <div class="panel"><canvas id="pidG"></canvas>
+        <div class="legend"><span><i style="background:var(--muted)"></i>Referans</span><span><i style="background:var(--c1)"></i>Gerçek açı</span><span><i style="background:var(--c4)"></i>Hata</span><span><i style="background:var(--c2)"></i>Motor torku</span><span>Gri bant: tork sınırı</span></div>
+      </div>
+      <div class="panel">
+        <div style="display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center">
+          <canvas id="pidArm"></canvas>
+          <div><div class="play" style="margin:0"><button id="pidPlay">▶ Oynat</button></div><small style="color:var(--muted)">Mavi: kol · Kesikli: hedef</small></div>
+        </div>
+        <h4>Kazançlar</h4>
+        <div class="ctl"><label>Kp · oransal <span id="pidvp"></span></label><input id="pidp" type="range" min="0" max="400" step="1"></div>
+        <div class="ctl"><label>Ki · integral <span id="pidvi"></span></label><input id="pidi" type="range" min="0" max="600" step="5"></div>
+        <div class="ctl"><label>Kd · türev <span id="pidvd"></span></label><input id="pidd" type="range" min="0" max="20" step="0.1"></div>
+        <h4>Görev</h4>
+        <div class="ctl"><label>Hedef açı <span id="pidvr"></span></label><input id="pidr" type="range" min="0" max="120" step="1"></div>
+        <div class="seg"><button id="pidSmooth" class="on">Yumuşak (quintic 2 s)</button><button id="pidStep">Basamak (ani)</button></div>
+        <div class="ctl"><label>Tork sınırı <span id="pidvt"></span></label><input id="pidt" type="range" min="1" max="20" step="0.5"></div>
+        <label class="chk"><input type="checkbox" id="pidAW" checked> Anti-windup (doymada integrali dondur)</label>
+        <label class="chk"><input type="checkbox" id="pidF" checked> Türev filtresi (5 ms)</label>
+        <label class="chk"><input type="checkbox" id="pidG2"> Yerçekimi telafisi (m·g·l·cos q eklenir)</label>
+        <div class="readout"><div><small>Maks. aşma</small><b id="pidOs"></b></div><div><small>Kalıcı hata</small><b id="pidSs"></b></div><div><small>Oturma süresi (±0.5°)</small><b id="pidTs"></b></div><div><small>Maks. tork</small><b id="pidTm"></b></div></div>
+        <h4>Hazır örnekler</h4><div class="presets" id="pidP"></div>
+        <div class="explain" id="pidE"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
 <script>
 (() => {
-  const L = [0.30, 0.25, 0.10], R = L[0] + L[1] + L[2];
-  const QMIN = [-180, -150, -150], QMAX = [180, 150, 150];
-  const rad = d => d * Math.PI / 180, deg = r => r * 180 / Math.PI;
-  const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
-  const $ = id => document.getElementById(id);
-  const cv = $("c"), ctx = cv.getContext("2d");
-  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+"use strict";
+// ================= ortak =================
+const L = [0.30, 0.25, 0.10], REACH = 0.65, QMIN = [-180, -150, -150], QMAX = [180, 150, 150];
+const rad = d => d * Math.PI / 180, deg = r => r * 180 / Math.PI;
+const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const f = (v, n = 4) => (Math.abs(v) < 0.5 * 10 ** -n ? 0 : v).toFixed(n);
+const fd = (r, n = 1) => f(deg(r), n) + "°";
 
-  let mode = "FK", elbow = 1, q = [rad(30), rad(45), rad(-30)], target = null, other = null;
+function fk(q) {
+  let x = 0, y = 0, a = 0; const pts = [[0, 0]], ang = [];
+  for (let i = 0; i < 3; i++) { a += q[i]; ang.push(a); x += L[i] * Math.cos(a); y += L[i] * Math.sin(a); pts.push([x, y]); }
+  return { pts, ang, x, y, phi: wrap(a) };
+}
+function ik(x, y, phi, e) {
+  const xw = x - L[2] * Math.cos(phi), yw = y - L[2] * Math.sin(phi);
+  const r2 = xw * xw + yw * yw;
+  let c2 = (r2 - L[0] ** 2 - L[1] ** 2) / (2 * L[0] * L[1]);
+  const out = { xw, yw, r2, c2, ok: Math.abs(c2) <= 1 + 1e-9 };
+  if (!out.ok) return out;
+  c2 = Math.max(-1, Math.min(1, c2));
+  const s2 = e * Math.sqrt(1 - c2 * c2), q2 = Math.atan2(s2, c2);
+  const a = Math.atan2(yw, xw), b = Math.atan2(L[1] * s2, L[0] + L[1] * c2);
+  const q1 = wrap(a - b), q3 = wrap(phi - q1 - q2);
+  out.q = [q1, q2, q3]; out.a = a; out.b = b; out.s2 = s2;
+  out.inLim = out.q.every((v, i) => deg(v) >= QMIN[i] - 1e-6 && deg(v) <= QMAX[i] + 1e-6);
+  return out;
+}
 
-  // dünya (m) <-> piksel
-  const S = 380, OX = cv.width * 0.40, OY = cv.height * 0.62;
-  const toPx = (x, y) => [OX + x * S, OY - y * S];
-  const toW = (px, py) => [(px - OX) / S, (OY - py) / S];
+// canvas'ı CSS boyutuna ve ekran yoğunluğuna uydur
+function prep(cv, aspect) {
+  const dpr = window.devicePixelRatio || 1, w = cv.clientWidth || 600, h = Math.round(w * aspect);
+  if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+  cv.style.height = h + "px";
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+  return { ctx, w, h };
+}
 
-  function fk(q) {
-    let x = 0, y = 0, a = 0; const pts = [[0, 0]];
-    for (let i = 0; i < 3; i++) { a += q[i]; x += L[i] * Math.cos(a); y += L[i] * Math.sin(a); pts.push([x, y]); }
-    return { pts, x, y, phi: wrap(a) };
+// kol sahnesi: dünya koordinatı (m) -> piksel
+function scene(cv, aspect, opt = {}) {
+  const { ctx, w, h } = prep(cv, aspect);
+  const span = opt.span || 1.5, S = w / span, ox = w * (opt.ox ?? 0.5), oy = h * (opt.oy ?? 0.62);
+  const P = (x, y) => [ox + x * S, oy - y * S], W = (px, py) => [(px - ox) / S, (oy - py) / S];
+  const sc = { ctx, w, h, S, P, W };
+  ctx.font = "12px Inter, system-ui, sans-serif";
+  // ızgara
+  ctx.strokeStyle = css("--grid"); ctx.lineWidth = 1;
+  for (let v = -1; v <= 1.001; v += 0.1) {
+    const [gx] = P(v, 0), [, gy] = P(0, v);
+    ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke();
   }
-  function ik(x, y, phi, e) {
-    const xw = x - L[2] * Math.cos(phi), yw = y - L[2] * Math.sin(phi);
-    const c2 = (xw * xw + yw * yw - L[0] ** 2 - L[1] ** 2) / (2 * L[0] * L[1]);
-    if (Math.abs(c2) > 1) return null;
-    const s2 = e * Math.sqrt(1 - c2 * c2), q2 = Math.atan2(s2, c2);
-    const q1 = Math.atan2(yw, xw) - Math.atan2(L[1] * s2, L[0] + L[1] * c2);
-    return [wrap(q1), wrap(q2), wrap(phi - q1 - q2)];
+  if (opt.ws) ctx.drawImage(wsImage(S), ox - REACH * S - 2, oy - REACH * S - 2);
+  ctx.strokeStyle = css("--muted"); ctx.globalAlpha = .7;
+  ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.moveTo(ox, 0); ctx.lineTo(ox, h); ctx.stroke();
+  ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.arc(ox, oy, REACH * S, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+  ctx.globalAlpha = 1; ctx.fillStyle = css("--muted");
+  for (let v = -0.6; v <= 0.61; v += 0.2) {
+    if (Math.abs(v) < 1e-9) continue;
+    const [gx] = P(v, 0), [, gy] = P(0, v);
+    ctx.fillText(v.toFixed(1), gx - 9, oy + 15); ctx.fillText(v.toFixed(1), ox + 5, gy + 4);
   }
-  const withinLimits = qq => qq.every((v, i) => deg(v) >= QMIN[i] - 1e-6 && deg(v) <= QMAX[i] + 1e-6);
-
-  // çalışma uzayı: bir kez örnekle
-  const ws = document.createElement("canvas"); ws.width = cv.width; ws.height = cv.height;
-  function buildWS() {
-    const w = ws.getContext("2d"); w.clearRect(0, 0, ws.width, ws.height); w.fillStyle = css("--ws");
-    for (let k = 0; k < 26000; k++) {
-      const qq = [0, 1, 2].map(i => rad(QMIN[i] + Math.random() * (QMAX[i] - QMIN[i])));
-      const p = fk(qq); const [px, py] = toPx(p.x, p.y); w.fillRect(px, py, 2, 2);
-    }
+  ctx.fillText("x [m]", w - 42, oy - 7); ctx.fillText("y [m]", ox + 6, 14);
+  ctx.fillRect(ox - 20, oy, 40, 9);
+  return sc;
+}
+// çalışma uzayı görüntüsü (ölçeğe ve temaya göre önbellek)
+let wsCache = { key: "", img: null };
+function wsImage(S) {
+  const key = Math.round(S) + css("--ws");
+  if (wsCache.key === key) return wsCache.img;
+  const c = document.createElement("canvas"), n = Math.ceil(2 * REACH * S) + 4; c.width = c.height = n;
+  const x = c.getContext("2d"); x.fillStyle = css("--ws");
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let k = 0; k < 24000; k++) {
+    const q = [0, 1, 2].map(i => rad(QMIN[i] + rnd() * (QMAX[i] - QMIN[i]))), p = fk(q);
+    x.fillRect(n / 2 + p.x * S - 1, n / 2 - p.y * S - 1, 2.2, 2.2);
   }
+  wsCache = { key, img: c }; return c;
+}
+function drawArm(sc, q, o = {}) {
+  const { ctx, P } = sc, p = fk(q), cols = o.colors || [css("--c1"), css("--c2"), css("--c3")];
+  ctx.save(); ctx.globalAlpha = o.alpha ?? 1; ctx.lineCap = "round";
+  for (let i = 0; i < 3; i++) {
+    const a = P(...p.pts[i]), b = P(...p.pts[i + 1]);
+    ctx.strokeStyle = cols[i]; ctx.lineWidth = o.width || 10;
+    ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b); ctx.stroke();
+  }
+  if (!o.noJoints) for (let i = 0; i < 3; i++) {
+    const [px, py] = P(...p.pts[i]);
+    ctx.fillStyle = css("--surface"); ctx.strokeStyle = css("--text"); ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(px, py, 6.5, 0, 7); ctx.fill(); ctx.stroke();
+  }
+  const [ex, ey] = P(...p.pts[3]); ctx.fillStyle = css("--c4"); ctx.fillRect(ex - 5, ey - 5, 10, 10);
+  ctx.restore(); return p;
+}
+function cross(sc, x, y, color) {
+  const { ctx, P } = sc, [tx, ty] = P(x, y);
+  ctx.strokeStyle = color; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(tx, ty, 10, 0, 7); ctx.moveTo(tx - 15, ty); ctx.lineTo(tx + 15, ty); ctx.moveTo(tx, ty - 15); ctx.lineTo(tx, ty + 15); ctx.stroke();
+}
+function label(ctx, txt, x, y, color) { ctx.fillStyle = color || css("--text"); ctx.font = "600 12px Inter, system-ui"; ctx.fillText(txt, x, y); ctx.font = "12px Inter, system-ui"; }
 
-  function drawArm(pts, colors, width, alpha) {
-    ctx.globalAlpha = alpha; ctx.lineCap = "round";
+// basit çizgi grafiği
+function plot(ctx, box, series, o = {}) {
+  const { x, y, w, h } = box, pad = { l: 46, r: 10, t: o.title ? 20 : 8, b: o.xlabel ? 30 : 18 };
+  const X0 = x + pad.l, Y0 = y + pad.t, PW = w - pad.l - pad.r, PH = h - pad.t - pad.b;
+  let tmin = Infinity, tmax = -Infinity, ymin = Infinity, ymax = -Infinity;
+  series.forEach(s => { s.t.forEach(v => { tmin = Math.min(tmin, v); tmax = Math.max(tmax, v); });
+    s.y.forEach(v => { if (isFinite(v)) { ymin = Math.min(ymin, v); ymax = Math.max(ymax, v); } }); });
+  if (o.hlinesInRange !== false) (o.hlines || []).forEach(hl => { ymin = Math.min(ymin, hl.y); ymax = Math.max(ymax, hl.y); });
+  if (o.ymin !== undefined) ymin = Math.min(ymin, o.ymin); if (o.ymax !== undefined) ymax = Math.max(ymax, o.ymax);
+  if (ymax - ymin < 1e-9) { ymax += 1; ymin -= 1; }
+  const m = (ymax - ymin) * 0.08; ymin -= m; ymax += m;
+  const tx = t => X0 + (t - tmin) / (tmax - tmin || 1) * PW, ty = v => Y0 + (ymax - v) / (ymax - ymin) * PH;
+  ctx.font = "11px Inter, system-ui"; ctx.strokeStyle = css("--grid"); ctx.fillStyle = css("--muted"); ctx.lineWidth = 1;
+  const step = niceStep((ymax - ymin) / 4);
+  for (let v = Math.ceil(ymin / step) * step; v <= ymax; v += step) {
+    ctx.beginPath(); ctx.moveTo(X0, ty(v)); ctx.lineTo(X0 + PW, ty(v)); ctx.stroke();
+    ctx.fillText(+v.toFixed(6) + "", x + 2, ty(v) + 4);
+  }
+  const ts = niceStep((tmax - tmin) / 5);
+  for (let t = Math.ceil(tmin / ts) * ts; t <= tmax + 1e-9; t += ts) ctx.fillText(+t.toFixed(3) + "", tx(t) - 6, Y0 + PH + 13);
+  ctx.strokeStyle = css("--line"); ctx.strokeRect(X0, Y0, PW, PH);
+  ctx.save(); ctx.beginPath(); ctx.rect(X0, Y0, PW, PH); ctx.clip();
+  if (o.band) { ctx.fillStyle = css("--surface-2"); ctx.fillRect(X0, Y0, PW, ty(o.band) - Y0); ctx.fillRect(X0, ty(-o.band), PW, Y0 + PH - ty(-o.band)); }
+  (o.hlines || []).forEach(hl => { ctx.strokeStyle = hl.color || css("--muted"); ctx.setLineDash(hl.dash || [4, 4]);
+    ctx.beginPath(); ctx.moveTo(X0, ty(hl.y)); ctx.lineTo(X0 + PW, ty(hl.y)); ctx.stroke(); ctx.setLineDash([]); });
+  series.forEach(s => {
+    ctx.strokeStyle = s.color; ctx.lineWidth = s.width || 2; ctx.setLineDash(s.dash || []); ctx.globalAlpha = s.alpha ?? 1;
+    ctx.beginPath(); let pen = false;
+    for (let i = 0; i < s.t.length; i++) { if (!isFinite(s.y[i])) { pen = false; continue; }
+      const px = tx(s.t[i]), py = ty(s.y[i]); pen ? ctx.lineTo(px, py) : ctx.moveTo(px, py); pen = true; }
+    ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+  });
+  if (o.vline !== undefined) { ctx.strokeStyle = css("--text"); ctx.globalAlpha = .5; ctx.beginPath(); ctx.moveTo(tx(o.vline), Y0); ctx.lineTo(tx(o.vline), Y0 + PH); ctx.stroke(); ctx.globalAlpha = 1; }
+  ctx.restore();
+  if (o.title) { ctx.fillStyle = css("--text"); ctx.font = "600 12px Inter, system-ui"; ctx.fillText(o.title, X0, y + 13); }
+  if (o.xlabel) { ctx.fillStyle = css("--muted"); ctx.font = "11px Inter, system-ui"; ctx.fillText(o.xlabel, X0 + PW - 40, Y0 + PH + 26); }
+  if (o.legend) { let lx = X0 + PW - 8; ctx.font = "11px Inter, system-ui";
+    o.legend.slice().reverse().forEach(([txt, col]) => { const tw = ctx.measureText(txt).width; lx -= tw + 26;
+      ctx.fillStyle = col; ctx.fillRect(lx, y + 6, 14, 3); ctx.fillStyle = css("--muted"); ctx.fillText(txt, lx + 18, y + 11); }); }
+}
+function niceStep(raw) { const p = 10 ** Math.floor(Math.log10(raw || 1)), n = raw / p; return (n < 1.5 ? 1 : n < 3.5 ? 2 : n < 7.5 ? 5 : 10) * p; }
+
+function presets(boxId, list, apply) {
+  const box = $(boxId); box.innerHTML = "";
+  list.forEach((p, i) => { const b = document.createElement("button"); b.textContent = p.ad;
+    b.onclick = () => { [...box.children].forEach(c => c.classList.remove("on")); b.classList.add("on"); apply(p); };
+    box.appendChild(b); if (i === 0) b.classList.add("on"); });
+}
+const explain = (id, title, html) => { $(id).innerHTML = `<b class="t">${title}</b>${html}`; };
+const clearOn = id => [...$(id).children].forEach(c => c.classList.remove("on"));
+const steps = (id, items) => { $(id).innerHTML = items.map(s =>
+  `<li class="${s.cls || ""}"><div><div class="h">${s.h}</div>${s.f ? `<div class="f">${s.f}</div>` : ""}${s.w ? `<div class="w">${s.w}</div>` : ""}</div></li>`).join(""); };
+
+// ================= 1. DÜZ KİNEMATİK =================
+const FK = { q: [30, 45, -30] };
+const FK_P = [
+  { ad: "📐 Konu 1'deki çözümlü örnek", q: [30, 45, -30], t: "Kitaptaki örnek",
+    d: "Konu 1'de elle çözülen örnek bu. Sonuç <b>x = 0.3952 m, y = 0.4622 m, φ = 45°</b> çıkmalı. Aşağıdaki adımları kâğıtta yaptığın hesapla karşılaştır." },
+  { ad: "➡️ Tam açık kol (tekillik)", q: [0, 0, 0], t: "Tekil konum",
+    d: "Kol dümdüz ve yatay, uç en uzak noktada (0.65 m). <b>q2 = 0 olduğu için det J = 0</b>, yani kol tekil. Ucu daha da dışarı itemezsin, kol o yöndeki hareket kabiliyetini kaybetmiş. Gerçek robotlar bu konumdan kaçınır." },
+  { ad: "⬆️ Dimdik yukarı", q: [90, 0, 0], t: "Kol dikey",
+    d: "Bütün uzuvlar yukarıyı gösteriyor: x = 0, y = 0.65 m. Bu duruşta <b>yerçekimi torku sıfırdır</b>, çünkü yatay kaldıraç kolu yok (Konu 4). Kol yine tam açık olduğu için yine tekil." },
+  { ad: "🤏 En fazla katlanmış dirsek", q: [0, 150, -150], t: "Eklem sınırında",
+    d: "Dirsek 150°'ye kadar bükülü, bu eklemin <b>sınırı</b>. Uç tabana yaklaşıyor ama tam üstüne gelemiyor. Çalışma uzayının ortasındaki küçük boşluğun sebebi bu sınır." },
+  { ad: "🔁 Aynı nokta, farklı duruş (A)", q: [7.2166, 92.3603, -119.5769], t: "Dirsek aşağı",
+    d: "Uç (0.35, 0.25) noktasında ve φ = −20°. Şimdi alttaki <b>(B)</b> örneğine tıkla: Kol bambaşka duruyor, ama uç <b>aynı</b> noktada. Ters kinematikte birden fazla çözüm olmasının sebebi budur." },
+  { ad: "🔁 Aynı nokta, farklı duruş (B)", q: [88.7535, -92.3603, -16.3933], t: "Dirsek yukarı",
+    d: "Sonuç yine x = 0.3500, y = 0.2500, φ = −20°. Açılar tamamen farklı, ama uç aynı yerde. Bunu 2. sekmede (ters kinematik) <b>Dirsek</b> düğmesiyle de görebilirsin." },
+];
+function fkSync() { [1, 2, 3].forEach(i => { $("fk" + i).value = Math.round(FK.q[i - 1]); $("fkv" + i).textContent = f(FK.q[i - 1], 1) + "°"; }); }
+function fkDraw() {
+  const sc = scene($("fkC"), 0.72, { ws: true, ox: 0.5, oy: 0.55 }), q = FK.q.map(rad), { ctx, P } = sc;
+  const p = fk(q);
+  if ($("fkShadow").checked) {
+    const cols = [css("--c1"), css("--c2"), css("--c3")];
     for (let i = 0; i < 3; i++) {
-      const [a, b] = [toPx(...pts[i]), toPx(...pts[i + 1])];
-      ctx.strokeStyle = colors[i]; ctx.lineWidth = width;
-      ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b); ctx.stroke();
+      const [x0, y0] = p.pts[i], [x1, y1] = p.pts[i + 1];
+      ctx.strokeStyle = cols[i]; ctx.lineWidth = 2; ctx.setLineDash([4, 4]); ctx.globalAlpha = .9;
+      ctx.beginPath(); ctx.moveTo(...P(x0, y0)); ctx.lineTo(...P(x1, y0)); ctx.lineTo(...P(x1, y1)); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+      // açı yayı
+      const [cx, cy] = P(x0, y0), a0 = i === 0 ? 0 : p.ang[i - 1];
+      ctx.strokeStyle = cols[i]; ctx.lineWidth = 1.5; ctx.beginPath();
+      ctx.arc(cx, cy, 26 + i * 4, -Math.max(a0, p.ang[i]), -Math.min(a0, p.ang[i])); ctx.stroke();
+      label(ctx, "q" + (i + 1), cx + 30 * Math.cos((a0 + p.ang[i]) / 2) + 2, cy - 30 * Math.sin((a0 + p.ang[i]) / 2), cols[i]);
     }
-    for (let i = 0; i < 3; i++) {
-      const [px, py] = toPx(...pts[i]);
-      ctx.fillStyle = css("--panel"); ctx.strokeStyle = css("--text"); ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(px, py, 7, 0, 7); ctx.fill(); ctx.stroke();
-    }
-    const [ex, ey] = toPx(...pts[3]);
-    ctx.fillStyle = css("--target"); ctx.fillRect(ex - 5, ey - 5, 10, 10);
-    ctx.globalAlpha = 1;
   }
+  drawArm(sc, q);
+  const [ex, ey] = P(p.x, p.y); label(ctx, `(${f(p.x, 3)}, ${f(p.y, 3)})`, ex + 10, ey - 10);
+  const det = L[0] * L[1] * Math.sin(q[1]);
+  $("fkx").textContent = f(p.x) + " m"; $("fky").textContent = f(p.y) + " m"; $("fkphi").textContent = fd(p.phi);
+  $("fkdet").textContent = f(det) + (Math.abs(det) < 0.003 ? " ⚠️" : "");
+  const [a1, a2, a3] = p.ang, A = a => fd(a);
+  steps("fkS", [
+    { h: `1. uzuv (L1 = 0.30 m): açısı q1 = ${A(a1)}`, f: `Δx = 0.30·cos(${A(a1)}) = ${f(L[0] * Math.cos(a1))}   Δy = 0.30·sin(${A(a1)}) = ${f(L[0] * Math.sin(a1))}`,
+      w: `Dirseğin konumu: (${f(p.pts[1][0])}, ${f(p.pts[1][1])}) m. Bunlar 1. okun "gölgeleri".` },
+    { h: `2. uzuv (L2 = 0.25 m): mutlak açısı q1 + q2 = ${A(a1)} + ${fd(q[1])} = ${A(a2)}`, f: `Δx = 0.25·cos(${A(a2)}) = ${f(L[1] * Math.cos(a2))}   Δy = 0.25·sin(${A(a2)}) = ${f(L[1] * Math.sin(a2))}`,
+      w: `Bileğin konumu: (${f(p.pts[2][0])}, ${f(p.pts[2][1])}) m. Açılar toplanıyor, çünkü dirsek üst kolun zaten döndürdüğü yönden itibaren döner.` },
+    { h: `3. uzuv (L3 = 0.10 m): mutlak açısı q1 + q2 + q3 = ${A(a3)}`, f: `Δx = 0.10·cos(${A(a3)}) = ${f(L[2] * Math.cos(a3))}   Δy = 0.10·sin(${A(a3)}) = ${f(L[2] * Math.sin(a3))}` },
+    { h: "Sonuç: Bütün gölgeleri topla", cls: "ok", f: `x = ${f(L[0] * Math.cos(a1))} + ${f(L[1] * Math.cos(a2))} + ${f(L[2] * Math.cos(a3))} = ${f(p.x)} m   ·   y = ${f(p.y)} m   ·   φ = ${A(p.phi)}`,
+      w: "Bu, DH matrislerini 0T1 · 1T2 · 2T3 şeklinde çarpınca çıkan sonucun ta kendisi (Konu 1.4)." },
+    { h: "Tekillik kontrolü", cls: Math.abs(det) < 0.003 ? "bad" : "", f: `det J = L1·L2·sin(q2) = 0.30·0.25·sin(${fd(q[1])}) = ${f(det)}`,
+      w: Math.abs(det) < 0.003 ? "Sıfıra çok yakın: Kol tekil, bazı yönlerde hareket edemez!" : "Sıfırdan uzak: Kol her yönde rahatça hareket edebilir." },
+  ]);
+}
+[1, 2, 3].forEach(i => $("fk" + i).addEventListener("input", e => { FK.q[i - 1] = +e.target.value; $("fkv" + i).textContent = e.target.value + "°"; clearOn("fkP");
+  explain("fkE", "Serbest deneme", "Kaydırıcıları oynatırken adımlardaki sayıların nasıl değiştiğini izle. İpucu: q2'yi 0°'ye getir ve det J'ye bak."); fkDraw(); }));
+$("fkShadow").onchange = fkDraw;
+presets("fkP", FK_P, p => { FK.q = p.q.slice(); fkSync(); explain("fkE", p.t, p.d); fkDraw(); });
 
-  function draw() {
-    ctx.clearRect(0, 0, cv.width, cv.height);
-    // ızgara
-    ctx.strokeStyle = css("--grid"); ctx.lineWidth = 1;
-    for (let v = -0.8; v <= 0.81; v += 0.1) {
-      const [gx] = toPx(v, 0), [, gy] = toPx(0, v);
-      ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, cv.height); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(cv.width, gy); ctx.stroke();
-    }
-    ctx.drawImage(ws, 0, 0);
-    // eksenler + erişim çemberi
-    ctx.strokeStyle = css("--muted"); ctx.lineWidth = 1.2;
-    ctx.beginPath(); ctx.moveTo(0, OY); ctx.lineTo(cv.width, OY); ctx.moveTo(OX, 0); ctx.lineTo(OX, cv.height); ctx.stroke();
-    ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.arc(OX, OY, R * S, 0, 7); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = css("--muted"); ctx.font = "12px system-ui";
-    ctx.fillText("x [m]", cv.width - 40, OY - 6); ctx.fillText("y [m]", OX + 6, 14);
-    ctx.fillText("maks. erişim 0.65 m", OX + R * S * 0.71 + 4, OY - R * S * 0.71);
-    for (let v = -0.6; v <= 0.61; v += 0.2) {
-      if (Math.abs(v) < 1e-9) continue;
-      const [gx] = toPx(v, 0), [, gy] = toPx(0, v);
-      ctx.fillText(v.toFixed(1), gx - 9, OY + 14); ctx.fillText(v.toFixed(1), OX + 4, gy + 4);
-    }
-    // taban
-    ctx.fillStyle = css("--muted"); ctx.fillRect(OX - 22, OY, 44, 12);
-
-    const cols = [css("--link1"), css("--link2"), css("--link3")];
-    if (mode === "IK" && other) drawArm(fk(other).pts, [css("--ghost"), css("--ghost"), css("--ghost")], 7, 1);
-    const p = fk(q);
-    drawArm(p.pts, cols, 10, 1);
-    if (mode === "IK" && target) {
-      const [tx, ty] = toPx(target[0], target[1]);
-      ctx.strokeStyle = css("--target"); ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(tx, ty, 11, 0, 7); ctx.moveTo(tx - 16, ty); ctx.lineTo(tx + 16, ty);
-      ctx.moveTo(tx, ty - 16); ctx.lineTo(tx, ty + 16); ctx.stroke();
-    }
-    // çıktı
-    $("ox").textContent = p.x.toFixed(4) + " m"; $("oy").textContent = p.y.toFixed(4) + " m";
-    $("ophi").textContent = deg(p.phi).toFixed(1) + "°";
-    $("oq").textContent = q.map(v => deg(v).toFixed(1) + "°").join(", ");
-    const det = L[0] * L[1] * Math.sin(q[1]);
-    $("odet").textContent = det.toFixed(4) + (Math.abs(det) < 0.004 ? "  ⚠️ tekil" : "");
+// ================= 2. TERS KİNEMATİK =================
+const IK = { x: 0.35, y: 0.25, phi: -20, e: 1 };
+const IK_P = [
+  { ad: "📐 Konu 2'deki örnek", x: 0.35, y: 0.25, phi: -20, e: 1, t: "İki çözüm",
+    d: "Hedef (0.35, 0.25) m ve φ = −20°. <b>İki çözüm</b> var: Dirsek aşağıyken (7.2°, 92.4°, −119.6°), dirsek yukarıyken (88.8°, −92.4°, −16.4°). Soluk kol ikinci çözüm. <b>Dirsek</b> düğmesiyle ikisi arasında geç." },
+  { ad: "❌ Ulaşılamayan hedef", x: 0.70, y: 0.0, phi: 0, e: 1, t: "Çözüm yok",
+    d: "Hedef 0.70 m uzakta, oysa kol en fazla 0.65 m uzanabiliyor. 3. adımda <b>cos q2 > 1</b> çıkıyor. Kosinüs 1'den büyük olamayacağı için çözüm yok." },
+  { ad: "🎯 Tam sınırda: tek çözüm", x: 0.65, y: 0.0, phi: 0, e: 1, t: "İki çözüm birleşir",
+    d: "cos q2 = 1, yani q2 = 0. Dirsek aşağı ve dirsek yukarı çözümleri <b>aynı</b> duruşa denk geliyor. Kol tamamen açık ve <b>tekil</b>." },
+  { ad: "⚠️ Eklem sınırı aşılıyor", x: 0.05, y: 0.05, phi: 0, e: 1, t: "Matematik var, robot yapamaz",
+    d: "Hedef tabana çok yakın. Formül q2 ≈ ±169° veriyor, ama dirsek en fazla <b>±150°</b> bükülebiliyor. Matematik çözüm bulsa da gerçek robot bu duruşa giremez. Gerçek bir IK çözücü eklem sınırlarını mutlaka kontrol etmelidir." },
+  { ad: "🔄 Aynı nokta, farklı uç açısı", x: 0.40, y: 0.20, phi: 90, e: 1, t: "φ'nin etkisi",
+    d: "Uç yukarıyı gösteriyor (φ = 90°). Şimdi <b>φ kaydırıcısını</b> yavaşça oynat. Mor bilek noktası, hedefin etrafında L3 = 0.10 m yarıçaplı bir çember üzerinde dolaşıyor ve bütün eklemler değişiyor." },
+];
+function ikSync() {
+  $("ikx").value = IK.x; $("iky").value = IK.y; $("ikphi").value = IK.phi;
+  $("ikvx").textContent = f(IK.x, 3) + " m"; $("ikvy").textContent = f(IK.y, 3) + " m"; $("ikvphi").textContent = IK.phi + "°";
+  $("ikDown").classList.toggle("on", IK.e === 1); $("ikUp").classList.toggle("on", IK.e === -1);
+}
+let ikLast = { q: [rad(7.2), rad(92.4), rad(-119.6)] };
+function ikDraw() {
+  const cv = $("ikC"), sc = scene(cv, 0.72, { ws: true, ox: 0.5, oy: 0.55 }), { ctx, P, S } = sc;
+  const phi = rad(IK.phi), s = ik(IK.x, IK.y, phi, IK.e), o = ik(IK.x, IK.y, phi, -IK.e);
+  // bilek çemberi
+  const [hx, hy] = P(IK.x, IK.y); ctx.strokeStyle = css("--c5"); ctx.globalAlpha = .35; ctx.setLineDash([3, 4]);
+  ctx.beginPath(); ctx.arc(hx, hy, L[2] * S, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+  if (s.ok) {
+    if (o.q && Math.abs(o.q[1] - s.q[1]) > 1e-6) drawArm(sc, o.q, { alpha: .28, width: 8, noJoints: true, colors: [css("--c2"), css("--c2"), css("--c2")] });
+    drawArm(sc, s.q, { alpha: s.inLim ? 1 : .55 });
+    ikLast = s;
+    // kosinüs üçgeni
+    const pe = fk(s.q).pts[1]; ctx.strokeStyle = css("--c5"); ctx.lineWidth = 1.5; ctx.setLineDash([6, 4]);
+    ctx.beginPath(); ctx.moveTo(...P(0, 0)); ctx.lineTo(...P(s.xw, s.yw)); ctx.stroke(); ctx.setLineDash([]);
+    const [mx, my] = P(s.xw / 2, s.yw / 2); label(ctx, "r = " + f(Math.sqrt(s.r2), 3), mx + 6, my + 14, css("--c5"));
+  } else {
+    ctx.strokeStyle = css("--bad"); ctx.setLineDash([6, 4]); ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(...P(0, 0)); ctx.lineTo(...P(s.xw, s.yw)); ctx.stroke(); ctx.setLineDash([]);
   }
+  const [wx, wy] = P(s.xw, s.yw); ctx.fillStyle = css("--c5"); ctx.beginPath(); ctx.arc(wx, wy, 6, 0, 7); ctx.fill();
+  cross(sc, IK.x, IK.y, css("--c4"));
+  const m = $("ikMsg");
+  if (!s.ok) { m.className = "msg bad"; m.textContent = "❌ Bu hedefe bu uç açısıyla ulaşılamıyor (|cos q2| > 1). Hedefi yaklaştır ya da φ'yi değiştir."; }
+  else if (!s.inLim) { m.className = "msg warn"; m.textContent = o.inLim ? "⚠️ Matematiksel çözüm var, ama eklem sınırları (±150°) aşılıyor. Diğer dirsek konumunu dene." : "⚠️ İki çözüm de eklem sınırlarını (±150°) aşıyor. Robot bu hedefe ulaşamaz."; }
+  else { const ayni = o.q && Math.abs(o.q[1] - s.q[1]) < 1e-6; m.className = "msg ok"; m.textContent = "✅ Çözüm bulundu" + (ayni ? ". İki çözüm çakışıyor: tek çözüm (q2 = 0, kol tam açık)." : o.ok && o.inLim ? ". Soluk kol, aynı hedefe giden ikinci çözüm." : ". Diğer dirsek çözümü eklem sınırları dışında."); }
+  ["ikq1", "ikq2", "ikq3"].forEach((id, i) => $(id).textContent = s.ok ? fd(s.q[i]) : "—");
+  // adımlar
+  const ph = fd(phi), list = [
+    { h: "Bilek noktasını bul: Uçtan L3 kadar geri git", f: `xw = x − L3·cos φ = ${f(IK.x, 3)} − 0.10·cos(${ph}) = ${f(s.xw)}   ·   yw = ${f(IK.y, 3)} − 0.10·sin(${ph}) = ${f(s.yw)}`,
+      w: "Böylece 3 uzuvlu problem, tabandan bileğe uzanan 2 uzuvlu bir probleme iner (mor nokta)." },
+    { h: "Tabandan bileğe uzaklık", f: `r² = xw² + yw² = ${f(s.r2)}   →   r = ${f(Math.sqrt(s.r2))} m`, w: `L1 + L2 = 0.55 m'den büyükse bilek noktasına ulaşılamaz.` },
+    { h: "Kosinüs teoremiyle q2", cls: s.ok ? "" : "bad", f: `cos q2 = (r² − L1² − L2²) / (2·L1·L2) = (${f(s.r2)} − 0.0900 − 0.0625) / 0.1500 = ${f(s.c2)}`,
+      w: s.ok ? "−1 ile 1 arasında, yani bir çözüm var." : "|cos q2| > 1: Böyle bir açı yok, hedef erişim alanı dışında. Hesap burada durur." },
+  ];
+  if (s.ok) list.push(
+    { h: `q2 = atan2(${IK.e > 0 ? "+" : "−"}√(1 − cos²q2), cos q2)`, f: `q2 = ${fd(s.q[1])}   (diğer çözüm: ${fd(-s.q[1])})`, w: "Karekökün + işareti dirsek aşağı, − işareti dirsek yukarı çözümünü verir." },
+    { h: "q1 = atan2(yw, xw) − atan2(L2·sin q2, L1 + L2·cos q2)", f: `q1 = ${fd(s.a)} − ${fd(s.b)} = ${fd(s.q[0])}`, w: "İlk terim bileğin yönü, ikinci terim dirseğin bu yönden sapma açısı." },
+    { h: "q3 = φ − q1 − q2", f: `q3 = ${ph} − ${fd(s.q[0])} − ${fd(s.q[1])} = ${fd(s.q[2])}` },
+    (() => { const c = fk(s.q), err = Math.hypot(c.x - IK.x, c.y - IK.y);
+      return { h: s.inLim ? "Kontrol: Bulunan açıları düz kinematiğe koy" : "Kontrol: Çözüm geçerli mi?", cls: s.inLim ? "ok" : "bad",
+        f: `FK(q) = (${f(c.x)}, ${f(c.y)}) m, φ = ${fd(c.phi)}   ·   hata = ${err.toExponential(1)} m`,
+        w: s.inLim ? "Hedefle aynı, çözüm doğru." : "Konum doğru, ama en az bir eklem ±150° sınırının dışında. Gerçek robot bu duruşa giremez." }; })()
+  );
+  steps("ikS", list);
+}
+function ikPick(ev) {
+  const r = $("ikC").getBoundingClientRect(), w = r.width, S = w / 1.5;
+  IK.x = Math.max(-0.7, Math.min(0.7, (ev.clientX - r.left - w * 0.5) / S));
+  IK.y = Math.max(-0.7, Math.min(0.7, (r.height * 0.55 - (ev.clientY - r.top)) / S));
+  clearOn("ikP"); explain("ikE", "Serbest deneme", "Hedefi gri çemberin dışına sürükle: Çözüm kayboluyor. Tabana çok yaklaştır: Eklem sınırı uyarısı çıkıyor. Arada her yerde iki çözüm var."); ikSync(); ikDraw();
+}
+let ikDown = false;
+$("ikC").addEventListener("pointerdown", e => { ikDown = true; ikPick(e); });
+$("ikC").addEventListener("pointermove", e => { if (ikDown) ikPick(e); });
+addEventListener("pointerup", () => ikDown = false);
+["ikx", "iky", "ikphi"].forEach(id => $(id).addEventListener("input", () => { IK.x = +$("ikx").value; IK.y = +$("iky").value; IK.phi = +$("ikphi").value; ikSync(); ikDraw(); }));
+$("ikDown").onclick = () => { IK.e = 1; ikSync(); ikDraw(); };
+$("ikUp").onclick = () => { IK.e = -1; ikSync(); ikDraw(); };
+presets("ikP", IK_P, p => { Object.assign(IK, { x: p.x, y: p.y, phi: p.phi, e: p.e }); ikSync(); explain("ikE", p.t, p.d); ikDraw(); });
 
-  function syncSliders() {
-    ["q1", "q2", "q3"].forEach((id, i) => { $(id).value = Math.round(deg(q[i])); $("v" + (i + 1)).textContent = Math.round(deg(q[i])) + "°"; });
-  }
-  ["q1", "q2", "q3"].forEach((id, i) => $(id).addEventListener("input", e => {
-    q[i] = rad(+e.target.value); $("v" + (i + 1)).textContent = e.target.value + "°"; draw();
-  }));
+// ================= 3. YÖRÜNGE =================
+const YR = { A: [0.45, 0.05, 0], B: [0.15, 0.40, 60], T: 2, prof: "q", u: 0, playing: false, showJ: true, showC: true };
+const YR_P = [
+  { ad: "📐 Konu 3'teki örnek", A: [0.45, 0.05, 0], B: [0.15, 0.40, 60], T: 2, prof: "q", t: "Eğri yol ve düz yol",
+    d: "Mavi uç bir <b>yay</b> çiziyor (0.485 m), turuncu uç <b>düz çizgide</b> gidiyor (0.461 m). Sol alttaki grafikte kartezyende q2 ve q3'ün bir tepe yaptığını gör: Düz çizgiyi korumak için eklemler ileri gidip geri dönüyor." },
+  { ad: "⏱️ Aynı hareket, 0.8 saniyede", A: [0.45, 0.05, 0], B: [0.15, 0.40, 60], T: 0.8, prof: "q", t: "Süre kısalınca",
+    d: "Süre 2 s'den 0.8 s'ye inince hızlar (2/0.8) = <b>2.5 kat</b>, ivmeler (2/0.8)² = <b>6.25 kat</b> artıyor. Tablodaki değerleri bir önceki örnekle karşılaştır. Motor torku ivmeyle orantılı olduğu için hızlı hareket <b>güçlü motor</b> ister." },
+  { ad: "〰️ Kübik profil: ivme sıçraması", A: [0.45, 0.05, 0], B: [0.15, 0.40, 60], T: 2, prof: "c", t: "Kübik vs quintic",
+    d: "Sağ alttaki grafikte kübik profilin ivmesi <b>t = 0'da birden</b> başlıyor ve t = T'de birden kesiliyor. Bu ani ivme değişimi (sonsuz sarsıntı) robotta titreşim yaratır. Quintic profil ivmeyi sıfırdan yumuşakça başlatıp sıfırda bitirir." },
+  { ad: "⛔ Kartezyen yol imkânsız", A: [0.45, 0.0, 0], B: [-0.45, 0.0, 180], T: 2.5, prof: "q", t: "Düz çizgi her zaman mümkün değil",
+    d: "Sağdan sola düz bir çizgi tabanın <b>üstünden</b> geçmek zorunda. Orada dirseğin 150°'den fazla bükülmesi gerekiyor. Kırmızı kısım robotun yapamayacağı bölüm. Eklem uzayı planlama ise sorunsuz: Kol yukarıdan dolaşarak gidiyor. Gerçek planlayıcılar (MoveIt gibi) bu yüzden kartezyen yolu önce <b>kontrol eder</b>." },
+];
+const prof = {
+  q: tau => [10 * tau ** 3 - 15 * tau ** 4 + 6 * tau ** 5, 30 * tau ** 2 - 60 * tau ** 3 + 30 * tau ** 4, 60 * tau - 180 * tau ** 2 + 120 * tau ** 3],
+  c: tau => [3 * tau ** 2 - 2 * tau ** 3, 6 * tau - 6 * tau ** 2, 6 - 12 * tau],
+};
+function unwrapSeq(arr) { for (let i = 1; i < arr.length; i++) { let d = arr[i] - arr[i - 1]; while (d > Math.PI) { arr[i] -= 2 * Math.PI; d -= 2 * Math.PI; } while (d < -Math.PI) { arr[i] += 2 * Math.PI; d += 2 * Math.PI; } } return arr; }
+let YRD = null;
+function yrCompute() {
+  const N = 241, T = YR.T, t = [...Array(N)].map((_, k) => k / (N - 1) * T);
+  const qa = ik(YR.A[0], YR.A[1], rad(YR.A[2]), 1).q, qb = ik(YR.B[0], YR.B[1], rad(YR.B[2]), 1).q;
+  const pr = prof[YR.prof], other = prof[YR.prof === "q" ? "c" : "q"];
+  const qJ = [[], [], []], qC = [[], [], []], valid = [], tipJ = [], tipC = [], dq1 = qb[0] - qa[0];
+  const acc = [], accO = [];
+  t.forEach(tt => {
+    const tau = tt / T, [s] = pr(tau);
+    for (let i = 0; i < 3; i++) qJ[i].push(qa[i] + s * (qb[i] - qa[i]));
+    const pose = [0, 1, 2].map(i => YR.A[i] + s * (YR.B[i] - YR.A[i])), r = ik(pose[0], pose[1], rad(pose[2]), 1);
+    valid.push(r.ok && r.inLim); tipC.push([pose[0], pose[1]]);
+    for (let i = 0; i < 3; i++) qC[i].push(r.ok ? r.q[i] : NaN);
+    acc.push(deg(dq1 * pr(tau)[2] / T ** 2)); accO.push(deg(dq1 * other(tau)[2] / T ** 2));
+  });
+  qC.forEach(unwrapSeq);
+  for (let k = 0; k < N; k++) tipJ.push(fk([qJ[0][k], qJ[1][k], qJ[2][k]]).pts[3]);
+  const len = pts => pts.reduce((a, p, i) => i ? a + Math.hypot(p[0] - pts[i - 1][0], p[1] - pts[i - 1][1]) : 0, 0);
+  const vmax = Q => { let m = 0; for (let i = 0; i < 3; i++) for (let k = 1; k < N; k++) { const v = Math.abs(Q[i][k] - Q[i][k - 1]) / (t[1] - t[0]); if (isFinite(v)) m = Math.max(m, v); } return deg(m); };
+  const amax = Q => { let m = 0; const dt = t[1] - t[0]; for (let i = 0; i < 3; i++) for (let k = 1; k < N - 1; k++) { const a = Math.abs(Q[i][k + 1] - 2 * Q[i][k] + Q[i][k - 1]) / dt ** 2; if (isFinite(a)) m = Math.max(m, a); } return deg(m); };
+  const ok = valid.every(Boolean);
+  YRD = { t, qJ, qC, valid, tipJ, tipC, acc, accO, ok, N,
+    stats: { lenJ: len(tipJ), lenC: len(tipC), vJ: vmax(qJ), vC: ok ? vmax(qC) : NaN, aJ: amax(qJ), aC: ok ? amax(qC) : NaN,
+      a0: deg(qb.reduce((m, v, i) => Math.max(m, Math.abs((v - qa[i]) * pr(0)[2] / T ** 2)), 0)) } };
+}
+function yrDraw() {
+  if (!YRD) yrCompute();
+  const D = YRD, k = Math.round(YR.u * (D.N - 1)), sc = scene($("yrC"), 0.62, { ws: true, ox: 0.5, oy: 0.6, span: 1.55 }), { ctx, P } = sc;
+  const path = (pts, col, okArr) => { ctx.lineWidth = 3; for (let i = 1; i < pts.length; i++) { ctx.strokeStyle = okArr && !okArr[i] ? css("--bad") : col;
+    ctx.beginPath(); ctx.moveTo(...P(...pts[i - 1])); ctx.lineTo(...P(...pts[i])); ctx.stroke(); } };
+  if (YR.showJ) path(D.tipJ, css("--c1"));
+  if (YR.showC) path(D.tipC, css("--c2"), D.valid);
+  if (YR.showJ) drawArm(sc, [D.qJ[0][k], D.qJ[1][k], D.qJ[2][k]], { colors: [css("--c1"), css("--c1"), css("--c1")], width: 8, alpha: .9 });
+  if (YR.showC && D.valid[k]) drawArm(sc, [D.qC[0][k], D.qC[1][k], D.qC[2][k]], { colors: [css("--c2"), css("--c2"), css("--c2")], width: 8, alpha: .9 });
+  if (YR.showC && !D.valid[k]) { const [x, y] = P(...D.tipC[k]); label(ctx, "✖ kartezyen: ulaşılamaz", x + 10, y - 8, css("--bad")); }
+  [["A", YR.A, css("--ok")], ["B", YR.B, css("--c4")]].forEach(([n, p, c]) => { const [x, y] = P(p[0], p[1]); ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, y, 7, 0, 7); ctx.fill(); label(ctx, n, x + 9, y - 8, c); });
+  $("yrTv").textContent = f(D.t[k], 2) + " s";
+  // grafikler
+  const g1 = prep($("yrQ"), 0.55), cols = [css("--c1"), css("--c2"), css("--c3")], ser = [];
+  for (let i = 0; i < 3; i++) { if (YR.showJ) ser.push({ t: D.t, y: D.qJ[i].map(deg), color: cols[i] });
+    if (YR.showC) ser.push({ t: D.t, y: D.qC[i].map(deg), color: cols[i], dash: [5, 4] }); }
+  plot(g1.ctx, { x: 0, y: 0, w: g1.w, h: g1.h }, ser, { xlabel: "t [s]", vline: D.t[k], legend: [["q1", cols[0]], ["q2", cols[1]], ["q3", cols[2]]] });
+  const g2 = prep($("yrA"), 0.55), nm = YR.prof === "q" ? ["quintic", "kübik"] : ["kübik", "quintic"];
+  plot(g2.ctx, { x: 0, y: 0, w: g2.w, h: g2.h }, [{ t: D.t, y: D.accO, color: css("--muted"), dash: [5, 4], width: 1.5 }, { t: D.t, y: D.acc, color: css("--c4"), width: 2.5 }],
+    { xlabel: "t [s]", vline: D.t[k], hlines: [{ y: 0 }], legend: [[nm[0] + " (seçili)", css("--c4")], [nm[1], css("--muted")]] });
+  const S = D.stats, na = v => isFinite(v) ? v : null;
+  $("yrTab").innerHTML = `<tr><td>Uç yol uzunluğu</td><td>${f(S.lenJ, 3)} m</td><td>${f(S.lenC, 3)} m</td></tr>
+    <tr><td>Maks. eklem hızı</td><td>${f(S.vJ, 1)} °/s</td><td>${na(S.vC) === null ? "—" : f(S.vC, 1) + " °/s"}</td></tr>
+    <tr><td>Maks. eklem ivmesi</td><td>${f(S.aJ, 0)} °/s²</td><td>${na(S.aC) === null ? "—" : f(S.aC, 0) + " °/s²"}</td></tr>
+    <tr><td>Başlangıç ivmesi</td><td colspan="2" style="text-align:center">${f(S.a0, 1)} °/s² ${YR.prof === "c" ? "⚠️ sıçrama" : "✓ sıfır"}</td></tr>
+    <tr><td>Uygulanabilir mi?</td><td>✅</td><td>${D.ok ? "✅" : "❌ hayır"}</td></tr>`;
+}
+function yrSync() { $("yrDur").value = YR.T; $("yrvT").textContent = f(YR.T, 1) + " s"; $("yrQuin").classList.toggle("on", YR.prof === "q"); $("yrCub").classList.toggle("on", YR.prof === "c"); }
+$("yrDur").addEventListener("input", e => { YR.T = +e.target.value; yrSync(); yrCompute(); yrDraw(); });
+$("yrQuin").onclick = () => { YR.prof = "q"; yrSync(); yrCompute(); yrDraw(); };
+$("yrCub").onclick = () => { YR.prof = "c"; yrSync(); yrCompute(); yrDraw(); };
+$("yrShowJ").onchange = e => { YR.showJ = e.target.checked; yrDraw(); };
+$("yrShowC").onchange = e => { YR.showC = e.target.checked; yrDraw(); };
+$("yrT").addEventListener("input", e => { YR.u = e.target.value / 1000; YR.playing = false; $("yrPlay").textContent = "▶ Oynat"; yrDraw(); });
+let yrStart = 0;
+$("yrPlay").onclick = () => {
+  if (YR.playing) { YR.playing = false; $("yrPlay").textContent = "▶ Oynat"; return; }
+  if (YR.u >= 1) YR.u = 0; YR.playing = true; $("yrPlay").textContent = "⏸ Durdur"; yrStart = performance.now() - YR.u * YR.T * 1000;
+  const loop = now => { if (!YR.playing) return; YR.u = Math.min(1, (now - yrStart) / (YR.T * 1000)); $("yrT").value = YR.u * 1000; yrDraw();
+    if (YR.u < 1) requestAnimationFrame(loop); else { YR.playing = false; $("yrPlay").textContent = "↺ Tekrar"; } };
+  requestAnimationFrame(loop);
+};
+presets("yrP", YR_P, p => { Object.assign(YR, { A: p.A, B: p.B, T: p.T, prof: p.prof, u: 0, playing: false }); $("yrT").value = 0; $("yrPlay").textContent = "▶ Oynat";
+  yrSync(); explain("yrE", p.t, p.d); yrCompute(); yrDraw(); });
 
-  function solve() {
-    if (!target) return;
-    const phi = rad(+$("phi").value); $("vphi").textContent = $("phi").value + "°";
-    const s = ik(target[0], target[1], phi, elbow), o = ik(target[0], target[1], phi, -elbow);
-    const m = $("ikmsg");
-    if (!s) { m.className = "msg bad"; m.textContent = "❌ Bu hedefe bu uç açısıyla ulaşılamaz: cos q2 > 1. Hedefi yaklaştır ya da φ'yi değiştir."; other = null; draw(); return; }
-    if (!withinLimits(s)) { m.className = "msg bad"; m.textContent = "⚠️ Matematiksel çözüm var, ama eklem sınırlarını (±150°) aşıyor. Diğer dirsek konumunu dene."; }
-    else { m.className = "msg ok"; m.textContent = "✅ Çözüm bulundu. Soluk turuncu kol, aynı hedefe giden ikinci çözümü gösteriyor."; }
-    q = s; other = o; syncSliders(); draw();
-  }
-  function pick(ev) {
-    if (mode !== "IK") return;
-    const r = cv.getBoundingClientRect();
-    const px = (ev.clientX - r.left) * cv.width / r.width, py = (ev.clientY - r.top) * cv.height / r.height;
-    target = toW(px, py); solve();
-  }
-  let down = false;
-  cv.addEventListener("pointerdown", e => { down = true; pick(e); });
-  cv.addEventListener("pointermove", e => { if (down) pick(e); });
-  window.addEventListener("pointerup", () => down = false);
-  $("phi").addEventListener("input", solve);
-  $("eDown").onclick = () => { elbow = 1; $("eDown").classList.add("on"); $("eUp").classList.remove("on"); solve(); };
-  $("eUp").onclick = () => { elbow = -1; $("eUp").classList.add("on"); $("eDown").classList.remove("on"); solve(); };
+// ================= 4. TORK =================
+const G = 9.81, TK = { q: [0, 0, 0], m: 0.5, mm: 0.25, sf: 1.5, n1: 50 };
+const M_UZUV = [1.20, 0.90, 0.30], M_MOT2 = 0.40, ALFA = [120, 150, 200].map(rad), OMEGA = [90, 120, 180].map(rad), ETA = 0.8, NS = [null, 50, 30];
+const TK_P = [
+  { ad: "📐 Konu 4: yatay kol, 0.5 kg", q: [0, 0, 0], m: 0.5, mm: 0.25, sf: 1.5, n1: 50, t: "En kötü durum",
+    d: "Kol tamamen yatay, bu yüzden yerçekimi kaldıraçları en uzun. Eklem 1 tasarım torku <b>21.49 N·m</b> çıkıyor (Konu 4 tablosuyla aynı). Torkun yaklaşık %90'ı <b>statik</b>: Bu kolu yerçekimi zorluyor, hızlanma değil." },
+  { ad: "⬆️ Kol dik yukarı", q: [90, 0, 0], m: 0.5, mm: 0.25, sf: 1.5, n1: 50, t: "Kaldıraç kolu sıfır",
+    d: "Bütün kütleler eklem 1'in tam üstünde, yatay uzaklıkları <b>sıfır</b>. Bu yüzden statik tork sıfır. Geriye yalnızca hızlanma torku (J·α) kalıyor. Motor seçimini bu duruşa göre yaparsan, kol yataya geldiğinde motor yetmez!" },
+  { ad: "↗️ Kol 45° kaldırılmış", q: [45, 0, 0], m: 0.5, mm: 0.25, sf: 1.5, n1: 50, t: "cos 45° = 0.707",
+    d: "Yatay uzaklıkların hepsi cos 45° = 0.707 katına iniyor, statik torklar da aynı oranda azalıyor: 13.0 × 0.707 ≈ 9.2 N·m. Dinamik tork ise değişmiyor, çünkü kolun düz duruşunda atalet aynı." },
+  { ad: "🏋️ Yük 1 kg'a çıktı", q: [0, 0, 0], m: 1.0, mm: 0.25, sf: 1.5, n1: 50, t: "Yük en uçta",
+    d: "Fazladan 0.5 kg en uç noktada, eklem 1'den 0.65 m uzakta duruyor. Statik tork 0.5 × 9.81 × 0.65 = <b>+3.19 N·m</b> artıyor. Uçtaki her gram en çok taban motorunu zorlar." },
+  { ad: "🔩 Ağır bilek motoru (0.8 kg)", q: [0, 0, 0], m: 0.5, mm: 0.8, sf: 1.5, n1: 50, t: "Motorun yeri önemli",
+    d: "Bilek motoru 0.25 kg'dan 0.8 kg'a çıktı. 0.55 m uzaktaki bu fazladan kütle, eklem 1'e 0.55 × 9.81 × 0.55 ≈ 3 N·m ekliyor. Gerçek robotlarda ağır motorlar bu yüzden <b>tabana yakın</b> konur, kayış veya mille uca taşınır." },
+  { ad: "⚙️ Redüktör N = 100", q: [0, 0, 0], m: 0.5, mm: 0.25, sf: 1.5, n1: 100, t: "Vites küçültmek",
+    d: "Eklem 1'in redüktör oranı iki katına çıktı. Motorun vermesi gereken tork <b>yarıya</b> iniyor (0.27 N·m), ama motor <b>iki kat hızlı</b> dönmeli (1500 rpm). Daha küçük bir motor yeter, ama devri yüksek olmalı." },
+];
+function tkCalc() {
+  const q = TK.q.map(rad), p = fk(q), mids = [0, 1, 2].map(i => [(p.pts[i][0] + p.pts[i + 1][0]) / 2, (p.pts[i][1] + p.pts[i + 1][1]) / 2]);
+  const masses = [
+    { ad: "Uzuv 1", m: M_UZUV[0], pos: mids[0], Ic: M_UZUV[0] * L[0] ** 2 / 12, j: 0 },
+    { ad: "Eklem 2 motoru", m: M_MOT2, pos: p.pts[1], Ic: 0, j: 1 },
+    { ad: "Uzuv 2", m: M_UZUV[1], pos: mids[1], Ic: M_UZUV[1] * L[1] ** 2 / 12, j: 1 },
+    { ad: "Eklem 3 motoru", m: TK.mm, pos: p.pts[2], Ic: 0, j: 2 },
+    { ad: "Uzuv 3", m: M_UZUV[2], pos: mids[2], Ic: M_UZUV[2] * L[2] ** 2 / 12, j: 2 },
+    { ad: "Yük + tutucu", m: TK.m, pos: p.pts[3], Ic: 0, j: 3 },
+  ];
+  const res = [0, 1, 2].map(i => {
+    const o = p.pts[i], out = masses.filter(M => M.j >= i && !(M.ad === "Eklem " + (i + 1) + " motoru"));
+    const tg = G * out.reduce((a, M) => a + M.m * (M.pos[0] - o[0]), 0);
+    const J = out.reduce((a, M) => a + M.Ic + M.m * ((M.pos[0] - o[0]) ** 2 + (M.pos[1] - o[1]) ** 2), 0);
+    const ta = J * ALFA[i], tot = (Math.abs(tg) + ta) * TK.sf, N = i === 0 ? TK.n1 : NS[i];
+    return { tg, J, ta, tot, N, tm: tot / (N * ETA), rpm: OMEGA[i] * N * 60 / (2 * Math.PI), out };
+  });
+  return { p, masses, res };
+}
+function tkDraw() {
+  const { p, masses, res } = tkCalc(), sc = scene($("tkC"), 0.6, { ox: 0.42, oy: 0.62, span: 1.45 }), { ctx, P, S } = sc;
+  // yerçekimi oku
+  ctx.strokeStyle = css("--muted"); ctx.fillStyle = css("--muted"); const [gx, gy] = P(-0.55, 0.5);
+  ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx, gy + 40); ctx.stroke(); ctx.beginPath(); ctx.moveTo(gx - 5, gy + 32); ctx.lineTo(gx, gy + 42); ctx.lineTo(gx + 5, gy + 32); ctx.fill(); label(ctx, "g", gx + 8, gy + 24, css("--muted"));
+  drawArm(sc, TK.q.map(rad), { width: 8 });
+  masses.forEach(M => {
+    const [x, y] = P(...M.pos), r = 5 + 9 * Math.sqrt(M.m);
+    ctx.strokeStyle = css("--c4"); ctx.lineWidth = 1.3; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, P(0, 0)[1]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = css("--c5"); ctx.globalAlpha = .55; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+    label(ctx, f(M.m, 2) + " kg", x - 16, y - r - 5, css("--text"));
+  });
+  // eklem 1 kaldıraçları (yatay)
+  const [bx, by] = P(0, 0);
+  ctx.strokeStyle = css("--c4"); ctx.lineWidth = 2;
+  const xs = masses.map(M => M.pos[0]); ctx.beginPath(); ctx.moveTo(bx, by + 18); ctx.lineTo(P(Math.max(...xs, 0), 0)[0], by + 18); ctx.moveTo(bx, by + 18); ctx.lineTo(P(Math.min(...xs, 0), 0)[0], by + 18); ctx.stroke();
+  label(ctx, "yatay kaldıraç kolları →", bx + 6, by + 34, css("--c4"));
+  // çubuk grafik
+  const g = prep($("tkB"), 0.36), c = g.ctx, maxv = Math.max(25, ...res.map(r => r.tot)) * 1.1, X0 = 70, W = g.w - X0 - 70, bh = 22;
+  c.font = "12px Inter, system-ui";
+  res.forEach((r, i) => {
+    const y = 14 + i * (bh + 18), ws = Math.abs(r.tg) / maxv * W, wd = r.ta / maxv * W, wt = r.tot / maxv * W;
+    c.fillStyle = css("--text"); c.fillText("Eklem " + (i + 1), 4, y + 15);
+    c.fillStyle = css("--surface-2"); c.fillRect(X0, y, W, bh);
+    c.fillStyle = css("--c1"); c.fillRect(X0, y, ws, bh); c.fillStyle = css("--c2"); c.fillRect(X0 + ws, y, wd, bh);
+    c.strokeStyle = css("--text"); c.lineWidth = 2; c.beginPath(); c.moveTo(X0 + wt, y - 4); c.lineTo(X0 + wt, y + bh + 4); c.stroke();
+    c.fillStyle = css("--text"); c.font = "600 12px Inter, system-ui"; c.fillText(f(r.tot, 2) + " N·m", X0 + Math.min(wt, W) + 6, y + 15); c.font = "12px Inter, system-ui";
+  });
+  $("tkTab").innerHTML = res.map((r, i) => `<tr><td>${i + 1} (N=${r.N})</td><td>${f(r.tot, 2)}</td><td>${f(r.tm, 3)}</td><td>${f(r.rpm, 0)}</td></tr>`).join("");
+  // eklem 1 adımları
+  const r0 = res[0], rows = r0.out.map(M => `${M.ad}: ${f(M.m, 2)} kg × ${G} × ${f(M.pos[0], 3)} m = ${f(M.m * G * M.pos[0], 3)} N·m`);
+  steps("tkS", [
+    { h: "Eklem 1'in dışındaki bütün kütleleri listele", w: "Uzuvlar (kütle merkezi uzvun ortasında), eklem 2 ve 3'ün motorları, uçtaki yük. Hepsi eklem 1 döndüğünde onunla birlikte döner." },
+    { h: "Her kütle için: m × g × (yatay uzaklık)", f: rows.join("<br>"), w: "Yatay uzaklık kütlenin x koordinatı (eklem 1 orijinde). Kütle eklemin solundaysa terim negatif olur, yani ters yönde döndürür." },
+    { h: "Statik (yerçekimi) tork = bu terimlerin toplamı", f: `τ_g = ${f(r0.tg, 3)} N·m`, w: TK.q[0] === 90 ? "Kol dik olduğu için bütün yatay uzaklıklar sıfır." : "Kol yükseldikçe yatay uzaklıklar, dolayısıyla tork da azalır." },
+    { h: "Dinamik tork = J × α", f: `J = Σ(I_c + m·r²) = ${f(r0.J, 4)} kg·m²   ·   α = 120 °/s² = ${f(ALFA[0], 3)} rad/s²   →   τ_a = ${f(r0.ta, 3)} N·m`, w: "r, kütlenin ekleme olan gerçek uzaklığı (yatay değil). Uzuvlar ince çubuk kabul edildi: I_c = m·L²/12." },
+    { h: "Tasarım torku = (|statik| + dinamik) × emniyet", cls: "ok", f: `τ = (${f(Math.abs(r0.tg), 3)} + ${f(r0.ta, 3)}) × ${f(TK.sf, 1)} = ${f(r0.tot, 2)} N·m` },
+    { h: "Motora düşen tork ve devir", cls: "ok", f: `τ_motor = τ / (N·η) = ${f(r0.tot, 2)} / (${r0.N} × 0.80) = ${f(r0.tm, 3)} N·m   ·   n_motor = 90 °/s × ${r0.N} = ${f(r0.rpm, 0)} rpm`,
+      w: "Bu iki değerle motor kataloğuna bakılır. Step motorlarda torkun o devirdeki değeri kontrol edilmelidir, tutma torku yanıltır." },
+  ]);
+}
+function tkSync() {
+  [1, 2, 3].forEach(i => { $("tk" + i).value = TK.q[i - 1]; $("tkv" + i).textContent = TK.q[i - 1] + "°"; });
+  $("tkm").value = TK.m; $("tkvm").textContent = f(TK.m, 2) + " kg"; $("tkmm").value = TK.mm; $("tkvmm").textContent = f(TK.mm, 2) + " kg";
+  $("tksf").value = TK.sf; $("tkvsf").textContent = f(TK.sf, 1); $("tkn").value = TK.n1; $("tkvn").textContent = TK.n1;
+}
+const tkFree = () => { clearOn("tkP"); explain("tkE", "Serbest deneme", "Önce q1'i yavaşça 0°'den 90°'ye çıkar ve eklem 1'in mavi çubuğunu izle: Statik tork cos q1 ile azalıyor. Sonra yükü artır: En çok hangi eklem etkileniyor?"); };
+[1, 2, 3].forEach(i => $("tk" + i).addEventListener("input", e => { TK.q[i - 1] = +e.target.value; tkSync(); tkFree(); tkDraw(); }));
+[["tkm", "m"], ["tkmm", "mm"], ["tksf", "sf"], ["tkn", "n1"]].forEach(([id, k]) => $(id).addEventListener("input", e => { TK[k] = +e.target.value; tkSync(); tkFree(); tkDraw(); }));
+presets("tkP", TK_P, p => { Object.assign(TK, { q: p.q.slice(), m: p.m, mm: p.mm, sf: p.sf, n1: p.n1 }); tkSync(); explain("tkE", p.t, p.d); tkDraw(); });
 
-  function setMode(m) {
-    mode = m; $("tFK").classList.toggle("on", m === "FK"); $("tIK").classList.toggle("on", m === "IK");
-    $("pFK").hidden = m !== "FK"; $("pIK").hidden = m !== "IK";
-    if (m === "IK") { if (!target) target = [0.35, 0.25]; solve(); } else { other = null; draw(); }
+// ================= 5. PID =================
+const PJ = 0.08, PB = 0.15, MGL = 0.9 * 9.81 * 0.20, ENC = 2 * Math.PI / 4096, DT = 0.001, TEND = 5;
+const PID = { kp: 60, ki: 0, kd: 0, ref: 60, step: false, tmax: 12, aw: true, filt: true, grav: false };
+const PID_P = [
+  { ad: "1️⃣ Sadece P (Kp = 60)", s: { kp: 60, ki: 0, kd: 0, ref: 60, step: false, tmax: 12, aw: true, filt: true, grav: false }, t: "Kalıcı hata",
+    d: "Kol hedefe yaklaşıyor ama <b>tam varamıyor</b>. Yaklaşık 0.9°'lik bir hata kalıyor. Sebebi şu: 60°'de yerçekimi torku 1.77·cos 60° = 0.88 N·m, ve P kontrolcü tork üretmek için hataya <b>ihtiyaç duyar</b>. Hata = 0.88 / 60 rad ≈ 0.84°. Ayrıca salınım var." },
+  { ad: "2️⃣ P çok büyük (Kp = 300, ani komut)", s: { kp: 300, ki: 0, kd: 0, ref: 60, step: true, tmax: 12, aw: true, filt: true, grav: false }, t: "Hata küçüldü, salınım büyüdü",
+    d: "Hedef <b>aniden</b> 60° yapıldı. Kp = 300 ile kalıcı hata ≈0.16°'ye iniyor, ama kol hedefi <b>≈39° aşıyor</b> ve 4.5 saniye boyunca 30'dan fazla kez ileri geri sallanıyor, çünkü sönüm yok. Duşta musluğu sert çevirip sürekli ayarı kaçırmak gibi. Şimdi Kd'yi 4'e çıkar ve farkı gör." },
+  { ad: "3️⃣ PD (Kp = 60, Kd = 4)", s: { kp: 60, ki: 0, kd: 4, ref: 60, step: false, tmax: 12, aw: true, filt: true, grav: false }, t: "D salınımı söndürür",
+    d: "Türev terimi \"hata hızla değişiyor, yavaşla\" der ve salınım kayboluyor. Ama <b>kalıcı hata hâlâ duruyor</b> (≈0.9°), çünkü kol durduğunda hatanın değişim hızı sıfırdır ve D terimi o anda hiçbir şey yapmaz." },
+  { ad: "4️⃣ PID (Kp = 60, Ki = 150, Kd = 4)", s: { kp: 60, ki: 150, kd: 4, ref: 60, step: false, tmax: 12, aw: true, filt: true, grav: false }, t: "I kalıcı hatayı siler",
+    d: "İntegral terimi küçük hatayı <b>zamanla biriktiriyor</b> ve torku yavaşça artırıyor. Sonunda yerçekimini tam karşılıyor ve kalıcı hata sıfıra iniyor. Bu, Konu 5'teki sonucun aynısı." },
+  { ad: "5️⃣ Integral şişmesi (windup)", s: { kp: 60, ki: 150, kd: 4, ref: 60, step: true, tmax: 4, aw: false, filt: true, grav: false }, t: "Anti-windup kapalı",
+    d: "Ani bir basamak komutu verildi ve tork 4 N·m ile sınırlı. Motor uzun süre <b>doymada</b> kalıyor ve bu sırada integral boşuna şişiyor. Kol hedefi <b>≈25°</b> geçiyor. Şimdi <b>Anti-windup</b> kutusunu işaretle: Aşma ≈2°'ye iniyor." },
+  { ad: "6️⃣ Yerçekimi telafisi + PD", s: { kp: 60, ki: 0, kd: 4, ref: 60, step: false, tmax: 12, aw: true, filt: true, grav: true }, t: "Modeli kullanmak",
+    d: "Kontrolcüye yerçekimi torkunu (m·g·l·cos q) <b>önceden ekledik</b>. Artık P'nin yerçekimini taşıması gerekmiyor ve integral olmadan da kalıcı hata neredeyse sıfır. Endüstriyel robotlar bu yöntemi kullanır (hesaplanmış tork)." },
+  { ad: "7️⃣ Türev filtresi kapalı", s: { kp: 60, ki: 150, kd: 4, ref: 60, step: false, tmax: 12, aw: true, filt: false, grav: false }, t: "Gürültünün büyümesi",
+    d: "Enkoder açıyı 0.088°'lik adımlarla ölçüyor. Filtre olmadan D terimi her adımı ani bir \"hız\" sanıyor ve tork grafiği <b>diken diken</b> oluyor. Bu, motoru ısıtır ve ses yapar. Filtreyi açıp karşılaştır." },
+];
+function pidSim(o) {
+  const n = Math.round(TEND / DT), T = new Float32Array(n), Q = new Float32Array(n), R = new Float32Array(n), U = new Float32Array(n);
+  const qf = rad(o.ref), a = DT / (0.005 + DT);
+  let q = 0, qd = 0, I = 0, ep = 0, D = 0;
+  for (let k = 0; k < n; k++) {
+    const t = k * DT, tau = Math.min(1, t / 2), r = o.step ? qf : qf * (10 * tau ** 3 - 15 * tau ** 4 + 6 * tau ** 5);
+    const qm = Math.round(q / ENC) * ENC, e = r - qm;
+    if (k) { const raw = (e - ep) / DT; D = o.filt ? D + a * (raw - D) : raw; }
+    const ff = o.grav ? MGL * Math.cos(r) : 0;
+    const uraw = o.kp * e + o.ki * I + o.kd * D + ff, u = Math.max(-o.tmax, Math.min(o.tmax, uraw));
+    if (!o.aw || u === uraw) I += e * DT;
+    ep = e;
+    const qdd = (u - PB * qd - MGL * Math.cos(q)) / PJ; qd += qdd * DT; q += qd * DT;
+    T[k] = t; Q[k] = deg(q); R[k] = deg(r); U[k] = u;
   }
-  $("tFK").onclick = () => setMode("FK"); $("tIK").onclick = () => setMode("IK");
-  $("vphi").textContent = $("phi").value + "°";
+  const last = Math.round(0.5 / DT), ss = [...Q.slice(n - last)].reduce((s, v) => s + v, 0) / last - o.ref;
+  let os = -Infinity; for (let k = 0; k < n; k++) os = Math.max(os, Q[k] - o.ref);
+  let ts = 0; for (let k = n - 1; k >= 0; k--) if (Math.abs(Q[k] - R[k]) > 0.5) { ts = T[k]; break; }
+  let um = 0; for (let k = 0; k < n; k++) um = Math.max(um, Math.abs(U[k]));
+  return { T, Q, R, U, ss, os, ts, um, n };
+}
+let PS = null, pidAnim = null;
+function pidRun() { PS = pidSim(PID); pidDraw(); }
+function pidDraw(cursor) {
+  const g = prep($("pidG"), 0.95), c = g.ctx, h3 = g.h / 3, S = PS, step = 5;
+  const dec = arr => { const o = []; for (let k = 0; k < S.n; k += step) o.push(arr[k]); return o; }, t = dec(S.T);
+  plot(c, { x: 0, y: 0, w: g.w, h: h3 }, [{ t, y: dec(S.R), color: css("--muted"), dash: [6, 4], width: 1.5 }, { t, y: dec(S.Q), color: css("--c1"), width: 2.2 }], { title: "Eklem açısı [°]", vline: cursor });
+  const E = []; for (let k = 0; k < S.n; k += step) E.push(S.R[k] - S.Q[k]);
+  plot(c, { x: 0, y: h3, w: g.w, h: h3 }, [{ t, y: E, color: css("--c4"), width: 2 }], { title: "Hata = referans − gerçek [°]", hlines: [{ y: 0 }], vline: cursor });
+  plot(c, { x: 0, y: 2 * h3, w: g.w, h: h3 }, [{ t, y: dec(S.U), color: css("--c2"), width: 1.4 }], { title: "Motor torku [N·m]", xlabel: "t [s]", band: PID.tmax, hlines: [{ y: PID.tmax }, { y: -PID.tmax }, { y: 0, dash: [1, 3] }], hlinesInRange: false, ymin: -0.5, ymax: 1, vline: cursor });
+  $("pidOs").textContent = S.os > 0.05 ? f(S.os, 2) + "°" : "yok";
+  $("pidSs").textContent = f(Math.abs(S.ss), 3) + "°"; $("pidSs").style.color = Math.abs(S.ss) > 0.2 ? css("--bad") : css("--ok");
+  $("pidTs").textContent = S.ts >= TEND - 0.01 ? "oturmadı" : f(S.ts, 2) + " s"; $("pidTm").textContent = f(S.um, 2) + " N·m";
+  pidArm(cursor === undefined ? S.n - 1 : Math.min(S.n - 1, Math.round(cursor / DT)));
+}
+function pidArm(k) {
+  const g = prep($("pidArm"), 1), c = g.ctx, cx = g.w * 0.25, cy = g.h * 0.8, Lp = g.w * 0.65, q = rad(PS.Q[k]), r = rad(PS.R[k]);
+  c.strokeStyle = css("--muted"); c.setLineDash([4, 4]); c.lineWidth = 2; c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + Lp * Math.cos(r), cy - Lp * Math.sin(r)); c.stroke(); c.setLineDash([]);
+  c.strokeStyle = css("--c1"); c.lineWidth = 8; c.lineCap = "round"; c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + Lp * Math.cos(q), cy - Lp * Math.sin(q)); c.stroke();
+  c.fillStyle = css("--surface"); c.strokeStyle = css("--text"); c.lineWidth = 2; c.beginPath(); c.arc(cx, cy, 6, 0, 7); c.fill(); c.stroke();
+  c.fillStyle = css("--muted"); c.fillRect(cx - 14, cy + 6, 28, 6);
+}
+$("pidPlay").onclick = () => {
+  if (pidAnim) { cancelAnimationFrame(pidAnim); pidAnim = null; $("pidPlay").textContent = "▶ Oynat"; pidDraw(); return; }
+  const t0 = performance.now(); $("pidPlay").textContent = "⏸ Durdur";
+  const loop = now => { const t = (now - t0) / 1000; if (t >= TEND) { pidAnim = null; $("pidPlay").textContent = "▶ Oynat"; pidDraw(); return; }
+    pidDraw(t); pidAnim = requestAnimationFrame(loop); };
+  pidAnim = requestAnimationFrame(loop);
+};
+function pidSync() {
+  $("pidp").value = PID.kp; $("pidvp").textContent = PID.kp; $("pidi").value = PID.ki; $("pidvi").textContent = PID.ki;
+  $("pidd").value = PID.kd; $("pidvd").textContent = f(PID.kd, 1); $("pidr").value = PID.ref; $("pidvr").textContent = PID.ref + "°";
+  $("pidt").value = PID.tmax; $("pidvt").textContent = f(PID.tmax, 1) + " N·m";
+  $("pidAW").checked = PID.aw; $("pidF").checked = PID.filt; $("pidG2").checked = PID.grav;
+  $("pidSmooth").classList.toggle("on", !PID.step); $("pidStep").classList.toggle("on", PID.step);
+}
+const pidFree = () => { clearOn("pidP"); explain("pidE", "Serbest deneme", "Kp'yi artırınca hata küçülüyor ama salınım artıyor mu? Ki'yi sıfırdan yavaşça yükselt: Kalıcı hata ne zaman kayboluyor? Hedefi 90°'ye getir: P'nin kalıcı hatası neden sıfıra iniyor? (İpucu: cos 90° = 0.)"); };
+[["pidp", "kp"], ["pidi", "ki"], ["pidd", "kd"], ["pidr", "ref"], ["pidt", "tmax"]].forEach(([id, k]) => $(id).addEventListener("input", e => { PID[k] = +e.target.value; pidSync(); pidFree(); pidRun(); }));
+[["pidAW", "aw"], ["pidF", "filt"], ["pidG2", "grav"]].forEach(([id, k]) => $(id).addEventListener("change", e => { PID[k] = e.target.checked; pidRun(); }));
+$("pidSmooth").onclick = () => { PID.step = false; pidSync(); pidRun(); };
+$("pidStep").onclick = () => { PID.step = true; pidSync(); pidRun(); };
+presets("pidP", PID_P, p => { Object.assign(PID, p.s); pidSync(); explain("pidE", p.t, p.d); pidRun(); });
 
-  buildWS(); syncSliders(); draw();
-  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { buildWS(); draw(); });
+// ================= sekmeler =================
+const DRAW = { fk: fkDraw, ik: ikDraw, yr: yrDraw, tk: tkDraw, pid: () => PS ? pidDraw() : pidRun() };
+let active = "fk";
+function show(tab) {
+  if (!DRAW[tab]) tab = "fk"; active = tab;
+  document.querySelectorAll(".labtabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
+  document.querySelectorAll(".labpane").forEach(p => p.hidden = p.id !== "pane-" + tab);
+  DRAW[tab]();
+}
+document.querySelectorAll(".labtabs button").forEach(b => b.onclick = () => { history.replaceState(null, "", "#" + b.dataset.tab); show(b.dataset.tab); });
+addEventListener("hashchange", () => show(location.hash.slice(1)));
+let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => DRAW[active](), 120); });
+addEventListener("temadegisti", () => { wsCache.key = ""; DRAW[active](); });
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { wsCache.key = ""; DRAW[active](); });
+
+// başlangıç
+fkSync(); explain("fkE", FK_P[0].t, FK_P[0].d);
+ikSync(); explain("ikE", IK_P[0].t, IK_P[0].d);
+yrSync(); explain("yrE", YR_P[0].t, YR_P[0].d);
+tkSync(); explain("tkE", TK_P[0].t, TK_P[0].d);
+pidSync(); Object.assign(PID, PID_P[0].s); pidSync(); explain("pidE", PID_P[0].t, PID_P[0].d);
+show(location.hash.slice(1) || "fk");
 })();
 </script>
-</body>
-</html>
+{% endraw %}

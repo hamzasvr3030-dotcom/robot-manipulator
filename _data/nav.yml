@@ -1,0 +1,20 @@
+- grup: Başla
+  sayfalar:
+    - { n: "⌂", ad: "Ana sayfa", url: "/" }
+    - { n: "🎮", ad: "İnteraktif Laboratuvar", url: "/interaktif.html" }
+- grup: Konular
+  sayfalar:
+    - { n: "0", ad: "Temeller", url: "/konular/00-temeller.html" }
+    - { n: "1", ad: "Düz kinematik", url: "/konular/01-duz-kinematik.html" }
+    - { n: "2", ad: "Ters kinematik", url: "/konular/02-ters-kinematik.html" }
+    - { n: "3", ad: "Yörünge planlama", url: "/konular/03-yorunge-planlama.html" }
+    - { n: "4", ad: "Motorlar ve tork", url: "/konular/04-motorlar.html" }
+    - { n: "5", ad: "Kontrol (PID)", url: "/konular/05-kontrol.html" }
+    - { n: "6", ad: "Tutucu ve sensörler", url: "/konular/06-tutucu.html" }
+    - { n: "7", ad: "Yazılım: ROS 2, URDF", url: "/konular/07-yazilim.html" }
+    - { n: "8", ad: "Algılama ve kamera", url: "/konular/08-algilama.html" }
+    - { n: "9", ad: "Güvenlik", url: "/konular/09-guvenlik.html" }
+- grup: Başvuru
+  sayfalar:
+    - { n: "📖", ad: "Terimler sözlüğü", url: "/SOZLUK.html" }
+    - { n: "📚", ad: "Kaynakça", url: "/KAYNAKLAR.html" }

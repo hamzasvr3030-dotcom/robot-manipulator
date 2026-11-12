@@ -28,7 +28,7 @@ $x = L_1\cos q_1 + L_2\cos(q_1+q_2)$ ve $y = L_1\sin q_1 + L_2\sin(q_1+q_2)$
 
 İkinci okun açısı $q_1+q_2$'dir, çünkü dirsek, üst kolun **zaten döndürdüğü** yönden itibaren döner. Formüllerin hepsi bundan ibaret. Aşağıdaki matrisler aynı işi 3B'de ve çok eklemli kollarda düzenli yapmanın yoludur.
 
-> 🎮 Kolu kendin oynatıp sonucu görmek istersen: **[İnteraktif kol](../interaktif.html)**
+<a class="lab-link" href="../interaktif.html#fk">🎮 Düz kinematik laboratuvarı: açıları oynat, hesabı adım adım izle →</a>
 
 **Düz kinematik:** Eklem açıları $q$ verildiğinde uç efektörün konumunu ve yönelimini bulma problemidir. Çözümü her zaman vardır ve tektir.
 

@@ -10,6 +10,8 @@
 > - **I (integral):** "Bir süredir hâlâ biraz soğuk" diye düşünüp musluğu **zamanla** biraz daha açarsın. Kalıcı hata böyle kaybolur.
 > - **D (türev):** Sıcaklık hızla yükseliyorsa musluğu açmayı **erkenden** bırakırsın. Böylece suyun aşırı ısınması (salınım) önlenir.
 
+<a class="lab-link" href="../interaktif.html#pid">🎮 PID laboratuvarı: Kp, Ki, Kd ile oyna, 7 hazır örnek →</a>
+
 ## 5.1 Kaskad kontrol yapısı
 
 Endüstriyel servo sürücülerde üç kontrol döngüsü iç içe çalışır. İçteki döngü her zaman daha hızlıdır [2, Bölüm 6], [10]:

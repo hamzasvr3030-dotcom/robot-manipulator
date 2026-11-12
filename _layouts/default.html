@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if page.title and page.url != "/" %}{{ page.title | strip_html }} · {% endif %}{{ site.title }}</title>
+<meta name="description" content="{{ site.description }}">
+<script>
+  try { var t = localStorage.getItem("tema"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+{% include head-custom.html %}
+</head>
+<body>
+<header class="topbar">
+  <button class="iconbtn" id="menuBtn" aria-label="Menüyü aç">☰</button>
+  <a class="brand" href="{{ '/' | relative_url }}"><span class="logo">🦾</span><span>Robot Manipülatörleri</span></a>
+  <span class="spacer"></span>
+  <a class="iconbtn" href="https://github.com/hamzasvr3030-dotcom/robot-manipulator" title="GitHub deposu">GitHub</a>
+  <button class="iconbtn" id="temaBtn" aria-label="Temayı değiştir" title="Açık / koyu tema">◐</button>
+</header>
+<div class="shell">
+  <nav class="sidebar" id="sidebar">
+    {% for g in site.data.nav %}
+      <h4>{{ g.grup }}</h4>
+      {% for s in g.sayfalar %}
+        {% assign hedef = s.url %}
+        <a href="{{ s.url | relative_url }}" {% if page.url == hedef %}class="on"{% elsif hedef == "/" and page.url == "/index.html" %}class="on"{% endif %}><span class="n">{{ s.n }}</span><span>{{ s.ad }}</span></a>
+      {% endfor %}
+    {% endfor %}
+  </nav>
+  <main class="content">
+    <article class="{% if page.genis %}wide{% else %}prose{% endif %}">
+      {{ content }}
+    </article>
+  </main>
+</div>
+<script>
+(function () {
+  // tema düğmesi
+  var root = document.documentElement;
+  document.getElementById("temaBtn").onclick = function () {
+    var koyu = root.getAttribute("data-theme") ? root.getAttribute("data-theme") === "dark"
+             : matchMedia("(prefers-color-scheme: dark)").matches;
+    var yeni = koyu ? "light" : "dark";
+    root.setAttribute("data-theme", yeni);
+    try { localStorage.setItem("tema", yeni); } catch (e) {}
+    window.dispatchEvent(new Event("temadegisti"));
+  };
+  // mobil menü
+  document.getElementById("menuBtn").onclick = function (e) { e.stopPropagation(); document.body.classList.toggle("menu-open"); };
+  document.addEventListener("click", function (e) {
+    if (document.body.classList.contains("menu-open") && !document.getElementById("sidebar").contains(e.target))
+      document.body.classList.remove("menu-open");
+  });
+  // bilgi kutularını sınıflandır
+  var tipler = [["🎯", "kisaca"], ["🧠", "benzetme"], ["⚠️", "uyari"], ["💡", "ipucu"], ["ℹ️", "bilgi"], ["🎮", "ipucu"]];
+  document.querySelectorAll(".prose blockquote").forEach(function (b) {
+    var t = b.textContent.trim();
+    if (/^Çıktı türü:/.test(t)) { b.classList.add("meta"); return; }
+    tipler.forEach(function (p) { if (t.indexOf(p[0]) === 0) b.classList.add(p[1]); });
+  });
+  // "Akılda kalsın" listesini kutuya al
+  document.querySelectorAll(".prose h2").forEach(function (h) {
+    if (h.textContent.indexOf("Akılda kalsın") > -1) {
+      h.classList.add("ozet");
+      var ul = h.nextElementSibling;
+      if (ul && ul.tagName === "UL") { var d = document.createElement("div"); d.className = "ozet-kutu"; ul.replaceWith(d); d.appendChild(ul); }
+    }
+    if (h.textContent.indexOf("Kendini test et") > -1) h.classList.add("test");
+  });
+  // en alttaki "← önceki · … · sonraki →" satırını kartlara çevir
+  var ps = document.querySelectorAll(".prose > p");
+  var son = ps[ps.length - 1];
+  if (son && son.textContent.indexOf("←") > -1 && son.textContent.indexOf("→") > -1) {
+    var links = son.querySelectorAll("a"), ilk = links[0], sonl = links[links.length - 1];
+    var pager = document.createElement("div"); pager.className = "pager";
+    pager.innerHTML = '<a href="' + ilk.href + '"><small>Önceki</small>' + ilk.textContent.replace("← ", "") + '</a>' +
+                      '<a class="next" href="' + sonl.href + '"><small>Sonraki</small>' + sonl.textContent.replace(" →", "") + '</a>';
+    var hr = son.previousElementSibling; if (hr && hr.tagName === "HR") hr.remove();
+    son.replaceWith(pager);
+  }
+})();
+</script>
+</body>
+</html>

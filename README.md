@@ -23,7 +23,8 @@ Robot kol tasarımının 10 temel konusunu **tek bir örnek kol** üzerinden anl
 **Önerilen okuma sırası:** 0 → 1 → 2 → 3 → 4 → 5. Bunlar kolun "beyni ve kası". Ardından 6–9 istediğin sırayla okunabilir.
 
 **Yardımcı sayfalar:**
-- 🎮 **[İnteraktif kol](https://hamzasvr3030-dotcom.github.io/robot-manipulator/interaktif.html):** Kaydırıcılarla eklemleri çevirebilir ya da tıklayarak kolu bir hedefe gönderebilirsin. Konu 1 ve 2'yi anlamanın en hızlı yolu.
+- 🎮 **[İnteraktif laboratuvar](https://hamzasvr3030-dotcom.github.io/robot-manipulator/interaktif.html):** 5 bölüm var: düz kinematik, ters kinematik, yörünge, tork ve PID. Her bölümde hazır örnekler, canlı adım adım hesap ve "ne görüyorsun?" açıklamaları bulunuyor.
+- 🌐 **[Web sitesi](https://hamzasvr3030-dotcom.github.io/robot-manipulator/):** Bu sayfaların menülü, açık/koyu temalı ve formülleri düzgün gösteren sürümü.
 - 📖 **[Terimler sözlüğü](SOZLUK.md):** "DOF neydi?", "Tekillik ne demek?" gibi sorular için 48 terimin sade açıklaması.
 
 ## 📚 Konular
