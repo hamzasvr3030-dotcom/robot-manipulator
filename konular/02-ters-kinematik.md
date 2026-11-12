@@ -2,6 +2,21 @@
 
 > **Çıktı türü:** Kod · **Kod:** [`kod/robot_kol.py`](../kod/robot_kol.py) (`ters_kinematik_analitik`, `ters_kinematik_sayisal`), [`kod/k02_ters_kinematik.py`](../kod/k02_ters_kinematik.py)
 
+> ### 🎯 Kısaca
+> **Soru:** "Elimi şu noktaya götürmek istiyorum. Eklemleri kaç dereceye çevirmeliyim?"
+> Bu, düz kinematiğin **tersidir** ve daha zordur. Bazen hiç cevap yoktur (nokta çok uzaktadır), bazen birden fazla cevap vardır.
+
+> 🧠 **Benzetme:** Masadaki bardağa uzan. Aynı bardağa **dirseğin aşağıdayken** de, **dirseğin yukarıdayken** de ulaşabilirsin. Bu ikisi aynı hedefin iki farklı çözümüdür. Bardak kolunun yetişmeyeceği kadar uzaktaysa çözüm yoktur.
+
+**İki çözüm yolu var:**
+
+| Yol | Nasıl çalışır? | Benzetme |
+|---|---|---|
+| **Analitik** | Geometri (üçgen + kosinüs teoremi) ile cevabı formülle **bir seferde** bulur | Haritaya bakıp adresi doğrudan bulmak |
+| **Sayısal** | Bir tahminle başlar, "sıcak-soğuk" oyunu gibi her adımda hedefe biraz yaklaşır | Karanlıkta duvara dokuna dokuna kapıyı bulmak |
+
+> 🎮 Hedefe tıklayıp iki çözümü kendin görmek için: **[İnteraktif kol](../interaktif.html)**
+
 **Ters kinematik (IK):** İstenen uç efektör pozu $(x, y, \varphi)$ verildiğinde bu pozu sağlayan eklem açılarını $q$ bulma problemidir. Düz kinematiğin aksine:
 
 - Çözüm **hiç olmayabilir**: hedef çalışma uzayının dışında olabilir.
@@ -83,5 +98,26 @@ Sayısal (DLS, q0=[10. 10. 10.]°): q = [7.2166 92.3603 -119.5769] °  (14 itera
 | Genellik | Kola özel türetim gerekir | Her kolda çalışır |
 | Kullanıldığı yer | Endüstriyel kontrolcüler, IKFast | MoveIt (KDL, TRAC-IK), simülasyon |
 
+## ⚡ Akılda kalsın
+- **Ters kinematik** = istenen uç konumu → açılar. Cevap **0, 1, 2 ya da sonsuz** sayıda olabilir.
+- Analitik çözümün püf noktası: Uçtan $L_3$ kadar geri git ve problemi **2 uzuvlu üçgene** indir.
+- Açı hesaplarında hep **`atan2`** kullan.
+- Sayısal yöntem, başlangıç tahminine **en yakın** çözümü bulur. **DLS**, kol tekilliğe yaklaştığında yöntemin "çıldırmasını" önler.
+
+## ✍️ Kendini test et
+<details>
+<summary><b>Soru:</b> Formülde cos q2 = 1.4 çıktı. Bu ne anlama gelir?</summary>
+<br>
+|cos q2| > 1 olamaz, demek ki hedef erişim alanının dışında. Kol o noktaya yetişemez.
+</details>
+<details>
+<summary><b>Soru:</b> Sayısal IK'ya farklı bir başlangıç açısı verirsen ne olabilir?</summary>
+<br>
+Diğer çözüme (örneğin dirsek yukarı) yakınsayabilir. Hangi çözümün bulunacağını başlangıç tahmini belirler.
+</details>
+
 ## Kaynaklar
 [1] Craig · [2] Spong vd. · [4] Siciliano vd. · [7] Buss · [28] Wampler. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
+
+---
+[← 1 · Düz kinematik](01-duz-kinematik.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [3 · Yörünge →](03-yorunge-planlama.md)

@@ -6,6 +6,26 @@ Robot kol tasarımının 10 temel konusunu **tek bir örnek kol** üzerinden anl
 
 **Örnek kol:** Düşey düzlemde çalışan 3 eklemli düzlemsel RRR kol. Uzuv boyları $L_1 = 0.30$ m, $L_2 = 0.25$ m, $L_3 = 0.10$ m. Yük kapasitesi 0.5 kg.
 
+## 🧭 Nereden başlamalıyım?
+
+> **Robot kolu tek cümleyle anlatmak gerekirse:** Motorlar (4) eklemleri çevirir, kontrolcü (5) motorların doğru açıda durmasını sağlar. Kinematik (1–2) açıları "elin nerede olduğu" bilgisine çevirir. Yörünge planlama (3) elin oraya nasıl gideceğini belirler. Kamera (8) hedefi bulur, tutucu (6) nesneyi kavrar. Yazılım (7) bütün bu parçaları birbirine bağlar, güvenlik (9) de insanları korur.
+
+**Her sayfa aynı düzende ilerler:**
+
+| Bölüm | Ne var? |
+|---|---|
+| 🎯 **Kısaca** | Konunun özü, 3–4 cümleyle |
+| 🧠 **Benzetme** | Günlük hayattan bir örnek |
+| 📐 Teori ve 💻 uygulama | Formüller, kod çıktıları ve grafikler |
+| ⚡ **Akılda kalsın** | Sayfanın 4 maddelik özeti |
+| ✍️ **Kendini test et** | Cevabı tıklayınca açılan sorular |
+
+**Önerilen okuma sırası:** 0 → 1 → 2 → 3 → 4 → 5. Bunlar kolun "beyni ve kası". Ardından 6–9 istediğin sırayla okunabilir.
+
+**Yardımcı sayfalar:**
+- 🎮 **[İnteraktif kol](https://hamzasvr3030-dotcom.github.io/robot-manipulator/interaktif.html):** Kaydırıcılarla eklemleri çevirebilir ya da tıklayarak kolu bir hedefe gönderebilirsin. Konu 1 ve 2'yi anlamanın en hızlı yolu.
+- 📖 **[Terimler sözlüğü](SOZLUK.md):** "DOF neydi?", "Tekillik ne demek?" gibi sorular için 48 terimin sade açıklaması.
+
 ## 📚 Konular
 
 | # | Konu | Ne yapılıyor? | Çıktı |

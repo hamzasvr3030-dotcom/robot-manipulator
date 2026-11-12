@@ -2,6 +2,20 @@
 
 > **Çıktı türü:** Depo · **Dosyalar:** [`urdf/rrr_kol.urdf`](../urdf/rrr_kol.urdf), [`ros2/display.launch.py`](../ros2/display.launch.py), [`ros2/moveit_hareket.py`](../ros2/moveit_hareket.py)
 
+> ### 🎯 Kısaca
+> Gerçek bir robot yazılımı tek bir programdan oluşmaz. Kamera, planlayıcı, motor sürücüsü gibi **birçok küçük program** birbirleriyle konuşur.
+> - **ROS 2:** Bu programların konuştuğu **ortak dil ve posta sistemi**dir.
+> - **URDF:** Robotun **teknik resmidir**.
+> - **MoveIt 2:** Robotun **GPS'i** gibidir: Çarpışmadan gidilecek rotayı hesaplar.
+
+> 🧠 **Benzetme — ROS 2'nin haberleşme yolları:**
+>
+> | ROS kavramı | Günlük hayatta | Örnek |
+> |---|---|---|
+> | **Topic** | Radyo yayını: Yayıncı yayın yapar, dinlemek isteyen frekansı açar | Eklem açıları sürekli yayınlanır |
+> | **Service** | Telefonla soru sorup cevap almak | "Tutucuyu kapat" → "Tamam" |
+> | **Action** | Kargo takibi: İş uzun sürer, arada "yolda" bilgisi gelir, istersen iptal edersin | "Şu poza git" |
+
 ## 7.1 ROS 2 nedir?
 
 **ROS 2 (Robot Operating System 2)** bir işletim sistemi değil, robot yazılımı için bir **ara katman (middleware)** ve araç ekosistemidir [13], [16]. Temel kavramları:
@@ -95,5 +109,26 @@ Bu depodaki `kod/` klasörü yalnızca **numpy ve matplotlib** kullanır. Daha k
 - **Modern Robotics kütüphanesi** (Lynch & Park): Kitaptaki algoritmaların doğrudan karşılıkları [3]
 - **PyBullet / MuJoCo**: URDF yükleyen fizik simülasyonu
 
+## ⚡ Akılda kalsın
+- **Node** = tek bir iş yapan program. **Topic** = sürekli akan veri. **Service** = soru-cevap. **Action** = uzun süren görev.
+- **URDF** = link'ler (parçalar) + joint'ler (eklemler). Bu depodaki URDF dosyası Python modeliyle **aynı kolu** tanımlar.
+- **MoveIt 2** = IK + çarpışma kontrolü + yol planlama + yürütme, hepsi bir arada.
+- Önerilen başlangıç: **Ubuntu 24.04 + ROS 2 Jazzy**. Önce modeli RViz'de aç, sonra MoveIt Setup Assistant'ı çalıştır.
+
+## ✍️ Kendini test et
+<details>
+<summary><b>Soru:</b> Kameradan saniyede 30 görüntü geliyor. Topic mi, service mi kullanılır?</summary>
+<br>
+Topic. Veri sürekli akıyor; her görüntü için ayrıca soru sormaya gerek yok.
+</details>
+<details>
+<summary><b>Soru:</b> URDF'de bir eklemin dönme yönünü hangi etiket belirler?</summary>
+<br>
+<axis xyz="..."/> etiketi. Bu depoda tüm eklemlerde (0, −1, 0) kullanılıyor.
+</details>
+
 ## Kaynaklar
 [3] Lynch & Park · [5] Corke · [13] ROS 2 Dokümantasyonu · [14] URDF eğitimleri · [15] MoveIt 2 Dokümantasyonu · [16] Macenski vd. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
+
+---
+[← 6 · Tutucu](06-tutucu.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [8 · Algılama →](08-algilama.md)

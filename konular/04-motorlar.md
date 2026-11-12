@@ -2,6 +2,16 @@
 
 > **Çıktı türü:** Hesap sayfası · **Kod:** [`kod/k04_tork.py`](../kod/k04_tork.py) · **Tablo:** [`kod/tork_hesap_sayfasi.csv`](../kod/tork_hesap_sayfasi.csv) (Excel'de açılır)
 
+> ### 🎯 Kısaca
+> Her eklemi döndürecek motoru seçmek için sırayla üç soru sorulur:
+> 1. Eklem ne kadar **tork** (döndürme kuvveti) istiyor?
+> 2. Hangi **motor** tipi kullanılacak?
+> 3. Motor ile eklem arasına hangi **redüktör** (dişli kutusu) konacak?
+
+> 🧠 **Benzetme 1 — Tork:** Kolunu yana açıp elinde yarım litrelik bir şişe tut. En çok **omzun** yorulur, çünkü şişe omzuna en uzak eklemdir: kaldıraç kolu en uzun olan odur. **Tork = kuvvet × kaldıraç uzunluğu.** Robotun taban eklemi de aynı sebeple en çok zorlanan eklemdir.
+>
+> 🧠 **Benzetme 2 — Redüktör:** Bisikletteki vites gibidir. Küçük viteste pedal kolay döner ama yavaş gidersin. Redüktör de motorun hızlı ve zayıf dönüşünü, **yavaş ve güçlü** bir dönüşe çevirir.
+
 ## 4.1 Motor tipleri
 
 | Tip | Çalışma ilkesi | Artı | Eksi | Robotta kullanım |
@@ -82,5 +92,26 @@ Yük + tutucu kütlesi 0.50 kg, emniyet katsayısı $SF = 1.5$, redüktör verim
 
 Gerilim, sürekli ve tepe akım değerleri motor etiketine göre seçilir. Frenleme sırasında motor sürücüye enerji geri basar. Bu nedenle **rejeneratif enerji** için fren direnci gerekip gerekmediği kontrol edilmelidir [9, Bölüm 4].
 
+## ⚡ Akılda kalsın
+- En kötü durum kolun **yatay uzandığı** konumdur, çünkü yerçekimi kaldıracı en uzundur.
+- Yavaş kollarda torkun büyük kısmını yerçekimi oluşturur (bu örnekte yaklaşık %90). **Ağır parçaları tabana yakın** yerleştir.
+- Redüktör torku **N** kat artırır, hızı **N** kat düşürür ve yükün ataleti motora **N²** kat küçülerek yansır.
+- **Step motor:** Ucuzdur ve kolay konumlanır, ama hızlandıkça gücü düşer ve adım kaçırabilir. **BLDC servo:** Güçlü ve hassastır, ama pahalıdır.
+
+## ✍️ Kendini test et
+<details>
+<summary><b>Soru:</b> Eklem 1 için 21.5 N·m gerekiyor. N = 50, verim 0.8 ise motor ne kadar tork vermeli?</summary>
+<br>
+21.5 / (50 × 0.8) = 0.54 N·m.
+</details>
+<details>
+<summary><b>Soru:</b> Yükü 0.5 kg'dan 1 kg'a çıkarırsan hangi eklem en çok etkilenir?</summary>
+<br>
+Eklem 1. Yük ona en uzak noktada (0.65 m) duruyor, yani kaldıraç kolu en uzun. Eklem 1'in yük kaynaklı torku 0.5 × 9.81 × 0.65 ≈ 3.2 N·m artar.
+</details>
+
 ## Kaynaklar
 [1] Craig · [2] Spong vd. · [9] Hughes & Drury. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
+
+---
+[← 3 · Yörünge](03-yorunge-planlama.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [5 · Kontrol →](05-kontrol.md)

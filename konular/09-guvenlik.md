@@ -2,6 +2,14 @@
 
 > **Çıktı türü:** Liste
 
+> ### 🎯 Kısaca
+> Robot **güçlüdür, hızlıdır ve seni fark etmez**. Güvenlik, robotun insana zarar vermemesini garanti altına alan kuralların bütünüdür. Üç altın kural:
+> 1. **Ayrı tut:** Robot çalışırken insan çalışma alanına girmesin. Girerse robot dursun.
+> 2. **Durdurabil:** Herkes tek bir hareketle robotu durdurabilmeli. Bu durdurma **yazılıma güvenmemeli**.
+> 3. **Enerji kesilince güvende kal:** Robotun gücü kesildiğinde kol düşmemeli ve güç geri geldiğinde kendi kendine harekete geçmemeli.
+
+> 🧠 **Benzetme:** Acil durdurma butonu, arabadaki **el freni** gibidir. Bilgisayar donsa bile çalışmalıdır. Bu yüzden e-stop "programa stop komutu gönderen" bir düğme değildir. Motorların **gücünü fiziksel olarak keser**.
+
 > ⚠️ Bu liste eğitim amaçlıdır ve kendi başına bir uygunluk değerlendirmesi yerine geçmez. Gerçek bir robot hücresi devreye alınmadan önce ilgili standartlara göre **risk değerlendirmesi** yapılmalıdır. Bu değerlendirmenin yetkin bir kişi tarafından yapılması gerekir.
 
 ## 9.1 Temel tehlikeler
@@ -76,5 +84,26 @@ Acil durdurma yalnızca **Stop 0 veya Stop 1** olabilir [23], [24].
 - [ ] İlk denemeler düşük hızda ve kol menzilinin (0.65 m) dışında durarak yapılıyor.
 - [ ] Kolun düşmesine karşı ilk testlerde eklem 1 desteklenmiş. Ya da redüktör kendiliğinden kilitlenen tipte.
 
+## ⚡ Akılda kalsın
+- Önlemler bu sırayla düşünülür: **Önce tasarımla tehlikeyi yok et**, sonra koruyucu koy, en son uyarı ve eğitimle destekle.
+- **E-stop** donanımla çalışır, mandallıdır, çift kanallıdır ve **Stop 0 veya Stop 1** kategorisindedir.
+- Güç kesildiğinde **fren** kolu tutmalı. Güç geri geldiğinde robot **kendiliğinden başlamamalı**.
+- Bakımdan önce **kilitle ve etiketle (LOTO)**.
+
+## ✍️ Kendini test et
+<details>
+<summary><b>Soru:</b> Arduino'ya bağlı bir buton motorları yazılımla durduruyor. Bu bir e-stop sayılır mı?</summary>
+<br>
+Hayır. Program donarsa buton işe yaramaz. E-stop, motor sürücülerinin gücünü bir güvenlik rölesi üzerinden kesmelidir.
+</details>
+<details>
+<summary><b>Soru:</b> Stop 2 neden acil durdurma olarak kullanılamaz?</summary>
+<br>
+Stop 2'de motorlara güç gitmeye devam eder. Yazılım veya sürücü arızalanırsa kol yeniden hareket edebilir.
+</details>
+
 ## Kaynaklar
 [21] ISO 10218-1/-2:2025 · [22] ISO/TS 15066 · [23] ISO 13850 · [24] IEC 60204-1 · [25] ISO 13849-1 · [26] ISO 12100 · [27] Haddadin vd. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
+
+---
+[← 8 · Algılama](08-algilama.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [Kaynakça →](../KAYNAKLAR.md)

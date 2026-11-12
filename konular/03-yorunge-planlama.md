@@ -2,6 +2,16 @@
 
 > **Çıktı türü:** Grafik · **Kod:** [`kod/k03_yorunge.py`](../kod/k03_yorunge.py)
 
+> ### 🎯 Kısaca
+> Kolun A noktasından B noktasına **hangi yoldan** ve **hangi hızla** gideceğini planlamak.
+> İki temel karar verilir:
+> 1. **Yolun şekli:** Uç serbest mi gitsin, yoksa düz bir çizgi mi izlesin?
+> 2. **Hızlanma biçimi:** Hızlanma ve yavaşlama yumuşak mı olsun, ani mi?
+
+> 🧠 **Benzetme:** Arabayla kalkış yapmayı düşün. Gaza **yavaşça** basıp sonunda **yumuşakça** frenlersen bardaktaki çay dökülmez. Bu, **quintic** (5. derece) polinomdur. Gaza **birden** basarsan çay dökülür. Bu da ivmenin sıçradığı **kübik** polinomdur. Robotta dökülen çayın karşılığı titreşim ve dişlilerin yıpranmasıdır.
+>
+> **Eklem uzayı** planlamada her eklem kendi rahat hızında döner ve uç bir **eğri** çizer. **Kartezyen** planlamada uç **cetvelle çizilmiş gibi düz** gider, ama bunun için her an ters kinematik hesaplanması gerekir.
+
 **Yol (path)** yalnızca geometridir: hangi noktalardan geçileceğini söyler. **Yörünge (trajectory)** bu yola zamanı da ekler: her an konum, hız ve ivme bellidir [3, Bölüm 9], [8].
 
 ## 3.1 İki yaklaşım
@@ -54,5 +64,26 @@ Maks. eklem ivmesi: quintic = 89.0 °/s², cubic = 92.5 °/s²
 2. **Sağ üst grafik:** Eklem uzayında açılar düzgün S eğrileri çiziyor. Kartezyen yörüngede ise $q_2$ ve $q_3$ hareket sırasında bir **tepe** yapıyor: Düz çizgiyi korumak için eklemler son değerlerinin ötesine gidip geri dönmek zorunda kalıyor.
 3. **Sağ alt grafik:** Kübik polinomun ivmesi $t = 0$ ve $t = 2$ s'de **sıfır olmayan bir değerle** başlayıp bitiyor, bu da ivmenin sıçradığı anlamına geliyor. Quintic polinomun ivmesi ise sıfırdan başlayıp sıfırda bitiyor. Tepe değerleri yakın (89 ve 92.5 °/s²), fark **süreklilikte**.
 
+## ⚡ Akılda kalsın
+- **Yol** = geometri. **Yörünge** = yol + zaman (konum, hız, ivme).
+- **Eklem uzayı:** Basit, hızlı ve güvenlidir. Uç eğri çizer (robot dilinde MoveJ veya PTP).
+- **Kartezyen:** Uç düz gider (MoveL veya LIN). Her adımda IK gerekir ve **tekillik riski** vardır.
+- **Quintic** polinomda başta ve sonda hız **ve** ivme sıfırdır, yani hareket sarsıntısızdır.
+
+## ✍️ Kendini test et
+<details>
+<summary><b>Soru:</b> Kaynak robotu bir dikişi düz bir çizgi boyunca kaynatacak. Hangi planlama kullanılmalı?</summary>
+<br>
+Kartezyen. Torcun dikiş çizgisini tam olarak izlemesi gerekiyor.
+</details>
+<details>
+<summary><b>Soru:</b> Robot boşta, bir sonraki parçanın üstüne gidiyor. Hangisi daha uygun?</summary>
+<br>
+Eklem uzayı. Yolun şekli önemsiz; daha hızlı ve tekillik riski yok.
+</details>
+
 ## Kaynaklar
 [3] Lynch & Park · [4] Siciliano vd. · [8] Biagiotti & Melchiorri. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
+
+---
+[← 2 · Ters kinematik](02-ters-kinematik.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [4 · Motorlar →](04-motorlar.md)

@@ -2,6 +2,14 @@
 
 > **Çıktı türü:** Şema · **Kod:** [`kod/k00_sema.py`](../kod/k00_sema.py)
 
+> ### 🎯 Kısaca
+> Robot kol, **senin kolun gibi** çalışır: omuz, dirsek ve bilek yerine **eklemler**, kemikler yerine **uzuvlar** vardır. Bu sayfada üç şey öğreneceksin:
+> 1. Eklem çeşitleri: dönen ve kayan eklemler.
+> 2. Serbestlik derecesi (DOF): kolun kaç bağımsız hareket yapabildiği.
+> 3. Çalışma uzayı: kolun uzanabildiği bölge.
+
+> 🧠 **Benzetme:** Dirseğini masaya dayayıp önündeki bir noktaya parmağınla dokun. Omzunu, dirseğini ve bileğini kullanıyorsun, yani 3 eklem. Bileğini sabit tutarsan aynı noktaya yine dokunabilirsin, ama artık elinin açısını seçemezsin. İşte **serbestlik derecesi** budur: Her eklem sana bir "seçim hakkı" daha verir.
+
 ## 0.1 Manipülatör nedir?
 
 Robot manipülatör, birbirine **eklemlerle** bağlanmış katı **uzuvlardan** (link) oluşan açık kinematik zincirdir. Zincirin bir ucu sabit **tabana**, diğer ucu işi yapan **uç efektöre** (tutucu, kaynak torcu, vakum vb.) bağlıdır [1, Bölüm 1], [2, Bölüm 1].
@@ -67,5 +75,25 @@ Tüm konularda aynı model kullanılıyor: **düşey düzlemde çalışan 3 ekle
 
 **Neden bu kol?** 3 DOF, düzlemde konum ve yönelimi tam belirlemeye yetiyor. Bu sayede ters kinematiğin analitik çözümü elle türetilebiliyor. Aynı kavramlar (DH, Jacobian, tekillik) 6 eksenli kollara doğrudan genellenebilir.
 
+## ⚡ Akılda kalsın
+- Robotlarda neredeyse yalnızca iki eklem tipi kullanılır: **dönen (R)** ve **kayan (P)**.
+- Seri bir kolda **DOF = eklem sayısı**. Düzlemde her pozu alabilmek için 3, uzayda 6 DOF gerekir.
+- **Çalışma uzayının** sınırlarını uzuv boyları ve eklem sınırları birlikte belirler.
+
+## ✍️ Kendini test et
+<details>
+<summary><b>Soru:</b> Kartezyen bir 3B yazıcının eklem yapısı nedir, kaç DOF'u vardır?</summary>
+<br>
+PPP: Üç kayan eklemi vardır, yani 3 DOF. Çalışma uzayı bir kutu şeklindedir.
+</details>
+<details>
+<summary><b>Soru:</b> Bu depodaki kolun uzuvları 0.30 + 0.25 + 0.10 m. En uzak hangi mesafeye uzanabilir?</summary>
+<br>
+0.65 m. Kol tamamen düz açıldığında uzuv boyları toplanır.
+</details>
+
 ## Kaynaklar
 [1] Craig · [2] Spong vd. · [3] Lynch & Park. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
+
+---
+[🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [1 · Düz kinematik →](01-duz-kinematik.md)

@@ -2,6 +2,13 @@
 
 > **Çıktı türü:** Çıktı · **Kod:** [`kod/k08_goruntu.py`](../kod/k08_goruntu.py)
 
+> ### 🎯 Kısaca
+> Kamera bize "nesne görüntünün **455. pikselinde**" der. Robotun bilmesi gereken ise "nesne benden **0.53 m ileride**" bilgisidir. Bu sayfa pikseli metreye çevirmenin iki adımını anlatıyor:
+> 1. **Kamera kalibrasyonu:** Kamera, piksel cinsinden gördüğünü metreye nasıl çevirir?
+> 2. **El-göz kalibrasyonu:** Kamera robota göre nerede duruyor?
+
+> 🧠 **Benzetme:** Bir haritada iki şehir arası 5 cm olabilir. Gerçek mesafeyi bulmak için haritanın **ölçeğini** bilmen gerekir. Kamera kalibrasyonu bu ölçeği bulur. Ayrıca haritanın **kuzeyi nereye baktığını** da bilmen gerekir: Bu da el-göz kalibrasyonudur. Bizim gözlerimiz ve ellerimiz bu koordinasyonu doğuştan yapar, robota ise öğretmek gerekir.
+
 **Amaç:** Kamerada görülen bir nesnenin konumunu **robot tabanına göre** metre cinsinden bulmak ve kolu oraya göndermek. Bunun için iki dönüşüm gerekir:
 
 ```text
@@ -67,5 +74,28 @@ Robot tabanına göre: x = 0.5300 m, y = 0.0933 m, z = 0.0000 m
 - **Derin öğrenme tabanlı nesne tespiti** (örneğin YOLO): Nesnelerin renk yerine sınıfa göre bulunmasını sağlar.
 - **ROS 2'de bu zincirin karşılıkları:** `image_pipeline` ve `tf2` [13].
 
+## ⚡ Akılda kalsın
+- Görüntüden nesneyi bulmak için eşikleme, ardından ağırlık merkezi hesabı yapılır. Bu adım işin **kolay** kısmıdır.
+- Asıl önemli olan iki kalibrasyondur:
+  - **İç parametreler ($K$):** Piksel → kamera çerçevesi.
+  - **El-göz ($T_{rc}$):** Kamera çerçevesi → robot tabanı.
+- Tek bir kamera **derinliği bilemez**. Derinlik masa düzleminden, bir derinlik kamerasından veya stereo kameradan gelir.
+- OpenCV'de bu işlerin karşılıkları: `inRange` → `moments` → `calibrateCamera` → `calibrateHandEye`.
+
+## ✍️ Kendini test et
+<details>
+<summary><b>Soru:</b> Nesne görüntünün tam ortasında (u = 320, v = 240) olsaydı, kamera çerçevesindeki X ve Y ne olurdu?</summary>
+<br>
+X = 0, Y = 0. Nesne tam kameranın altında, yani robot koordinatında (0.35, 0) m'de.
+</details>
+<details>
+<summary><b>Soru:</b> Kamera 0.80 m yerine 1.60 m yükseğe taşınırsa aynı nesne görüntüde nasıl görünür?</summary>
+<br>
+Yarı boyutta görünür ve görüntü merkezine daha yakın durur. Formülde Z iki katına çıktığı için aynı piksel kayması iki kat metreye karşılık gelir.
+</details>
+
 ## Kaynaklar
 [5] Corke · [13] ROS 2 Dokümantasyonu · [17] Zhang · [18] Tsai & Lenz · [19] OpenCV · [20] Hartley & Zisserman. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
+
+---
+[← 7 · Yazılım](07-yazilim.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [9 · Güvenlik →](09-guvenlik.md)

@@ -2,6 +2,22 @@
 
 > **Çıktı türü:** Not
 
+> ### 🎯 Kısaca
+> Tutucu robotun **elidir**. Doğru tutucu seçimi nesneye bağlıdır:
+> - Nesnenin şekline: kutu mu, yuvarlak mı?
+> - Malzemesine: metal mi, karton mu?
+> - Hassasiyetine: yumurta mı, cıvata mı?
+>
+> Bu sayfada tutucu tiplerini karşılaştırıyor, "**ne kadar sıkmalı?**" sorusunu hesaplıyor ve tutucunun kullandığı sensörlere bakıyoruz.
+
+> 🧠 **Benzetme:**
+> - **Paralel tutucu:** Bir şeyi iki parmakla sıkıştırmak.
+> - **Vakum:** Camı vantuzla kaldırmak.
+> - **Mıknatıs:** Buzdolabı magneti.
+> - **Yumuşak tutucu:** Avucunla bir meyveyi sarmak.
+>
+> Elindeki ıslak bir şişeyi düşürmemek için daha sıkı tutarsın, çünkü sürtünme azalmıştır. Kavrama kuvveti formülü bu sezgiyi hesaba döker.
+
 Tutucu, robotun dünyayla temas ettiği parçadır. Kol ne kadar iyi olursa olsun, tutucu yanlış seçilmişse sistem çalışmaz [12].
 
 ## 6.1 Tutucu seçenekleri
@@ -57,5 +73,26 @@ Vakumlu tutucularda kavrama kuvveti $F = \Delta p \cdot A \cdot \eta$ ile hesapl
 | **6 eksenli kuvvet/tork sensörü** | Bilekte $F_{x,y,z},\,M_{x,y,z}$ ölçer | Montaj, yüzey takibi, çarpışma algılama |
 | **Dokunsal (tactile) dizi** | Temas dağılımını ve kaymayı algılar | Araştırma robotları |
 
+## ⚡ Akılda kalsın
+- **Paralel tutucu** varsayılan seçimdir. Düz yüzeyli nesneler için **vakum**, kırılgan veya düzensiz nesneler için **yumuşak** tutucu kullanılır.
+- Sürtünmeyle kavrama kuvveti $F \ge m(g+a)S / (\mu n)$ ile hesaplanır. Sürtünme ($\mu$) azalırsa daha sıkı tutmak gerekir.
+- Tutucunun kendi kütlesi kolun yük kapasitesinden **düşülür**.
+- En basit "tuttum mu?" sensörü **motor akımıdır**: Tutucu nesneye dayandığında akım artar.
+
+## ✍️ Kendini test et
+<details>
+<summary><b>Soru:</b> Sürtünme katsayısı 0.5'ten 0.25'e düşerse (yağlı parça) gereken kavrama kuvveti ne olur?</summary>
+<br>
+İki katına çıkar: 12.8 N yerine yaklaşık 25.6 N gerekir.
+</details>
+<details>
+<summary><b>Soru:</b> Delikli bir metal ızgarayı hangi tutucuyla tutarsın?</summary>
+<br>
+Manyetik tutucuyla (malzeme çelikse) ya da paralel tutucuyla. Vakum işe yaramaz, çünkü delikler havayı kaçırır.
+</details>
+
 ## Kaynaklar
 [12] Monkman vd. · [4] Siciliano vd. (Bölüm 5, sensörler). Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
+
+---
+[← 5 · Kontrol](05-kontrol.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [7 · Yazılım →](07-yazilim.md)

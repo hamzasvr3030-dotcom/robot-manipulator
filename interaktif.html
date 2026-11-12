@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>İnteraktif Robot Kol</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --panel: #ffffff; --text: #1d2330; --muted: #5c6578; --line: #d9dde5;
+    --grid: #eceef2; --link1: #4C72B0; --link2: #DD8452; --link3: #55A868; --target: #C44E52;
+    --ws: rgba(85,168,104,0.10); --ghost: rgba(221,132,82,0.35); --accent: #4C72B0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12151b; --panel: #1b2029; --text: #e6e9ef; --muted: #9aa3b5; --line: #2c3340;
+      --grid: #222833; --ws: rgba(85,168,104,0.14); --ghost: rgba(221,132,82,0.45); --accent: #7aa2e0;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12151b; --panel: #1b2029; --text: #e6e9ef; --muted: #9aa3b5; --line: #2c3340;
+    --grid: #222833; --ws: rgba(85,168,104,0.14); --ghost: rgba(221,132,82,0.45); --accent: #7aa2e0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { padding: 18px 16px 6px; max-width: 1100px; margin: 0 auto; }
+  header h1 { margin: 0 0 4px; font-size: 1.45rem; }
+  header p { margin: 0; color: var(--muted); }
+  header a { color: var(--accent); }
+  main { max-width: 1100px; margin: 0 auto; padding: 12px 16px 32px;
+         display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 16px; }
+  @media (max-width: 860px) { main { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  canvas { width: 100%; height: auto; display: block; border-radius: 8px; touch-action: none; cursor: crosshair; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+  .tabs button { flex: 1; padding: 8px; border: 1px solid var(--line); background: transparent;
+                 color: var(--text); border-radius: 8px; cursor: pointer; font: inherit; }
+  .tabs button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .row { margin: 10px 0; }
+  .row label { display: flex; justify-content: space-between; font-weight: 600; }
+  .row label span { font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 500; }
+  input[type=range] { width: 100%; accent-color: var(--accent); }
+  .out { font-variant-numeric: tabular-nums; background: var(--bg); border-radius: 8px; padding: 10px; margin-top: 10px; }
+  .out div { display: flex; justify-content: space-between; }
+  .hint { color: var(--muted); font-size: 0.9rem; margin: 8px 0 0; }
+  .msg { margin-top: 8px; padding: 8px 10px; border-radius: 8px; font-size: 0.92rem; }
+  .msg.ok { background: rgba(85,168,104,0.15); }
+  .msg.bad { background: rgba(196,78,82,0.15); }
+  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+  details { margin-top: 12px; }
+  summary { cursor: pointer; font-weight: 600; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎮 İnteraktif Robot Kol</h1>
+  <p>Kaydırıcılarla eklemleri çevir (<b>düz kinematik</b>) ya da şekle tıklayıp kolu hedefe gönder (<b>ters kinematik</b>).
+     Uzuvlar: L1 = 0.30 m, L2 = 0.25 m, L3 = 0.10 m · <a href="./">← Ana sayfa</a></p>
+</header>
+<main>
+  <div class="card"><canvas id="c" width="720" height="560" aria-label="Robot kol çizimi"></canvas>
+    <p class="hint"><span class="swatch" style="background:var(--ws)"></span>Yeşil alan: kolun ulaşabildiği bölge (çalışma uzayı) ·
+       IK modunda soluk turuncu kol: aynı hedefe giden <b>diğer</b> çözüm</p>
+  </div>
+  <div class="card">
+    <div class="tabs">
+      <button id="tFK" class="on">Düz kinematik</button>
+      <button id="tIK">Ters kinematik</button>
+    </div>
+
+    <div id="pFK">
+      <div class="row"><label>q1 (omuz) <span id="v1"></span></label><input id="q1" type="range" min="-180" max="180" value="30"></div>
+      <div class="row"><label>q2 (dirsek) <span id="v2"></span></label><input id="q2" type="range" min="-150" max="150" value="45"></div>
+      <div class="row"><label>q3 (bilek) <span id="v3"></span></label><input id="q3" type="range" min="-150" max="150" value="-30"></div>
+      <p class="hint">İpucu: q2'yi 0°'ye getir. Kol tamamen açılır ve <b>tekil</b> olur (det J = 0).</p>
+    </div>
+
+    <div id="pIK" hidden>
+      <p class="hint" style="margin-top:0">Şekilde bir noktaya <b>tıkla</b> ya da sürükle. Kol o noktaya uzanır.</p>
+      <div class="row"><label>Uç açısı φ <span id="vphi"></span></label><input id="phi" type="range" min="-180" max="180" value="-20"></div>
+      <div class="row"><label><span style="color:var(--text);font-weight:600">Dirsek</span></label>
+        <div class="tabs" style="margin:4px 0 0"><button id="eDown" class="on">aşağı</button><button id="eUp">yukarı</button></div></div>
+      <div id="ikmsg" class="msg ok"></div>
+    </div>
+
+    <div class="out">
+      <div><b>Uç x</b><span id="ox"></span></div>
+      <div><b>Uç y</b><span id="oy"></span></div>
+      <div><b>Uç açısı φ</b><span id="ophi"></span></div>
+      <div><b>q1, q2, q3</b><span id="oq"></span></div>
+      <div><b>det J</b><span id="odet"></span></div>
+    </div>
+
+    <details>
+      <summary>Hesap nasıl yapılıyor?</summary>
+      <p class="hint"><b>Düz:</b> x = L1·cos q1 + L2·cos(q1+q2) + L3·cos(q1+q2+q3). y için aynı formül sin ile yazılır.<br>
+      <b>Ters:</b> Önce uçtan L3 kadar geri gidilip bilek noktası bulunur. Sonra kosinüs teoremiyle q2, atan2 ile q1 hesaplanır. En son q3 = φ − q1 − q2.<br>
+      Ayrıntılar: Konu 1 ve Konu 2 sayfaları.</p>
+    </details>
+  </div>
+</main>
+<script>
+(() => {
+  const L = [0.30, 0.25, 0.10], R = L[0] + L[1] + L[2];
+  const QMIN = [-180, -150, -150], QMAX = [180, 150, 150];
+  const rad = d => d * Math.PI / 180, deg = r => r * 180 / Math.PI;
+  const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
+  const $ = id => document.getElementById(id);
+  const cv = $("c"), ctx = cv.getContext("2d");
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  let mode = "FK", elbow = 1, q = [rad(30), rad(45), rad(-30)], target = null, other = null;
+
+  // dünya (m) <-> piksel
+  const S = 380, OX = cv.width * 0.40, OY = cv.height * 0.62;
+  const toPx = (x, y) => [OX + x * S, OY - y * S];
+  const toW = (px, py) => [(px - OX) / S, (OY - py) / S];
+
+  function fk(q) {
+    let x = 0, y = 0, a = 0; const pts = [[0, 0]];
+    for (let i = 0; i < 3; i++) { a += q[i]; x += L[i] * Math.cos(a); y += L[i] * Math.sin(a); pts.push([x, y]); }
+    return { pts, x, y, phi: wrap(a) };
+  }
+  function ik(x, y, phi, e) {
+    const xw = x - L[2] * Math.cos(phi), yw = y - L[2] * Math.sin(phi);
+    const c2 = (xw * xw + yw * yw - L[0] ** 2 - L[1] ** 2) / (2 * L[0] * L[1]);
+    if (Math.abs(c2) > 1) return null;
+    const s2 = e * Math.sqrt(1 - c2 * c2), q2 = Math.atan2(s2, c2);
+    const q1 = Math.atan2(yw, xw) - Math.atan2(L[1] * s2, L[0] + L[1] * c2);
+    return [wrap(q1), wrap(q2), wrap(phi - q1 - q2)];
+  }
+  const withinLimits = qq => qq.every((v, i) => deg(v) >= QMIN[i] - 1e-6 && deg(v) <= QMAX[i] + 1e-6);
+
+  // çalışma uzayı: bir kez örnekle
+  const ws = document.createElement("canvas"); ws.width = cv.width; ws.height = cv.height;
+  function buildWS() {
+    const w = ws.getContext("2d"); w.clearRect(0, 0, ws.width, ws.height); w.fillStyle = css("--ws");
+    for (let k = 0; k < 26000; k++) {
+      const qq = [0, 1, 2].map(i => rad(QMIN[i] + Math.random() * (QMAX[i] - QMIN[i])));
+      const p = fk(qq); const [px, py] = toPx(p.x, p.y); w.fillRect(px, py, 2, 2);
+    }
+  }
+
+  function drawArm(pts, colors, width, alpha) {
+    ctx.globalAlpha = alpha; ctx.lineCap = "round";
+    for (let i = 0; i < 3; i++) {
+      const [a, b] = [toPx(...pts[i]), toPx(...pts[i + 1])];
+      ctx.strokeStyle = colors[i]; ctx.lineWidth = width;
+      ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b); ctx.stroke();
+    }
+    for (let i = 0; i < 3; i++) {
+      const [px, py] = toPx(...pts[i]);
+      ctx.fillStyle = css("--panel"); ctx.strokeStyle = css("--text"); ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(px, py, 7, 0, 7); ctx.fill(); ctx.stroke();
+    }
+    const [ex, ey] = toPx(...pts[3]);
+    ctx.fillStyle = css("--target"); ctx.fillRect(ex - 5, ey - 5, 10, 10);
+    ctx.globalAlpha = 1;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    // ızgara
+    ctx.strokeStyle = css("--grid"); ctx.lineWidth = 1;
+    for (let v = -0.8; v <= 0.81; v += 0.1) {
+      const [gx] = toPx(v, 0), [, gy] = toPx(0, v);
+      ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, cv.height); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(cv.width, gy); ctx.stroke();
+    }
+    ctx.drawImage(ws, 0, 0);
+    // eksenler + erişim çemberi
+    ctx.strokeStyle = css("--muted"); ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(0, OY); ctx.lineTo(cv.width, OY); ctx.moveTo(OX, 0); ctx.lineTo(OX, cv.height); ctx.stroke();
+    ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.arc(OX, OY, R * S, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = css("--muted"); ctx.font = "12px system-ui";
+    ctx.fillText("x [m]", cv.width - 40, OY - 6); ctx.fillText("y [m]", OX + 6, 14);
+    ctx.fillText("maks. erişim 0.65 m", OX + R * S * 0.71 + 4, OY - R * S * 0.71);
+    for (let v = -0.6; v <= 0.61; v += 0.2) {
+      if (Math.abs(v) < 1e-9) continue;
+      const [gx] = toPx(v, 0), [, gy] = toPx(0, v);
+      ctx.fillText(v.toFixed(1), gx - 9, OY + 14); ctx.fillText(v.toFixed(1), OX + 4, gy + 4);
+    }
+    // taban
+    ctx.fillStyle = css("--muted"); ctx.fillRect(OX - 22, OY, 44, 12);
+
+    const cols = [css("--link1"), css("--link2"), css("--link3")];
+    if (mode === "IK" && other) drawArm(fk(other).pts, [css("--ghost"), css("--ghost"), css("--ghost")], 7, 1);
+    const p = fk(q);
+    drawArm(p.pts, cols, 10, 1);
+    if (mode === "IK" && target) {
+      const [tx, ty] = toPx(target[0], target[1]);
+      ctx.strokeStyle = css("--target"); ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(tx, ty, 11, 0, 7); ctx.moveTo(tx - 16, ty); ctx.lineTo(tx + 16, ty);
+      ctx.moveTo(tx, ty - 16); ctx.lineTo(tx, ty + 16); ctx.stroke();
+    }
+    // çıktı
+    $("ox").textContent = p.x.toFixed(4) + " m"; $("oy").textContent = p.y.toFixed(4) + " m";
+    $("ophi").textContent = deg(p.phi).toFixed(1) + "°";
+    $("oq").textContent = q.map(v => deg(v).toFixed(1) + "°").join(", ");
+    const det = L[0] * L[1] * Math.sin(q[1]);
+    $("odet").textContent = det.toFixed(4) + (Math.abs(det) < 0.004 ? "  ⚠️ tekil" : "");
+  }
+
+  function syncSliders() {
+    ["q1", "q2", "q3"].forEach((id, i) => { $(id).value = Math.round(deg(q[i])); $("v" + (i + 1)).textContent = Math.round(deg(q[i])) + "°"; });
+  }
+  ["q1", "q2", "q3"].forEach((id, i) => $(id).addEventListener("input", e => {
+    q[i] = rad(+e.target.value); $("v" + (i + 1)).textContent = e.target.value + "°"; draw();
+  }));
+
+  function solve() {
+    if (!target) return;
+    const phi = rad(+$("phi").value); $("vphi").textContent = $("phi").value + "°";
+    const s = ik(target[0], target[1], phi, elbow), o = ik(target[0], target[1], phi, -elbow);
+    const m = $("ikmsg");
+    if (!s) { m.className = "msg bad"; m.textContent = "❌ Bu hedefe bu uç açısıyla ulaşılamaz: cos q2 > 1. Hedefi yaklaştır ya da φ'yi değiştir."; other = null; draw(); return; }
+    if (!withinLimits(s)) { m.className = "msg bad"; m.textContent = "⚠️ Matematiksel çözüm var, ama eklem sınırlarını (±150°) aşıyor. Diğer dirsek konumunu dene."; }
+    else { m.className = "msg ok"; m.textContent = "✅ Çözüm bulundu. Soluk turuncu kol, aynı hedefe giden ikinci çözümü gösteriyor."; }
+    q = s; other = o; syncSliders(); draw();
+  }
+  function pick(ev) {
+    if (mode !== "IK") return;
+    const r = cv.getBoundingClientRect();
+    const px = (ev.clientX - r.left) * cv.width / r.width, py = (ev.clientY - r.top) * cv.height / r.height;
+    target = toW(px, py); solve();
+  }
+  let down = false;
+  cv.addEventListener("pointerdown", e => { down = true; pick(e); });
+  cv.addEventListener("pointermove", e => { if (down) pick(e); });
+  window.addEventListener("pointerup", () => down = false);
+  $("phi").addEventListener("input", solve);
+  $("eDown").onclick = () => { elbow = 1; $("eDown").classList.add("on"); $("eUp").classList.remove("on"); solve(); };
+  $("eUp").onclick = () => { elbow = -1; $("eUp").classList.add("on"); $("eDown").classList.remove("on"); solve(); };
+
+  function setMode(m) {
+    mode = m; $("tFK").classList.toggle("on", m === "FK"); $("tIK").classList.toggle("on", m === "IK");
+    $("pFK").hidden = m !== "FK"; $("pIK").hidden = m !== "IK";
+    if (m === "IK") { if (!target) target = [0.35, 0.25]; solve(); } else { other = null; draw(); }
+  }
+  $("tFK").onclick = () => setMode("FK"); $("tIK").onclick = () => setMode("IK");
+  $("vphi").textContent = $("phi").value + "°";
+
+  buildWS(); syncSliders(); draw();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { buildWS(); draw(); });
+})();
+</script>
+</body>
+</html>

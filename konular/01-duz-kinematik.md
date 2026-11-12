@@ -2,6 +2,34 @@
 
 > **Çıktı türü:** Hesap · **Kod:** [`kod/k01_duz_kinematik.py`](../kod/k01_duz_kinematik.py), [`kod/robot_kol.py`](../kod/robot_kol.py)
 
+> ### 🎯 Kısaca
+> **Soru:** "Eklem açılarını biliyorum. Robotun eli (ucu) nerede?"
+> Bu soruyu yanıtlamak için her uzvu bir **ok** gibi düşünüp okları uç uca eklemek yeterlidir. Matrisler ve DH yöntemi, bu toplama işini düzenli ve hatasız yapmaya yarayan araçlardır.
+
+> 🧠 **Benzetme:** Gözlerin kapalı. Biri sana "omzunu 30° kaldır, dirseğini 45° bük" diyor. Parmak ucunun nerede olduğunu kafanda hesaplayabilirsin: Önce üst kolun nereyi gösteriyor, sonra ön kolun onun ucundan nereye uzanıyor. Düz kinematik tam olarak budur.
+
+### Formülden önce sezgi (2 uzuvlu kol)
+
+```text
+          ● uç
+         /
+     L2 /  ← ikinci ok: açısı q1+q2
+       /
+      ● dirsek
+     /
+ L1 /  ← birinci ok: açısı q1
+   /
+  ■ taban
+```
+
+Her okun **yatay gölgesi** $L\cos(\text{açı})$, **dikey gölgesi** $L\sin(\text{açı})$ olur. Ucun konumu bu gölgelerin toplamıdır:
+
+$x = L_1\cos q_1 + L_2\cos(q_1+q_2)$ ve $y = L_1\sin q_1 + L_2\sin(q_1+q_2)$
+
+İkinci okun açısı $q_1+q_2$'dir, çünkü dirsek, üst kolun **zaten döndürdüğü** yönden itibaren döner. Formüllerin hepsi bundan ibaret. Aşağıdaki matrisler aynı işi 3B'de ve çok eklemli kollarda düzenli yapmanın yoludur.
+
+> 🎮 Kolu kendin oynatıp sonucu görmek istersen: **[İnteraktif kol](../interaktif.html)**
+
 **Düz kinematik:** Eklem açıları $q$ verildiğinde uç efektörün konumunu ve yönelimini bulma problemidir. Çözümü her zaman vardır ve tektir.
 
 ## 1.1 Homojen dönüşüm matrisi
@@ -103,5 +131,31 @@ L_1 c_1 + L_2 c_{12} + L_3 c_{123} & L_2 c_{12} + L_3 c_{123} & L_3 c_{123} \\
 
 $\det J = L_1 L_2 \sin q_2$ olduğu için $q_2 = 0$ veya $q_2 = \pm 180°$ konumlarında kol **tekil (singular)** olur. Bu konumlarda kol tam açılmış ya da kendi üzerine katlanmıştır ve bazı yönlerde hareket edemez. $J$ aynı zamanda statik kuvvet ilişkisini de verir: $\tau = J^{T} F$ [3, Bölüm 5].
 
+## ⚡ Akılda kalsın
+- **Düz kinematik** = açılar → uç konumu. Sonuç **her zaman vardır ve tektir**.
+- **Homojen matris** (4×4), "döndür + taşı" bilgisini tek pakette tutar. Matrisler **sırayla çarpılır**.
+- **DH:** Her eklem 4 sayıyla tarif edilir ($a, \alpha, d, \theta$). Bu bir **kimlik kartı** gibidir.
+- **Jacobian:** "Eklemleri biraz oynatırsam uç ne kadar oynar?" sorusunun cevabıdır. $\det J = 0$ olduğunda kol **tekildir** (kilitlenir).
+
+## ✍️ Kendini test et
+<details>
+<summary><b>Soru:</b> q = (0°, 0°, 0°) iken uç nerededir?</summary>
+<br>
+x = 0.30 + 0.25 + 0.10 = 0.65 m, y = 0. Kol yatay ve tamamen açık.
+</details>
+<details>
+<summary><b>Soru:</b> q = (90°, 0°, 0°) iken uç nerededir?</summary>
+<br>
+x = 0, y = 0.65 m. Kol dimdik yukarıyı gösteriyor.
+</details>
+<details>
+<summary><b>Soru:</b> Kol neden q2 = 0° iken tekildir?</summary>
+<br>
+Kol tamamen açık. Ucu daha da uzağa itemezsin: O yönde hareket edemez, bir serbestlik kaybolur.
+</details>
+
 ## Kaynaklar
 [1] Craig · [2] Spong vd. · [3] Lynch & Park · [6] Denavit & Hartenberg. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
+
+---
+[← 0 · Temeller](00-temeller.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [2 · Ters kinematik →](02-ters-kinematik.md)

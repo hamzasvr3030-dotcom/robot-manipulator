@@ -2,6 +2,14 @@
 
 > **Çıktı türü:** Grafik · **Kod:** [`kod/k05_pid.py`](../kod/k05_pid.py)
 
+> ### 🎯 Kısaca
+> Motora "60°'ye git ve **orada kal**" dediğinde bunu nasıl başarır? Motor sürekli **ölçer** (enkoder), istenen değerle **karşılaştırır** ve aradaki farka (hataya) göre **düzeltir**. Bu döngü saniyede 1000 kez tekrarlanır. Düzeltme kuralı da **PID**'dir.
+
+> 🧠 **Benzetme — duşun suyunu ayarlamak:**
+> - **P (oransal):** Su çok soğuksa musluğu çok çevirirsin, az soğuksa az. Ama musluk bir yerde takılı kalırsa su hep biraz soğuk kalır. Bu **kalıcı hata**dır.
+> - **I (integral):** "Bir süredir hâlâ biraz soğuk" diye düşünüp musluğu **zamanla** biraz daha açarsın. Kalıcı hata böyle kaybolur.
+> - **D (türev):** Sıcaklık hızla yükseliyorsa musluğu açmayı **erkenden** bırakırsın. Böylece suyun aşırı ısınması (salınım) önlenir.
+
 ## 5.1 Kaskad kontrol yapısı
 
 Endüstriyel servo sürücülerde üç kontrol döngüsü iç içe çalışır. İçteki döngü her zaman daha hızlıdır [2, Bölüm 6], [10]:
@@ -74,5 +82,26 @@ PID (Kp=60, Ki=150, Kd=4)     maks |hata| =   1.47°   sürekli hal hatası = +0
 
 **Daha iyi kontrol yöntemleri:** Kontrolcüye yerçekimi telafisi olarak $mgl\cos q_{ref}$ ve ileri besleme olarak $J\ddot q_{ref}$ eklenirse PID'nin iş yükü büyük ölçüde azalır. Bu yaklaşım **hesaplanmış tork (computed torque)** kontrolüne giden yoldur [2, Bölüm 8], [4, Bölüm 8].
 
+## ⚡ Akılda kalsın
+- **Kapalı çevrim** = ölç → karşılaştır → düzelt döngüsü. Bu döngü **sensör** (enkoder) olmadan çalışmaz.
+- **P** hızlı tepki verir ama kalıcı hata bırakır. **I** hatayı sıfırlar. **D** salınımı söndürür.
+- Gerçek sistemde iki ek önlem şarttır: **anti-windup** (motor doyunca integrali durdur) ve **türev filtresi** (gürültüyü büyütme).
+- Robot kolunda kalıcı hatanın sebebi **yerçekimidir**. Bu yüzden integral terimi veya yerçekimi telafisi gerekir.
+
+## ✍️ Kendini test et
+<details>
+<summary><b>Soru:</b> Kol 90°'de (dimdik yukarı) dururken P kontrolcünün kalıcı hatası neden yok?</summary>
+<br>
+cos 90° = 0, yani bu konumda yerçekimi torku sıfır. Motorun bir şeyi taşıması gerekmediği için hata da gerekmiyor.
+</details>
+<details>
+<summary><b>Soru:</b> Kp'yi iki katına çıkarırsan kalıcı hata ne olur?</summary>
+<br>
+Yaklaşık yarıya iner (e = τ_g / Kp), ama salınım artar. Hatayı tamamen sıfırlamanın yolu I terimidir.
+</details>
+
 ## Kaynaklar
 [2] Spong vd. · [4] Siciliano vd. · [10] Åström & Murray · [11] Åström & Hägglund. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
+
+---
+[← 4 · Motorlar](04-motorlar.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [6 · Tutucu →](06-tutucu.md)
