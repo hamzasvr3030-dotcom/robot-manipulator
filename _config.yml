@@ -1,0 +1,10 @@
+title: Robot Manipülatörleri
+description: Temelden uygulamaya 10 konu — kinematik, yörünge, motor, kontrol, ROS 2, algılama, güvenlik
+theme: jekyll-theme-cayman
+lang: tr
+markdown: kramdown
+kramdown:
+  input: GFM
+  math_engine: null
+exclude:
+  - requirements.txt

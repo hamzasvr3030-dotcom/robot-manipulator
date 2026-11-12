@@ -1,0 +1,20 @@
+<!-- GitHub Pages'te LaTeX formüllerini MathJax ile gösterir -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  startup: {
+    pageReady: () => {
+      // ```math blokları kod bloğu olarak gelir: onları formüle çevir
+      document.querySelectorAll('div.language-math, pre > code.language-math').forEach(el => {
+        const kutu = el.tagName === 'CODE' ? el.parentElement : el;
+        const d = document.createElement('div');
+        d.textContent = '\\[' + el.textContent + '\\]';
+        d.style.overflowX = 'auto';
+        kutu.replaceWith(d);
+      });
+      return MathJax.startup.defaultPageReady();
+    }
+  }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
