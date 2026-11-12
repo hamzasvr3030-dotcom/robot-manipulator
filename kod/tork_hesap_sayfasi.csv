@@ -1,0 +1,15 @@
+﻿GİRDİLER
+Uzuv boyları [m];0.3;0.25;0.1
+Uzuv kütleleri [kg];1.2;0.9;0.3
+Motor kütleleri [kg];0.0;0.4;0.25
+Yük [kg];0.5
+Maks. ivme [rad/s²];2.094;2.618;3.491
+Maks. hız [rad/s];1.571;2.094;3.142
+Emniyet katsayısı;1.5
+Redüktör verimi;0.8
+
+SONUÇLAR
+Eklem;Statik tork [N·m];Atalet J [kg·m²];Dinamik tork [N·m];Toplam ×1.5 [N·m];Redüktör N;Motor torku [N·m];Motor devri [rpm];Mekanik güç [W]
+1;12,998;0,634;1,329;21,490;50;0,537;750,000;33,757
+2;4,316;0,123;0,322;6,957;50;0,174;1000,000;14,571
+3;0,638;0,006;0,021;0,988;30;0,041;900,000;3,104
