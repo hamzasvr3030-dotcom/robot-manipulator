@@ -2,6 +2,7 @@
   sayfalar:
     - { n: "⌂", ad: "Ana sayfa", url: "/" }
     - { n: "📅", ad: "Proje planı ve takvim", url: "/plan.html" }
+    - { n: "🔌", ad: "Kişi 2 · Elektronik ve güç", url: "/kisi2-elektronik-guc.html" }
     - { n: "🎮", ad: "İnteraktif Laboratuvar", url: "/interaktif.html" }
 - grup: Ortak dersler (tüm takımlar)
   sayfalar:

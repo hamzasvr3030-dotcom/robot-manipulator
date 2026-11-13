@@ -55,6 +55,7 @@ Tam plan için: **[Proje planı ve takvim](https://hamzasvr3030-dotcom.github.io
 **Her sayfa aynı düzende ilerler:** 📋 Syllabus kutusu (dönem, süre, sorumlu kişi, ön koşul) → 🎯 Kısaca → 🧠 Benzetme → teori ve uygulama → ⚡ Akılda kalsın → ✍️ Kendini test et (cevaplar tıklayınca açılır).
 
 **Yardımcı sayfalar:**
+- 🔌 **[Kişi 2 · Elektronik ve güç](kisi2-elektronik-guc.md):** Motor sürücüler, güç dağıtımı, acil durdurma ve sensör bağlantıları için öncelikler, malzeme listesi taslağı (son gün 20 Kasım), test prosedürleri ve hafta hafta iş listesi.
 - 🎮 **[İnteraktif laboratuvar](https://hamzasvr3030-dotcom.github.io/robot-manipulator/interaktif.html):** Konu 2–6 için hazır örnekler ve canlı adım adım hesap.
 - 📖 **[Terimler sözlüğü](SOZLUK.md)** · 📚 **[Kaynakça](KAYNAKLAR.md)**
 

@@ -180,3 +180,8 @@ a.card:hover { border-color: var(--accent); text-decoration: none; transform: tr
 .prose table.plan tr.simdi td { background: var(--accent-soft); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent); }
 .prose table.plan tr.simdi td:first-child::after { content: " ◀ şimdi"; color: var(--accent); font-weight: 700; font-size: .8rem; }
 .prose table.plan td.tarih { white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* görev listesi */
+.prose ul.task-list { list-style: none; padding-left: 4px; }
+.prose .task-list-item { margin: 4px 0; }
+.prose .task-list-item-checkbox { accent-color: var(--accent); width: 16px; height: 16px; margin-right: 8px; vertical-align: -2px; cursor: pointer; }
