@@ -1,5 +1,5 @@
 """
-Konu 4 — Eklem torku hesabı ve motor/redüktör boyutlandırma.
+Konu 5 — Eklem torku hesabı ve motor/redüktör boyutlandırma.
 
 En kötü durum: kol tamamen yatay uzanmış (yerçekimi momenti maksimum)
 + hedef açısal ivmede hızlanırken.

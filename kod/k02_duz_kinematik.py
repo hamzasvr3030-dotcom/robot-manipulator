@@ -1,4 +1,4 @@
-"""Konu 1 — DH parametreleriyle düz kinematik hesabı."""
+"""Konu 2 — DH parametreleriyle düz kinematik hesabı."""
 from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
@@ -44,4 +44,4 @@ ax.set_title(f"q = ({q_derece[0]:.0f}°, {q_derece[1]:.0f}°, {q_derece[2]:.0f}�
 ax.set_aspect("equal"); ax.grid(alpha=0.3); ax.set_xlabel("x [m]"); ax.set_ylabel("y [m]")
 ax.text(0.02, 0.95, "kırmızı: x_i ekseni\nyeşil: y_i ekseni", transform=ax.transAxes, va="top", fontsize=8)
 plt.tight_layout()
-plt.savefig(CIKTI / "01_duz_kinematik.png", dpi=130)
+plt.savefig(CIKTI / "02_duz_kinematik.png", dpi=130)

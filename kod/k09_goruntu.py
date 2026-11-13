@@ -1,9 +1,9 @@
 """
-Konu 8 — Temel görüntü işleme: renkli nesneyi bul, robot koordinatına çevir.
+Konu 9 — Temel görüntü işleme: renkli nesneyi bul, robot koordinatına çevir.
 
 Bağımlılık olmasın diye sentetik görüntü ve yalnızca numpy kullanılır.
 Gerçek kamerada aynı adımlar OpenCV ile yapılır (cv2.inRange, cv2.moments,
-cv2.calibrateCamera, cv2.calibrateHandEye) — bkz. konular/08-algilama.md
+cv2.calibrateCamera, cv2.calibrateHandEye) — bkz. konular/09-algilama.md
 
 Senaryo: Kamera masanın 0.80 m üzerinde, aşağı bakıyor (eye-to-hand).
 """
@@ -65,4 +65,4 @@ ax[2].imshow(img); ax[2].plot(u_c, v_c, "y+", ms=25, mew=3)
 ax[2].set_title(f"4–6) Merkez → robot: ({p_robot[0]:.3f}, {p_robot[1]:.3f}) m")
 for a in ax: a.set_xlabel("u [px]"); a.set_ylabel("v [px]")
 plt.tight_layout()
-plt.savefig(CIKTI / "08_goruntu_isleme.png", dpi=110)
+plt.savefig(CIKTI / "09_goruntu_isleme.png", dpi=110)

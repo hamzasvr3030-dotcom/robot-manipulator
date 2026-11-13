@@ -1,6 +1,9 @@
-# 1 · Düz Kinematik: Dönüşüm Matrisleri ve DH Parametreleri
+# 2 · Düz Kinematik: Dönüşüm Matrisleri ve DH Parametreleri
 
-> **Çıktı türü:** Hesap · **Kod:** [`kod/k01_duz_kinematik.py`](../kod/k01_duz_kinematik.py), [`kod/robot_kol.py`](../kod/robot_kol.py)
+> **Çıktı türü:** Hesap · **Kod:** [`kod/k02_duz_kinematik.py`](../kod/k02_duz_kinematik.py), [`kod/robot_kol.py`](../kod/robot_kol.py)
+
+> 📋 **Syllabus:** K2 · Düz kinematik · **Dönem:** P1 (12–15 Kasım) · **Tahmini süre:** 4 saat · **Öncelikli:** Kişi 4 (kinematik ve hareket planlama)  
+> **Ön koşul:** [O1 · Matematik ve fizik](../ortak/o1-matematik-fizik.md) · **Ay sonu hedefi:** Verilen kol için uç nokta konumunu hesaplar · **Syllabus çıktısı:** Seçilen kol için uç nokta hesabı (kod) · [Proje planı](../plan.html)
 
 > ### 🎯 Kısaca
 > **Soru:** "Eklem açılarını biliyorum. Robotun eli (ucu) nerede?"
@@ -32,7 +35,7 @@ $x = L_1\cos q_1 + L_2\cos(q_1+q_2)$ ve $y = L_1\sin q_1 + L_2\sin(q_1+q_2)$
 
 **Düz kinematik:** Eklem açıları $q$ verildiğinde uç efektörün konumunu ve yönelimini bulma problemidir. Çözümü her zaman vardır ve tektir.
 
-## 1.1 Homojen dönüşüm matrisi
+## 2.1 Homojen dönüşüm matrisi
 
 Bir çerçevenin başka bir çerçeveye göre **dönmesi** ($R$, 3×3) ve **ötelenmesi** ($p$, 3×1) tek bir 4×4 matriste birleştirilir [1, Bölüm 2], [3, Bölüm 3]:
 
@@ -48,7 +51,7 @@ Dönüşümler zincir boyunca **çarpılarak** birleşir. Örneğin $z$ ekseni e
 R_z(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix}
 ```
 
-## 1.2 Denavit–Hartenberg (DH) gösterimi
+## 2.2 Denavit–Hartenberg (DH) gösterimi
 
 Denavit ve Hartenberg [6], ardışık iki eklem çerçevesi arasındaki dönüşümü **4 parametreyle** ifade etmeyi önerdi. Bu yöntemde çerçeveler kurallara göre yerleştirilir: $z_i$ eklem eksenidir, $x_i$ iki $z$ ekseninin ortak dikmesidir [2, Bölüm 3.2].
 
@@ -73,7 +76,7 @@ s\theta_i & c\theta_i c\alpha_i & -c\theta_i s\alpha_i & a_i s\theta_i \\
 
 > ⚠️ Craig [1] **değiştirilmiş (modified) DH** kullanır: Parametrelerin sırası ve indeksleri farklıdır. Sonuç aynı çıkar, ama iki kitaptaki tablolar birbirine karıştırılmamalıdır.
 
-## 1.3 Örnek kolun DH tablosu
+## 2.3 Örnek kolun DH tablosu
 
 | $i$ | $a_i$ [m] | $\alpha_i$ | $d_i$ | $\theta_i$ |
 |---|---|---|---|---|
@@ -89,9 +92,9 @@ y = L_1 s_1 + L_2 s_{12} + L_3 s_{123},\qquad
 \varphi = q_1 + q_2 + q_3
 ```
 
-## 1.4 Hesap: $q = (30°,\,45°,\,-30°)$
+## 2.4 Hesap: $q = (30°,\,45°,\,-30°)$
 
-Program çıktısı (`python kod/k01_duz_kinematik.py`):
+Program çıktısı (`python kod/k02_duz_kinematik.py`):
 
 ```text
 0_T_1 =                                1_T_2 =
@@ -115,9 +118,9 @@ Kapalı form kontrol: x = 0.3952 m, y = 0.4622 m  (fark: 5.6e-17)
 - $y = 0.30\sin 30° + 0.25\sin 75° + 0.10\sin 45° = 0.1500 + 0.2415 + 0.0707 = 0.4622$ m ✔
 - $\varphi = 30 + 45 - 30 = 45°$. Bu sonuç $0T_3$'ün dönme bloğunda da görülüyor: $\cos 45° = 0.7071$ ✔
 
-![Düz kinematik](../gorseller/01_duz_kinematik.png)
+![Düz kinematik](../gorseller/02_duz_kinematik.png)
 
-## 1.5 Jacobian (sonraki konular için)
+## 2.5 Jacobian (sonraki konular için)
 
 Eklem hızlarını uç hızlarına bağlayan matris $\dot{\mathbf{x}} = J(q)\,\dot{q}$ ile tanımlanır [2, Bölüm 4]:
 
@@ -139,6 +142,11 @@ $\det J = L_1 L_2 \sin q_2$ olduğu için $q_2 = 0$ veya $q_2 = \pm 180°$ konum
 
 ## ✍️ Kendini test et
 <details>
+<summary><b>Syllabus (K2):</b> l1 = l2 = 0.3 m, θ1 = 90°, θ2 = −90° için uç nokta nedir?</summary>
+<br>
+x = 0.3·cos 90° + 0.3·cos(90° − 90°) = 0 + 0.3 = <b>0.3 m</b>, y = 0.3·sin 90° + 0.3·sin 0° = 0.3 + 0 = <b>0.3 m</b>. Uç (0.3, 0.3) m. Birinci uzuv dimdik yukarı, ikinci uzuv onun ucundan yatay olarak sağa uzanıyor ("Γ" şekli).
+</details>
+<details>
 <summary><b>Soru:</b> q = (0°, 0°, 0°) iken uç nerededir?</summary>
 <br>
 x = 0.30 + 0.25 + 0.10 = 0.65 m, y = 0. Kol yatay ve tamamen açık.
@@ -158,4 +166,4 @@ Kol tamamen açık. Ucu daha da uzağa itemezsin: O yönde hareket edemez, bir s
 [1] Craig · [2] Spong vd. · [3] Lynch & Park · [6] Denavit & Hartenberg. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
 
 ---
-[← 0 · Temeller](00-temeller.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [2 · Ters kinematik →](02-ters-kinematik.md)
+[← 1 · Temeller](01-temeller.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [3 · Ters kinematik →](03-ters-kinematik.md)

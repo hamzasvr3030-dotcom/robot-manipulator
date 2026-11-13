@@ -80,18 +80,18 @@ genis: true
 
 <div class="lab">
   <h1>🎮 İnteraktif Laboratuvar</h1>
-  <p class="lead">Konuları okuduktan sonra burada <b>kendin dene</b>. Her bölümde hazır örnekler var. Bir örneğe tıkla, ne olduğunu oku,
+  <p class="lead">Sekme numaraları <b>konu numaralarıdır</b> (Konu 2–6). Konuları okuduktan sonra burada <b>kendin dene</b>. Her bölümde hazır örnekler var. Bir örneğe tıkla, ne olduğunu oku,
     sonra kaydırıcıları oynatıp sonucun nasıl değiştiğini izle. Bütün hesaplar tarayıcında, <b>Python koduyla aynı formüllerle</b> yapılıyor.</p>
 
   <div class="labtabs" role="tablist">
-    <button data-tab="fk" class="on">1 · Düz kinematik <small>açı → konum</small></button>
-    <button data-tab="ik">2 · Ters kinematik <small>konum → açı</small></button>
-    <button data-tab="yr">3 · Yörünge <small>A'dan B'ye</small></button>
-    <button data-tab="tk">4 · Tork <small>motor seçimi</small></button>
-    <button data-tab="pid">5 · PID <small>kontrol</small></button>
+    <button data-tab="fk" class="on">2 · Düz kinematik <small>açı → konum</small></button>
+    <button data-tab="ik">3 · Ters kinematik <small>konum → açı</small></button>
+    <button data-tab="yr">4 · Yörünge <small>A'dan B'ye</small></button>
+    <button data-tab="tk">5 · Tork <small>motor seçimi</small></button>
+    <button data-tab="pid">6 · PID <small>kontrol</small></button>
   </div>
 
-  <!-- ============ 1. DÜZ KİNEMATİK ============ -->
+  <!-- ============ 2. DÜZ KİNEMATİK ============ -->
   <section class="labpane" id="pane-fk">
     <div class="intro">
       <div class="box"><h3>🎯 Ne öğreneceksin?</h3><p>Eklem açıları verildiğinde kolun ucunun nerede olduğunu. Her uzuv bir <b>ok</b>'tur. Okları uç uca eklediğinde varılan nokta, kolun ucudur.</p></div>
@@ -115,7 +115,7 @@ genis: true
     <div class="panel steps"><h3>🧮 Adım adım hesap</h3><ol id="fkS"></ol></div>
   </section>
 
-  <!-- ============ 2. TERS KİNEMATİK ============ -->
+  <!-- ============ 3. TERS KİNEMATİK ============ -->
   <section class="labpane" id="pane-ik" hidden>
     <div class="intro">
       <div class="box"><h3>🎯 Ne öğreneceksin?</h3><p>Ucu istediğin bir noktaya götürmek için gereken eklem açılarını. Çoğu hedefe <b>iki farklı duruşla</b> (dirsek yukarı ve aşağı) ulaşılır, bazı hedeflere ise <b>hiç</b> ulaşılamaz.</p></div>
@@ -398,12 +398,12 @@ const steps = (id, items) => { $(id).innerHTML = items.map(s =>
 // ================= 1. DÜZ KİNEMATİK =================
 const FK = { q: [30, 45, -30] };
 const FK_P = [
-  { ad: "📐 Konu 1'deki çözümlü örnek", q: [30, 45, -30], t: "Kitaptaki örnek",
-    d: "Konu 1'de elle çözülen örnek bu. Sonuç <b>x = 0.3952 m, y = 0.4622 m, φ = 45°</b> çıkmalı. Aşağıdaki adımları kâğıtta yaptığın hesapla karşılaştır." },
+  { ad: "📐 Konu 2'deki çözümlü örnek", q: [30, 45, -30], t: "Kitaptaki örnek",
+    d: "Konu 2'de elle çözülen örnek bu. Sonuç <b>x = 0.3952 m, y = 0.4622 m, φ = 45°</b> çıkmalı. Aşağıdaki adımları kâğıtta yaptığın hesapla karşılaştır." },
   { ad: "➡️ Tam açık kol (tekillik)", q: [0, 0, 0], t: "Tekil konum",
     d: "Kol dümdüz ve yatay, uç en uzak noktada (0.65 m). <b>q2 = 0 olduğu için det J = 0</b>, yani kol tekil. Ucu daha da dışarı itemezsin, kol o yöndeki hareket kabiliyetini kaybetmiş. Gerçek robotlar bu konumdan kaçınır." },
   { ad: "⬆️ Dimdik yukarı", q: [90, 0, 0], t: "Kol dikey",
-    d: "Bütün uzuvlar yukarıyı gösteriyor: x = 0, y = 0.65 m. Bu duruşta <b>yerçekimi torku sıfırdır</b>, çünkü yatay kaldıraç kolu yok (Konu 4). Kol yine tam açık olduğu için yine tekil." },
+    d: "Bütün uzuvlar yukarıyı gösteriyor: x = 0, y = 0.65 m. Bu duruşta <b>yerçekimi torku sıfırdır</b>, çünkü yatay kaldıraç kolu yok (Konu 5). Kol yine tam açık olduğu için yine tekil." },
   { ad: "🤏 En fazla katlanmış dirsek", q: [0, 150, -150], t: "Eklem sınırında",
     d: "Dirsek 150°'ye kadar bükülü, bu eklemin <b>sınırı</b>. Uç tabana yaklaşıyor ama tam üstüne gelemiyor. Çalışma uzayının ortasındaki küçük boşluğun sebebi bu sınır." },
   { ad: "🔁 Aynı nokta, farklı duruş (A)", q: [7.2166, 92.3603, -119.5769], t: "Dirsek aşağı",
@@ -442,7 +442,7 @@ function fkDraw() {
       w: `Bileğin konumu: (${f(p.pts[2][0])}, ${f(p.pts[2][1])}) m. Açılar toplanıyor, çünkü dirsek üst kolun zaten döndürdüğü yönden itibaren döner.` },
     { h: `3. uzuv (L3 = 0.10 m): mutlak açısı q1 + q2 + q3 = ${A(a3)}`, f: `Δx = 0.10·cos(${A(a3)}) = ${f(L[2] * Math.cos(a3))}   Δy = 0.10·sin(${A(a3)}) = ${f(L[2] * Math.sin(a3))}` },
     { h: "Sonuç: Bütün gölgeleri topla", cls: "ok", f: `x = ${f(L[0] * Math.cos(a1))} + ${f(L[1] * Math.cos(a2))} + ${f(L[2] * Math.cos(a3))} = ${f(p.x)} m   ·   y = ${f(p.y)} m   ·   φ = ${A(p.phi)}`,
-      w: "Bu, DH matrislerini 0T1 · 1T2 · 2T3 şeklinde çarpınca çıkan sonucun ta kendisi (Konu 1.4)." },
+      w: "Bu, DH matrislerini 0T1 · 1T2 · 2T3 şeklinde çarpınca çıkan sonucun ta kendisi (Konu 2.4)." },
     { h: "Tekillik kontrolü", cls: Math.abs(det) < 0.003 ? "bad" : "", f: `det J = L1·L2·sin(q2) = 0.30·0.25·sin(${fd(q[1])}) = ${f(det)}`,
       w: Math.abs(det) < 0.003 ? "Sıfıra çok yakın: Kol tekil, bazı yönlerde hareket edemez!" : "Sıfırdan uzak: Kol her yönde rahatça hareket edebilir." },
   ]);
@@ -455,7 +455,7 @@ presets("fkP", FK_P, p => { FK.q = p.q.slice(); fkSync(); explain("fkE", p.t, p.
 // ================= 2. TERS KİNEMATİK =================
 const IK = { x: 0.35, y: 0.25, phi: -20, e: 1 };
 const IK_P = [
-  { ad: "📐 Konu 2'deki örnek", x: 0.35, y: 0.25, phi: -20, e: 1, t: "İki çözüm",
+  { ad: "📐 Konu 3'teki örnek", x: 0.35, y: 0.25, phi: -20, e: 1, t: "İki çözüm",
     d: "Hedef (0.35, 0.25) m ve φ = −20°. <b>İki çözüm</b> var: Dirsek aşağıyken (7.2°, 92.4°, −119.6°), dirsek yukarıyken (88.8°, −92.4°, −16.4°). Soluk kol ikinci çözüm. <b>Dirsek</b> düğmesiyle ikisi arasında geç." },
   { ad: "❌ Ulaşılamayan hedef", x: 0.70, y: 0.0, phi: 0, e: 1, t: "Çözüm yok",
     d: "Hedef 0.70 m uzakta, oysa kol en fazla 0.65 m uzanabiliyor. 3. adımda <b>cos q2 > 1</b> çıkıyor. Kosinüs 1'den büyük olamayacağı için çözüm yok." },
@@ -534,7 +534,7 @@ presets("ikP", IK_P, p => { Object.assign(IK, { x: p.x, y: p.y, phi: p.phi, e: p
 // ================= 3. YÖRÜNGE =================
 const YR = { A: [0.45, 0.05, 0], B: [0.15, 0.40, 60], T: 2, prof: "q", u: 0, playing: false, showJ: true, showC: true };
 const YR_P = [
-  { ad: "📐 Konu 3'teki örnek", A: [0.45, 0.05, 0], B: [0.15, 0.40, 60], T: 2, prof: "q", t: "Eğri yol ve düz yol",
+  { ad: "📐 Konu 4'teki örnek", A: [0.45, 0.05, 0], B: [0.15, 0.40, 60], T: 2, prof: "q", t: "Eğri yol ve düz yol",
     d: "Mavi uç bir <b>yay</b> çiziyor (0.485 m), turuncu uç <b>düz çizgide</b> gidiyor (0.461 m). Sol alttaki grafikte kartezyende q2 ve q3'ün bir tepe yaptığını gör: Düz çizgiyi korumak için eklemler ileri gidip geri dönüyor." },
   { ad: "⏱️ Aynı hareket, 0.8 saniyede", A: [0.45, 0.05, 0], B: [0.15, 0.40, 60], T: 0.8, prof: "q", t: "Süre kısalınca",
     d: "Süre 2 s'den 0.8 s'ye inince hızlar (2/0.8) = <b>2.5 kat</b>, ivmeler (2/0.8)² = <b>6.25 kat</b> artıyor. Tablodaki değerleri bir önceki örnekle karşılaştır. Motor torku ivmeyle orantılı olduğu için hızlı hareket <b>güçlü motor</b> ister." },
@@ -622,8 +622,8 @@ presets("yrP", YR_P, p => { Object.assign(YR, { A: p.A, B: p.B, T: p.T, prof: p.
 const G = 9.81, TK = { q: [0, 0, 0], m: 0.5, mm: 0.25, sf: 1.5, n1: 50 };
 const M_UZUV = [1.20, 0.90, 0.30], M_MOT2 = 0.40, ALFA = [120, 150, 200].map(rad), OMEGA = [90, 120, 180].map(rad), ETA = 0.8, NS = [null, 50, 30];
 const TK_P = [
-  { ad: "📐 Konu 4: yatay kol, 0.5 kg", q: [0, 0, 0], m: 0.5, mm: 0.25, sf: 1.5, n1: 50, t: "En kötü durum",
-    d: "Kol tamamen yatay, bu yüzden yerçekimi kaldıraçları en uzun. Eklem 1 tasarım torku <b>21.49 N·m</b> çıkıyor (Konu 4 tablosuyla aynı). Torkun yaklaşık %90'ı <b>statik</b>: Bu kolu yerçekimi zorluyor, hızlanma değil." },
+  { ad: "📐 Konu 5: yatay kol, 0.5 kg", q: [0, 0, 0], m: 0.5, mm: 0.25, sf: 1.5, n1: 50, t: "En kötü durum",
+    d: "Kol tamamen yatay, bu yüzden yerçekimi kaldıraçları en uzun. Eklem 1 tasarım torku <b>21.49 N·m</b> çıkıyor (Konu 5 tablosuyla aynı). Torkun yaklaşık %90'ı <b>statik</b>: Bu kolu yerçekimi zorluyor, hızlanma değil." },
   { ad: "⬆️ Kol dik yukarı", q: [90, 0, 0], m: 0.5, mm: 0.25, sf: 1.5, n1: 50, t: "Kaldıraç kolu sıfır",
     d: "Bütün kütleler eklem 1'in tam üstünde, yatay uzaklıkları <b>sıfır</b>. Bu yüzden statik tork sıfır. Geriye yalnızca hızlanma torku (J·α) kalıyor. Motor seçimini bu duruşa göre yaparsan, kol yataya geldiğinde motor yetmez!" },
   { ad: "↗️ Kol 45° kaldırılmış", q: [45, 0, 0], m: 0.5, mm: 0.25, sf: 1.5, n1: 50, t: "cos 45° = 0.707",
@@ -719,7 +719,7 @@ const PID_P = [
   { ad: "3️⃣ PD (Kp = 60, Kd = 4)", s: { kp: 60, ki: 0, kd: 4, ref: 60, step: false, tmax: 12, aw: true, filt: true, grav: false }, t: "D salınımı söndürür",
     d: "Türev terimi \"hata hızla değişiyor, yavaşla\" der ve salınım kayboluyor. Ama <b>kalıcı hata hâlâ duruyor</b> (≈0.9°), çünkü kol durduğunda hatanın değişim hızı sıfırdır ve D terimi o anda hiçbir şey yapmaz." },
   { ad: "4️⃣ PID (Kp = 60, Ki = 150, Kd = 4)", s: { kp: 60, ki: 150, kd: 4, ref: 60, step: false, tmax: 12, aw: true, filt: true, grav: false }, t: "I kalıcı hatayı siler",
-    d: "İntegral terimi küçük hatayı <b>zamanla biriktiriyor</b> ve torku yavaşça artırıyor. Sonunda yerçekimini tam karşılıyor ve kalıcı hata sıfıra iniyor. Bu, Konu 5'teki sonucun aynısı." },
+    d: "İntegral terimi küçük hatayı <b>zamanla biriktiriyor</b> ve torku yavaşça artırıyor. Sonunda yerçekimini tam karşılıyor ve kalıcı hata sıfıra iniyor. Bu, Konu 6'daki sonucun aynısı." },
   { ad: "5️⃣ Integral şişmesi (windup)", s: { kp: 60, ki: 150, kd: 4, ref: 60, step: true, tmax: 4, aw: false, filt: true, grav: false }, t: "Anti-windup kapalı",
     d: "Ani bir basamak komutu verildi ve tork 4 N·m ile sınırlı. Motor uzun süre <b>doymada</b> kalıyor ve bu sırada integral boşuna şişiyor. Kol hedefi <b>≈25°</b> geçiyor. Şimdi <b>Anti-windup</b> kutusunu işaretle: Aşma ≈2°'ye iniyor." },
   { ad: "6️⃣ Yerçekimi telafisi + PD", s: { kp: 60, ki: 0, kd: 4, ref: 60, step: false, tmax: 12, aw: true, filt: true, grav: true }, t: "Modeli kullanmak",

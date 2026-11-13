@@ -2,7 +2,7 @@
 MoveIt 2 Python API (moveit_py) ile hareket planlama örneği.
 
 ÖN KOŞUL: MoveIt Setup Assistant ile 'rrr_kol_moveit_config' paketi oluşturulmuş olmalı
-(planlama grubu adı: "arm", uç: tool0, isimli poz: "hazir"). Adımlar konular/07-yazilim.md'de.
+(planlama grubu adı: "arm", uç: tool0, isimli poz: "hazir"). Adımlar konular/08-yazilim.md'de.
 
 Bu betik tek başına `python` ile değil, MoveIt yapılandırmasını parametre olarak
 aktaran bir launch dosyasıyla çalıştırılır (MoveIt "MoveItPy" eğitimindeki gibi).

@@ -1,4 +1,4 @@
-"""Konu 2 — Ters kinematik: analitik ve sayısal çözüm karşılaştırması."""
+"""Konu 3 — Ters kinematik: analitik ve sayısal çözüm karşılaştırması."""
 from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
@@ -45,4 +45,4 @@ ax2.semilogy(gecmis, "o-", color="#55A868")
 ax2.set_title("Sayısal IK (DLS) — hata yakınsaması")
 ax2.set_xlabel("iterasyon"); ax2.set_ylabel("|e|  (log ölçek)"); ax2.grid(alpha=0.3, which="both")
 plt.tight_layout()
-plt.savefig(CIKTI / "02_ters_kinematik.png", dpi=130)
+plt.savefig(CIKTI / "03_ters_kinematik.png", dpi=130)

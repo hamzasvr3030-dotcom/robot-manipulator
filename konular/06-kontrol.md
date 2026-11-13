@@ -1,6 +1,9 @@
-# 5 · Kontrol: PID, Konum/Hız Döngüsü, Geri Besleme
+# 6 · Kontrol: PID, Konum/Hız Döngüsü, Geri Besleme
 
-> **Çıktı türü:** Grafik · **Kod:** [`kod/k05_pid.py`](../kod/k05_pid.py)
+> **Çıktı türü:** Grafik · **Kod:** [`kod/k06_pid.py`](../kod/k06_pid.py)
+
+> 📋 **Syllabus:** K5 · Motor ve kontrol · **Dönem:** P3–P4 (30 Kasım – 20 Aralık) · **Tahmini süre:** 6 saat · **Öncelikli:** Kişi 3 (gömülü yazılım ve kontrol)  
+> **Ön koşul:** [O4 · Kontrol ve PID](../ortak/o4-kontrol-pid.md) · **Ay sonu hedefi:** Simülasyonda eklem takibi gösterir · **Syllabus çıktısı:** Tek eklemde konum takibi grafiği · [Proje planı](../plan.html)
 
 > ### 🎯 Kısaca
 > Motora "60°'ye git ve **orada kal**" dediğinde bunu nasıl başarır? Motor sürekli **ölçer** (enkoder), istenen değerle **karşılaştırır** ve aradaki farka (hataya) göre **düzeltir**. Bu döngü saniyede 1000 kez tekrarlanır. Düzeltme kuralı da **PID**'dir.
@@ -12,7 +15,7 @@
 
 <a class="lab-link" href="../interaktif.html#pid">🎮 PID laboratuvarı: Kp, Ki, Kd ile oyna, 7 hazır örnek →</a>
 
-## 5.1 Kaskad kontrol yapısı
+## 6.1 Kaskad kontrol yapısı
 
 Endüstriyel servo sürücülerde üç kontrol döngüsü iç içe çalışır. İçteki döngü her zaman daha hızlıdır [2, Bölüm 6], [10]:
 
@@ -26,7 +29,7 @@ Endüstriyel servo sürücülerde üç kontrol döngüsü iç içe çalışır. 
 - **Hız döngüsü:** Sürtünmeyi ve yük değişimlerini bastırır.
 - **Konum döngüsü:** Kola istenen yörüngeyi izletir.
 
-## 5.2 Geri besleme sensörleri
+## 6.2 Geri besleme sensörleri
 
 | Sensör | Ölçtüğü | Çözünürlük | Not |
 |---|---|---|---|
@@ -35,7 +38,7 @@ Endüstriyel servo sürücülerde üç kontrol döngüsü iç içe çalışır. 
 | Mutlak enkoder (manyetik/optik) | Mutlak açı (SSI, SPI, BiSS) | 12–23 bit | Açılışta referans aramaya gerek kalmaz |
 | Resolver | Mutlak açı (analog) | Yüksek | Çok dayanıklı. Havacılık ve ağır sanayide kullanılır |
 
-## 5.3 PID kontrolcü
+## 6.3 PID kontrolcü
 
 ```math
 u(t) = K_p\,e(t) + K_i\int_0^t e\,d\tau + K_d\,\frac{de}{dt}, \qquad e = q_{ref} - q
@@ -51,7 +54,7 @@ Pratikte iki ek önlem şarttır [11]:
 1. **Anti-windup:** Motor doymaya girdiğinde integral dondurulur.
 2. **Filtrelenmiş türev:** Türev terimi alçak geçiren bir filtreden geçirilir. Bu örnekte 5 ms'lik birinci dereceden filtre kullanıldı.
 
-## 5.4 Simülasyon
+## 6.4 Simülasyon
 
 **Model:** Tek bir eklem simüle edildi. Eklem, ağırlığı olan bir uzvu düşey düzlemde kaldırıyor:
 
@@ -74,7 +77,7 @@ PD  (Kp=60, Kd=4)             maks |hata| =   1.84°   sürekli hal hatası = +0
 PID (Kp=60, Ki=150, Kd=4)     maks |hata| =   1.47°   sürekli hal hatası = +0.015°   maks tork = 2.91 N·m
 ```
 
-![PID eklem takibi](../gorseller/05_pid.png)
+![PID eklem takibi](../gorseller/06_pid.png)
 
 **Yorum:**
 - **P kontrolcü:** Salınım yapıyor (kırmızı eğri) ve **0.89° kalıcı hata** bırakıyor. Kalıcı hatanın nedeni şu: Hata sıfır olsaydı motor tork üretmezdi, ama 60°'de yerçekimi torku $mgl\cos 60° = 0.88$ N·m. Bu yüzden kol, $K_p\,e = 0.88$ eşitliğini sağlayan $e = 0.88/60\ \text{rad} \approx 0.84°$'lik bir hatada dengeye geliyor. Simülasyondaki 0.89° bu hesaba çok yakın. Aradaki küçük fark enkoder kuantalamasından ve sürtünmeden kaynaklanıyor.
@@ -106,4 +109,4 @@ Yaklaşık yarıya iner (e = τ_g / Kp), ama salınım artar. Hatayı tamamen s�
 [2] Spong vd. · [4] Siciliano vd. · [10] Åström & Murray · [11] Åström & Hägglund. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
 
 ---
-[← 4 · Motorlar](04-motorlar.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [6 · Tutucu →](06-tutucu.md)
+[← 5 · Motorlar](05-motorlar.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [7 · Tutucu →](07-tutucu.md)

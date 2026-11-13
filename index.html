@@ -5,83 +5,96 @@ genis: true
 ---
 <section class="hero">
   <div>
-    <h1>Robot kolu nasıl çalışır?<br>Temelden uygulamaya 10 konu</h1>
-    <p class="lead">Kinematikten motor seçimine, PID kontrolden ROS 2 ve güvenliğe kadar robot kol tasarımının tüm temel konuları.
-      Hepsi <b>tek bir örnek kol</b> üzerinden; her konuda sade bir özet, günlük hayattan benzetmeler, çözümlü örnekler ve çalışan Python kodu var.</p>
+    <h1>Robotik Kol Takımı<br>Temel Bilgiler</h1>
+    <p class="lead">Malzemeler gelmeden ve gelir gelmez bilinmesi gereken her şey: <b>7 ortak ders</b> (tüm takımlar) ve <b>10 robotik kol konusu</b>.
+      Konular syllabus'taki K1–K7 modülleriyle eşleşir. Hepsi <b>tek bir örnek kol</b> üzerinden anlatılır: sade özetler, benzetmeler, çözümlü örnekler, kendini sınama soruları ve çalışan Python kodu.</p>
     <div class="btns">
-      <a class="btn primary" href="{{ '/konular/00-temeller.html' | relative_url }}">📘 Konu 0'dan başla</a>
-      <a class="btn" href="{{ '/interaktif.html' | relative_url }}">🎮 Laboratuvarı aç</a>
-      <a class="btn" href="{{ '/SOZLUK.html' | relative_url }}">📖 Sözlük</a>
+      <a class="btn primary" href="{{ '/plan.html' | relative_url }}">📅 Proje planı ve takvim</a>
+      <a class="btn" href="{{ '/ortak/o1-matematik-fizik.html' | relative_url }}">📘 O1'den başla</a>
+      <a class="btn" href="{{ '/interaktif.html' | relative_url }}">🎮 Laboratuvar</a>
     </div>
   </div>
-  <img src="{{ '/gorseller/00_kol_semasi.png' | relative_url }}" alt="Örnek 3 eklemli robot kol ve çalışma uzayı">
+  <img src="{{ '/gorseller/01_kol_semasi.png' | relative_url }}" alt="Örnek 3 eklemli robot kol ve çalışma uzayı">
 </section>
+
+{% include bu-hafta.html %}
 
 <div class="flow" aria-label="Bir robot kolda bilgi akışı">
   <b style="margin-right:6px">Bir robot kol nasıl iş yapar?</b>
-  <span class="step">📷 Kamera hedefi bulur (8)</span><span class="arr">→</span>
-  <span class="step">🧮 IK açıları hesaplar (1–2)</span><span class="arr">→</span>
-  <span class="step">📈 Yörünge çizilir (3)</span><span class="arr">→</span>
-  <span class="step">🎛️ PID motoru sürer (4–5)</span><span class="arr">→</span>
-  <span class="step">✊ Tutucu kavrar (6)</span>
-  <span class="arr">·</span><span class="step">🧩 ROS 2 hepsini bağlar (7)</span>
-  <span class="arr">·</span><span class="step">🛑 Güvenlik insanı korur (9)</span>
+  <span class="step">📷 Kamera hedefi bulur (9)</span><span class="arr">→</span>
+  <span class="step">🧮 IK açıları hesaplar (2–3)</span><span class="arr">→</span>
+  <span class="step">📈 Yörünge çizilir (4)</span><span class="arr">→</span>
+  <span class="step">🎛️ PID motoru sürer (5–6)</span><span class="arr">→</span>
+  <span class="step">✊ Tutucu kavrar (7)</span>
+  <span class="arr">·</span><span class="step">🧩 ROS 2 hepsini bağlar (8)</span>
+  <span class="arr">·</span><span class="step">🛑 Güvenlik insanı korur (10)</span>
 </div>
 
-<div class="section-title"><h2>📚 Konular</h2><span>Önerilen sıra: 0 → 5, sonra 6–9 istediğin sırayla</span></div>
+<div class="section-title"><h2>🧱 Ortak dersler (O1–O7)</h2><span>Dört takımın (drone, rover, otonom araç, robotik kol) herkesi için</span></div>
 <div class="cards">
-  <a class="card" href="{{ '/konular/00-temeller.html' | relative_url }}">
-    <div class="top"><span class="num">KONU 0</span><span class="tag">🖼️ Şema</span></div>
+  {% for m in site.data.plan.moduller %}{% if m.kod contains "O" %}
+  <a class="card" href="{{ m.url | relative_url }}">
+    <div class="top"><span class="num">{{ m.kod }}</span><span class="tag">{{ m.donem }} · {{ m.sure }} sa</span></div>
+    <h3>{{ m.ad }}</h3>
+    <p>{% case m.kod %}{% when "O1" %}Vektör, dönme matrisi, atan2, türev/integral, tork, ortalama ve standart sapma.{% when "O2" %}Ohm yasası, LiPo, C-oranı, sigorta, kablo, regülatör ve bu kol için güç dağıtım şeması.{% when "O3" %}Linux, Python, Git dalları ve PR, sanal ortam, ekip commit kuralları, CSV'den grafik.{% when "O4" %}Yükselme, aşım, yerleşme, kalıcı hata. P, PI, PID karşılaştırması ve elle ayar sırası.{% when "O5" %}Düğüm, konu, servis, aksiyon, launch, colcon, TF, rosbag. Örnek yayıncı/abone paketi.{% when "O6" %}Simülasyon ile gerçek arasındaki fark, deney kaydı, RMSE, iki parametre setinin karşılaştırması.{% when "O7" %}Ölçülebilir gereksinim, çıkış kriteri, formlar, hata kaydı, haftalık rapor şablonu.{% endcase %}</p>
+  </a>
+  {% endif %}{% endfor %}
+</div>
+
+<div class="section-title"><h2>🦾 Robotik kol konuları (1–10)</h2><span>Önerilen sıra: 1 → 6, sonra 7–10 istediğin sırayla</span></div>
+<div class="cards">
+  <a class="card" href="{{ '/konular/01-temeller.html' | relative_url }}">
+    <div class="top"><span class="num">KONU 1 · K1</span><span class="tag">🖼️ Şema</span></div>
     <h3>Robot manipülatör temelleri</h3>
     <p>Eklem tipleri, serbestlik derecesi (DOF), çalışma uzayı. Robot kolu insan koluyla karşılaştırarak öğren.</p>
   </a>
-  <a class="card" href="{{ '/konular/01-duz-kinematik.html' | relative_url }}">
-    <div class="top"><span class="num">KONU 1</span><span class="tag">🧮 Hesap</span></div>
+  <a class="card" href="{{ '/konular/02-duz-kinematik.html' | relative_url }}">
+    <div class="top"><span class="num">KONU 2 · K2</span><span class="tag">🧮 Hesap</span></div>
     <h3>Düz kinematik</h3>
     <p>"Açıları biliyorum, el nerede?" Dönüşüm matrisleri ve DH parametreleriyle uç konumunu hesapla.</p>
     <span class="lab">🎮 Laboratuvarda dene →</span>
   </a>
-  <a class="card" href="{{ '/konular/02-ters-kinematik.html' | relative_url }}">
-    <div class="top"><span class="num">KONU 2</span><span class="tag">💻 Kod</span></div>
+  <a class="card" href="{{ '/konular/03-ters-kinematik.html' | relative_url }}">
+    <div class="top"><span class="num">KONU 3 · K3</span><span class="tag">💻 Kod</span></div>
     <h3>Ters kinematik</h3>
     <p>"Eli şuraya götürmek için hangi açılar?" Analitik ve sayısal çözüm, dirsek yukarı/aşağı.</p>
     <span class="lab">🎮 Laboratuvarda dene →</span>
   </a>
-  <a class="card" href="{{ '/konular/03-yorunge-planlama.html' | relative_url }}">
-    <div class="top"><span class="num">KONU 3</span><span class="tag">📈 Grafik</span></div>
+  <a class="card" href="{{ '/konular/04-yorunge-planlama.html' | relative_url }}">
+    <div class="top"><span class="num">KONU 4 · K5</span><span class="tag">📈 Grafik</span></div>
     <h3>Yörünge planlama</h3>
     <p>A'dan B'ye nasıl gidilir? Eklem uzayı ile kartezyen yol, kübik ile quintic hız profili.</p>
     <span class="lab">🎮 Laboratuvarda dene →</span>
   </a>
-  <a class="card" href="{{ '/konular/04-motorlar.html' | relative_url }}">
-    <div class="top"><span class="num">KONU 4</span><span class="tag">📊 Hesap sayfası</span></div>
+  <a class="card" href="{{ '/konular/05-motorlar.html' | relative_url }}">
+    <div class="top"><span class="num">KONU 5 · K4</span><span class="tag">📊 Hesap sayfası</span></div>
     <h3>Motorlar, tork ve redüktör</h3>
     <p>Servo, step, BLDC karşılaştırması. Her eklem ne kadar tork ister, hangi motor ve dişli seçilir?</p>
     <span class="lab">🎮 Laboratuvarda dene →</span>
   </a>
-  <a class="card" href="{{ '/konular/05-kontrol.html' | relative_url }}">
-    <div class="top"><span class="num">KONU 5</span><span class="tag">📈 Grafik</span></div>
+  <a class="card" href="{{ '/konular/06-kontrol.html' | relative_url }}">
+    <div class="top"><span class="num">KONU 6 · K5</span><span class="tag">📈 Grafik</span></div>
     <h3>Kontrol: PID ve geri besleme</h3>
     <p>Motor doğru açıda nasıl durur? P, I ve D terimlerinin etkisi, enkoder, kalıcı hata.</p>
     <span class="lab">🎮 Laboratuvarda dene →</span>
   </a>
-  <a class="card" href="{{ '/konular/06-tutucu.html' | relative_url }}">
-    <div class="top"><span class="num">KONU 6</span><span class="tag">📝 Not</span></div>
+  <a class="card" href="{{ '/konular/07-tutucu.html' | relative_url }}">
+    <div class="top"><span class="num">KONU 7 · K6</span><span class="tag">📝 Not</span></div>
     <h3>Tutucu ve sensörler</h3>
     <p>Paralel, vakum, manyetik, yumuşak tutucu. Kavrama kuvveti ne kadar olmalı?</p>
   </a>
-  <a class="card" href="{{ '/konular/07-yazilim.html' | relative_url }}">
-    <div class="top"><span class="num">KONU 7</span><span class="tag">📦 Depo</span></div>
+  <a class="card" href="{{ '/konular/08-yazilim.html' | relative_url }}">
+    <div class="top"><span class="num">KONU 8 · K6</span><span class="tag">📦 Depo</span></div>
     <h3>Yazılım: ROS 2, URDF, MoveIt 2</h3>
     <p>Robot yazılımının parçaları nasıl konuşur? Kolun URDF modeli ve MoveIt ile hareket planlama.</p>
   </a>
-  <a class="card" href="{{ '/konular/08-algilama.html' | relative_url }}">
-    <div class="top"><span class="num">KONU 8</span><span class="tag">🖥️ Çıktı</span></div>
+  <a class="card" href="{{ '/konular/09-algilama.html' | relative_url }}">
+    <div class="top"><span class="num">KONU 9 · K6</span><span class="tag">🖥️ Çıktı</span></div>
     <h3>Algılama ve kamera kalibrasyonu</h3>
     <p>Görüntüdeki pikseli robotun anlayacağı metreye çevir. Renkle nesne bulma örneği.</p>
   </a>
-  <a class="card" href="{{ '/konular/09-guvenlik.html' | relative_url }}">
-    <div class="top"><span class="num">KONU 9</span><span class="tag">✅ Liste</span></div>
+  <a class="card" href="{{ '/konular/10-guvenlik.html' | relative_url }}">
+    <div class="top"><span class="num">KONU 10 · K7</span><span class="tag">✅ Liste</span></div>
     <h3>Güvenlik</h3>
     <p>Sıkışma riski, acil durdurma, güç kesme. İşaretlenebilir güvenlik kontrol listesi.</p>
   </a>
@@ -91,7 +104,7 @@ genis: true
 <div class="cards">
   <div class="card"><h3>3 eklemli düzlemsel kol (RRR)</h3><p>Düşey düzlemde çalışır, yerçekimi aşağı yönde etki eder. Omuz, dirsek ve bilek eklemleri var.</p></div>
   <div class="card"><h3>L₁ = 0.30 · L₂ = 0.25 · L₃ = 0.10 m</h3><p>Maksimum erişim 0.65 m. Eklem sınırları: q₁ ±180°, q₂ ve q₃ ±150°.</p></div>
-  <div class="card"><h3>Yük kapasitesi 0.5 kg</h3><p>Tutucu dahil. Bu yük için eklem 1 yaklaşık 21.5 N·m tork istiyor (Konu 4).</p></div>
+  <div class="card"><h3>Yük kapasitesi 0.5 kg</h3><p>Tutucu dahil. Bu yük için eklem 1 yaklaşık 21.5 N·m tork istiyor (Konu 5).</p></div>
   <div class="card"><h3>Python + URDF</h3><p>Aynı kol hem <code>kod/robot_kol.py</code>'de hem de ROS için <code>urdf/rrr_kol.urdf</code>'de tanımlı.</p></div>
 </div>
 
@@ -100,5 +113,5 @@ genis: true
 cd robot-manipulator
 pip install -r requirements.txt
 cd kod
-python k01_duz_kinematik.py   # sonuç ekrana yazılır, grafik gorseller/ klasörüne kaydedilir</code></pre>
+python k02_duz_kinematik.py   # sonuç ekrana yazılır, grafik gorseller/ klasörüne kaydedilir</code></pre>
 <p style="color:var(--muted);font-size:.9rem">Bu depo eğitim amaçlıdır. Güvenlik listesi gerçek bir risk değerlendirmesinin yerine geçmez.</p>

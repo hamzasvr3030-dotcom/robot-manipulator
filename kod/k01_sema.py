@@ -1,4 +1,4 @@
-"""Konu 0 — Kol şeması ve çalışma uzayı çizimi."""
+"""Konu 1 — Kol şeması ve çalışma uzayı çizimi."""
 from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
@@ -45,5 +45,5 @@ ax2.set_aspect("equal"); ax2.grid(alpha=0.3); ax2.legend(loc="lower left", fonts
 ax2.set_xlabel("x [m]"); ax2.set_ylabel("y [m]")
 
 plt.tight_layout()
-plt.savefig(CIKTI / "00_kol_semasi.png", dpi=130)
-print("Kaydedildi:", CIKTI / "00_kol_semasi.png")
+plt.savefig(CIKTI / "01_kol_semasi.png", dpi=130)
+print("Kaydedildi:", CIKTI / "01_kol_semasi.png")

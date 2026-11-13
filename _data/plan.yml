@@ -1,0 +1,58 @@
+# Proje takvimi — kaynak: Temel Bilgiler Syllabus'u ve Robotik Kol Projesi Hazırlık ve Uygulama Dosyası (güncelleme 12.11.2026)
+# tarih biçimi: YYYY-MM-DD (bitiş günü dahil)
+
+donemler:
+  - { kod: P1, bas: "2026-11-12", bit: "2026-11-15", ortak: [O1, O3], kol: [K1, K2] }
+  - { kod: P2, bas: "2026-11-16", bit: "2026-11-20", ortak: [O2, O4], kol: [K3, K4] }
+  - { kod: Sınav, bas: "2026-11-21", bit: "2026-11-29", ortak: [], kol: [], aciklama: "Ara sınav: modül çalışması yok" }
+  - { kod: P3, bas: "2026-11-30", bit: "2026-12-06", ortak: [O5], kol: [K7, K5], aciklama: "K7 güvenlik zorunlu, ilk elektrik testinden (07-13 Ara) önce" }
+  - { kod: P4, bas: "2026-12-07", bit: "2026-12-20", ortak: [O6], kol: [K5, K6] }
+  - { kod: P5, bas: "2026-12-21", bit: "2027-01-10", ortak: [O7], kol: [K6], aciklama: "Tekrar; 04-10 Oca hafif hafta: yalnızca tekrar ve kendini sınama" }
+  - { kod: Sınav, bas: "2027-01-11", bit: "2027-01-24", ortak: [], kol: [], aciklama: "Final sınavı: modül çalışması yok" }
+  - { kod: P6, bas: "2027-01-25", bit: "2027-03-21", ortak: [], kol: [], aciklama: "Proje içi öğrenme: test sonuçlarından çıkan konular" }
+
+haftalar:
+  - { kod: "Geçmiş", bas: "2026-11-03", bit: "2026-11-11", tur: Çalışma, hedef: "Önceki plandaki 1. ve 2. hafta işleri (Proje Kartı, grup kurulumu, ortam kurulumu, temel konular). Tamamlanma durumu ekipçe işaretlenir; bitmeyen işler H1-H2'ye alınır.", cikis: "Durum işaretlendi" }
+  - { kod: H1, bas: "2026-11-12", bit: "2026-11-15", tur: Çalışma, hedef: "Proje Kartı, kol hedefinin (yük, erişim, hassasiyet) belirlenmesi, malzeme listesi ve sipariş durumunun teyidi; ROS 2 / simülasyon kurulumu; düz ve ters kinematik", cikis: "Onaylı kart, sipariş teyidi, kurulu ortam" }
+  - { kod: H2, bas: "2026-11-16", bit: "2026-11-20", tur: Çalışma, hedef: "Eklem tork hesabı, motor gereksinimlerinin teyidi, CAD taslağı ve URDF başlangıcı, tüm sipariş ve onayların kapatılması (son gün 20 Kas), Kasım aylık raporu", cikis: "Aylık rapor, hesap sayfası, CAD taslağı" }
+  - { kod: "—", bas: "2026-11-21", bit: "2026-11-29", tur: Sınav, hedef: "ARA SINAV DÖNEMİ: çalışma, test, lab rezervasyonu ve onay işlemi planlanmamıştır.", cikis: "" }
+  - { kod: H3, bas: "2026-11-30", bit: "2026-11-30", tur: Hafif, hedef: "Yalnızca teslimata hazırlık: çalışma alanı, envanter kodları (DM-ELK-xxxx), form ve kayıt şablonları.", cikis: "Alan ve kayıtlar hazır" }
+  - { kod: T1, bas: "2026-12-01", bit: "2026-12-06", tur: Teslim, hedef: "Teslim alma, sayım, kontrol, envanter kodu (DM-ELK-xxxx), eksik parça listesi", cikis: "Envanter kaydı tamam" }
+  - { kod: T2, bas: "2026-12-07", bit: "2026-12-13", tur: Çalışma, hedef: "Tek eklem test düzeneği: motor, sürücü, geri besleme, yön ve sınır testleri; paralel olarak URDF ve simülasyon senaryoları (1-2)", cikis: "Tek eklem kontrollü" }
+  - { kod: T3, bas: "2026-12-14", bit: "2026-12-20", tur: Çalışma, hedef: "Mekanik üretim ve montaj, kablolama, eklem kalibrasyonu (sıfır noktası); paralel olarak simülasyon senaryoları (3-4) (1/3)", cikis: "" }
+  - { kod: T4, bas: "2026-12-21", bit: "2026-12-27", tur: Çalışma, hedef: "Mekanik üretim ve montaj, kablolama, eklem kalibrasyonu (sıfır noktası); paralel olarak simülasyon senaryoları (3-4) (2/3)", cikis: "" }
+  - { kod: T5, bas: "2026-12-28", bit: "2027-01-03", tur: Çalışma, hedef: "Mekanik üretim ve montaj, kablolama, eklem kalibrasyonu (sıfır noktası); paralel olarak simülasyon senaryoları (3-4) (3/3)", cikis: "Kol monte, eklemler çalışıyor" }
+  - { kod: T6, bas: "2027-01-04", bit: "2027-01-10", tur: Hafif, hedef: "HAFİF HAFTA (sınav öncesi): masa başı işler: CAD/belge güncelleme, montajda kalan hafif mekanik işler. Elektrikli hareket testi yok.", cikis: "Belgeler güncel" }
+  - { kod: "—", bas: "2027-01-11", bit: "2027-01-24", tur: Sınav, hedef: "FİNAL SINAV DÖNEMİ (11-22 Oca): çalışma planlanmamıştır. 23-24 Oca hafta sonu da planlanmamıştır; çalışmaya dönüş 25 Oca.", cikis: "" }
+  - { kod: T7, bas: "2027-01-25", bit: "2027-01-31", tur: Çalışma, hedef: "Yüksüz hareket testleri, sınır anahtarları ve acil durdurma testi", cikis: "Güvenlik testleri geçti" }
+  - { kod: T8, bas: "2027-02-01", bit: "2027-02-07", tur: Çalışma, hedef: "PID ayarı, yörünge takibi, simülasyonla karşılaştırma (1/2)", cikis: "" }
+  - { kod: T9, bas: "2027-02-08", bit: "2027-02-14", tur: Çalışma, hedef: "PID ayarı, yörünge takibi, simülasyonla karşılaştırma (2/2)", cikis: "Yörünge hatası ölçüldü" }
+  - { kod: T10, bas: "2027-02-15", bit: "2027-02-21", tur: Çalışma, hedef: "Hareket planlama entegrasyonu (MoveIt 2 veya özel çözücü), tutucu entegrasyonu (1/2)", cikis: "" }
+  - { kod: T11, bas: "2027-02-22", bit: "2027-02-28", tur: Çalışma, hedef: "Hareket planlama entegrasyonu (MoveIt 2 veya özel çözücü), tutucu entegrasyonu (2/2)", cikis: "Hedef noktalara ulaşıyor" }
+  - { kod: T12, bas: "2027-03-01", bit: "2027-03-07", tur: Çalışma, hedef: "Görev testleri (tut-bırak vb.), tekrarlanabilirlik ölçümü, algılama entegrasyonu (varsa) (1/2)", cikis: "" }
+  - { kod: T13, bas: "2027-03-08", bit: "2027-03-14", tur: Çalışma, hedef: "Görev testleri (tut-bırak vb.), tekrarlanabilirlik ölçümü, algılama entegrasyonu (varsa) (2/2)", cikis: "Görev başarı oranı ölçüldü" }
+  - { kod: T14, bas: "2027-03-15", bit: "2027-03-21", tur: Çalışma, hedef: "Tampon, dokümantasyon, demo, devir teslim", cikis: "Final raporu" }
+
+# modül → site sayfası, dönem, süre, öncelikli kişi
+moduller:
+  - { kod: O1, ad: "Matematik ve fizik minimumu", donem: P1, sure: 5, kim: "Tüm ekip", url: /ortak/o1-matematik-fizik.html }
+  - { kod: O2, ad: "Elektrik ve güç temelleri", donem: P2, sure: 4, kim: "Tüm ekip (zorunlu, elektrik testinden önce)", url: /ortak/o2-elektrik-guc.html }
+  - { kod: O3, ad: "Yazılım altyapısı", donem: P1, sure: 5, kim: "Tüm ekip", url: /ortak/o3-yazilim-altyapisi.html }
+  - { kod: O4, ad: "Kontrol temelleri ve PID", donem: P2, sure: 6, kim: "Tüm ekip", url: /ortak/o4-kontrol-pid.html }
+  - { kod: O5, ad: "ROS 2 temelleri", donem: P3, sure: 8, kim: "Tüm ekip", url: /ortak/o5-ros2.html }
+  - { kod: O6, ad: "Simülasyon ve veri analizi", donem: P4, sure: 4, kim: "Tüm ekip", url: /ortak/o6-simulasyon-veri.html }
+  - { kod: O7, ad: "Mühendislik pratiği ve kayıt düzeni", donem: P5, sure: 2, kim: "Tüm ekip", url: /ortak/o7-muhendislik-pratigi.html }
+  - { kod: K1, ad: "Manipülatör temelleri", donem: P1, sure: 3, kim: "Mekanik, Kişi 1", url: /konular/01-temeller.html }
+  - { kod: K2, ad: "Düz kinematik", donem: P1, sure: 4, kim: "Kişi 4", url: /konular/02-duz-kinematik.html }
+  - { kod: K3, ad: "Ters kinematik", donem: P2, sure: 5, kim: "Kişi 4", url: /konular/03-ters-kinematik.html }
+  - { kod: K4, ad: "Tork ve dinamik", donem: P2, sure: 4, kim: "Kişi 1 ve Kişi 2", url: /konular/05-motorlar.html }
+  - { kod: K7, ad: "Güvenlik", donem: "P3 (zorunlu)", sure: 3, kim: "Kişi 2 ve Kişi 5", url: /konular/10-guvenlik.html }
+  - { kod: K5, ad: "Motor ve kontrol", donem: P3-P4, sure: 6, kim: "Kişi 3", url: /konular/06-kontrol.html }
+  - { kod: K6, ad: "Hareket planlama ve yazılım", donem: P4-P5, sure: 8, kim: "Kişi 4 ve Kişi 5", url: /konular/08-yazilim.html }
+
+ekip:
+  - { kisi: "Kişi 1", grup: "Mekanik tasarım", sorumluluk: "Kol gövdesi, eklemler, taban, tutucu, tork dengesi", cikti: "CAD, ağırlık/tork tablosu" }
+  - { kisi: "Kişi 2", grup: "Elektronik ve güç", sorumluluk: "Motor sürücüler, güç dağıtımı, sensör bağlantıları, acil durdurma", cikti: "Güç şeması" }
+  - { kisi: "Kişi 3", grup: "Gömülü yazılım ve kontrol", sorumluluk: "Eklem kontrolü, geri besleme, kalibrasyon", cikti: "Firmware, ayar" }
+  - { kisi: "Kişi 4", grup: "Kinematik ve hareket planlama", sorumluluk: "Düz/ters kinematik, yörünge, MoveIt 2", cikti: "Planlama paketi" }
+  - { kisi: "Kişi 5", grup: "Simülasyon, test, algılama ve dokümantasyon", sorumluluk: "Simülasyon, test planı, güvenlik listeleri, (varsa) kamera/algılama, aylık rapor", cikti: "Test raporu, rapor" }

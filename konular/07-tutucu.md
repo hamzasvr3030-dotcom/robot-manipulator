@@ -1,6 +1,9 @@
-# 6 · Tutucu (Gripper) Tasarımı ve Temel Sensörler
+# 7 · Tutucu (Gripper) Tasarımı ve Temel Sensörler
 
 > **Çıktı türü:** Not
+
+> 📋 **Syllabus:** K6'nın tutucu kontrolü başlığı · **Dönem:** P4–P5 (7 Aralık – 10 Ocak) · **Tahmini süre:** K6 içinde · **Öncelikli:** Kişi 1 (tutucu tasarımı), Kişi 3 (tutucu kontrolü)  
+> **Ön koşul:** Konu 5 · **Ay sonu hedefi:** Tutucu seçeneklerini not eder · **Syllabus çıktısı:** Tutucu seçenekleri notu · [Proje planı](../plan.html)
 
 > ### 🎯 Kısaca
 > Tutucu robotun **elidir**. Doğru tutucu seçimi nesneye bağlıdır:
@@ -20,7 +23,7 @@
 
 Tutucu, robotun dünyayla temas ettiği parçadır. Kol ne kadar iyi olursa olsun, tutucu yanlış seçilmişse sistem çalışmaz [12].
 
-## 6.1 Tutucu seçenekleri
+## 7.1 Tutucu seçenekleri
 
 | Tip | Çalışma ilkesi | Artı | Eksi | Uygun nesne |
 |---|---|---|---|---|
@@ -32,7 +35,7 @@ Tutucu, robotun dünyayla temas ettiği parçadır. Kol ne kadar iyi olursa olsu
 | **Yumuşak (soft) / Fin Ray** | Esnek parmaklar nesnenin şekline uyar | Kırılgan ve düzensiz nesneleri tutar | Taşıma kapasitesi düşük, konum belirsiz | Gıda, meyve, düzensiz nesneler |
 | **Kavanoz (granular jamming)** | Tanecikli kese vakumla sertleşir | Neredeyse her şekli tutar | Yavaş, hacimli | Araştırma |
 
-## 6.2 Kavrama kuvveti hesabı (sürtünmeyle kavrama)
+## 7.2 Kavrama kuvveti hesabı (sürtünmeyle kavrama)
 
 $n$ temas yüzeyi, $\mu$ sürtünme katsayısı, $a$ hareket ivmesi ve $S$ emniyet katsayısı olmak üzere [12, Bölüm 2]:
 
@@ -40,7 +43,7 @@ $n$ temas yüzeyi, $\mu$ sürtünme katsayısı, $a$ hareket ivmesi ve $S$ emniy
 F_{kavrama} \;\ge\; \frac{m\,(g + a)}{\mu\,n}\; S
 ```
 
-**Örnek:** Bu depodaki kol için alınan yük $m = 0.5$ kg (Konu 4). Değerler:
+**Örnek:** Bu depodaki kol için alınan yük $m = 0.5$ kg (Konu 5). Değerler:
 - İki çeneli tutucu, kauçuk çene ve çelik parça: $\mu \approx 0.5$, $n = 2$
 - Hareket ivmesi $a = 3$ m/s², emniyet katsayısı $S = 2$
 
@@ -50,17 +53,17 @@ F \ge \frac{0.5\,(9.81 + 3)}{0.5 \cdot 2}\cdot 2 \approx 12.8\ \text{N}
 
 Vakumlu tutucularda kavrama kuvveti $F = \Delta p \cdot A \cdot \eta$ ile hesaplanır. Yatay kaldırmada vakum sürtünmeyle tutar, bu yüzden $\mu$ hesaba girer.
 
-## 6.3 Bu kol için öneri
+## 7.3 Bu kol için öneri
 
 | Senaryo | Öneri |
 |---|---|
-| Eğitim/prototip, 0.5 kg küçük parça | **Servo motorlu paralel tutucu.** Konu 4'teki 3. eklem bütçesine (0.25 kg motor) sığar, ucuzdur ve kontrolü kolaydır |
+| Eğitim/prototip, 0.5 kg küçük parça | **Servo motorlu paralel tutucu.** Konu 5'teki 3. eklem bütçesine (0.25 kg motor) sığar, ucuzdur ve kontrolü kolaydır |
 | Düz kutu veya karton | **Vakum tutucu** (küçük pompa + 30–40 mm vantuz) |
 | Meyve veya düzensiz nesne | **Fin Ray tipi yumuşak parmak** (3B yazıcıda TPU'dan basılabilir) |
 
-> ⚠️ Tutucunun kütlesi, Konu 4'teki 0.5 kg'lık "yük + tutucu" bütçesinin içinde kalmalıdır. Kütle artarsa bütün eklem torkları yeniden hesaplanmalıdır.
+> ⚠️ Tutucunun kütlesi, Konu 5'teki 0.5 kg'lık "yük + tutucu" bütçesinin içinde kalmalıdır. Kütle artarsa bütün eklem torkları yeniden hesaplanmalıdır.
 
-## 6.4 Temel sensörler
+## 7.4 Temel sensörler
 
 | Sensör | Ne işe yarar? | Örnek |
 |---|---|---|
@@ -95,4 +98,4 @@ Manyetik tutucuyla (malzeme çelikse) ya da paralel tutucuyla. Vakum işe yarama
 [12] Monkman vd. · [4] Siciliano vd. (Bölüm 5, sensörler). Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
 
 ---
-[← 5 · Kontrol](05-kontrol.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [7 · Yazılım →](07-yazilim.md)
+[← 6 · Kontrol](06-kontrol.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [8 · Yazılım →](08-yazilim.md)

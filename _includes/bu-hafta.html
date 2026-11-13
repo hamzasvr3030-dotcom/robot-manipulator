@@ -1,0 +1,32 @@
+<div class="buhafta" id="buHafta" hidden>
+  <div class="bh-ust"><span class="bh-rozet" id="bhRozet"></span><span class="bh-tarih" id="bhTarih"></span></div>
+  <div class="bh-hedef" id="bhHedef"></div>
+  <div class="bh-alt" id="bhAlt"></div>
+</div>
+<script>
+(function () {
+  var P = {{ site.data.plan | jsonify }};
+  var bugun = new Date(); bugun.setHours(12, 0, 0, 0);
+  var gun = function (s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2], 12); };
+  var icinde = function (x) { return bugun >= gun(x.bas) && bugun <= gun(x.bit); };
+  var tr = function (s) { var d = gun(s); return d.getDate() + " " + ["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"][d.getMonth()]; };
+  var h = P.haftalar.filter(icinde)[0], d = P.donemler.filter(icinde)[0];
+  var kutu = document.getElementById("buHafta");
+  if (!h && !d) {
+    var sonraki = P.haftalar.filter(function (x) { return gun(x.bas) > bugun; })[0];
+    if (!sonraki) return;
+    h = sonraki; kutu.classList.add("sonra");
+  }
+  var url = function (k) { var m = P.moduller.filter(function (x) { return x.kod === k; })[0];
+    return m ? '<a href="{{ "/" | relative_url }}' + m.url.slice(1) + '"><b>' + k + "</b> " + m.ad + "</a>" : k; };
+  document.getElementById("bhRozet").textContent = (kutu.classList.contains("sonra") ? "Sıradaki: " : "Bu hafta: ") + h.kod + (d ? " · Dönem " + d.kod : "");
+  document.getElementById("bhTarih").textContent = tr(h.bas) + (h.bas !== h.bit ? " – " + tr(h.bit) : "") + " · " + h.tur;
+  document.getElementById("bhHedef").textContent = h.hedef;
+  var alt = [];
+  if (h.cikis) alt.push("<span>✅ Çıkış kriteri: " + h.cikis + "</span>");
+  if (d && (d.ortak.length || d.kol.length)) alt.push("<span>📚 Bu dönemin modülleri: " + d.ortak.concat(d.kol).map(url).join(" · ") + "</span>");
+  if (d && d.aciklama) alt.push("<span>ℹ️ " + d.aciklama + "</span>");
+  document.getElementById("bhAlt").innerHTML = alt.join("");
+  kutu.hidden = false;
+})();
+</script>

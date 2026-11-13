@@ -56,7 +56,7 @@
       document.body.classList.remove("menu-open");
   });
   // bilgi kutularını sınıflandır
-  var tipler = [["🎯", "kisaca"], ["🧠", "benzetme"], ["⚠️", "uyari"], ["💡", "ipucu"], ["ℹ️", "bilgi"], ["🎮", "ipucu"]];
+  var tipler = [["🎯", "kisaca"], ["🧠", "benzetme"], ["⚠️", "uyari"], ["💡", "ipucu"], ["ℹ️", "bilgi"], ["🎮", "ipucu"], ["📋", "syllabus"]];
   document.querySelectorAll(".prose blockquote").forEach(function (b) {
     var t = b.textContent.trim();
     if (/^Çıktı türü:/.test(t)) { b.classList.add("meta"); return; }

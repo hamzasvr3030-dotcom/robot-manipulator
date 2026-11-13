@@ -1,6 +1,9 @@
-# 4 · Motorlar: Servo, Step, BLDC, Tork, Redüktör, Sürücü Seçimi
+# 5 · Motorlar: Servo, Step, BLDC, Tork, Redüktör, Sürücü Seçimi
 
-> **Çıktı türü:** Hesap sayfası · **Kod:** [`kod/k04_tork.py`](../kod/k04_tork.py) · **Tablo:** [`kod/tork_hesap_sayfasi.csv`](../kod/tork_hesap_sayfasi.csv) (Excel'de açılır)
+> **Çıktı türü:** Hesap sayfası · **Kod:** [`kod/k05_tork.py`](../kod/k05_tork.py) · **Tablo:** [`kod/tork_hesap_sayfasi.csv`](../kod/tork_hesap_sayfasi.csv) (Excel'de açılır)
+
+> 📋 **Syllabus:** K4 · Tork ve dinamik (+ K5'in motor kısmı) · **Dönem:** P2 (16–20 Kasım) · **Tahmini süre:** 4 saat · **Öncelikli:** Kişi 1 ve Kişi 2  
+> **Ön koşul:** [O1 · Matematik ve fizik](../ortak/o1-matematik-fizik.md), [O2 · Elektrik ve güç](../ortak/o2-elektrik-guc.md) · **Ay sonu hedefi:** Eklem torku hesabı yapar · **Syllabus çıktısı:** Eklem başına gereken tork tablosu (hesap sayfası) · [Proje planı](../plan.html)
 
 > ### 🎯 Kısaca
 > Her eklemi döndürecek motoru seçmek için sırayla üç soru sorulur:
@@ -14,7 +17,7 @@
 
 <a class="lab-link" href="../interaktif.html#tk">🎮 Tork laboratuvarı: duruşu ve yükü değiştir, torku izle →</a>
 
-## 4.1 Motor tipleri
+## 5.1 Motor tipleri
 
 | Tip | Çalışma ilkesi | Artı | Eksi | Robotta kullanım |
 |---|---|---|---|---|
@@ -26,7 +29,7 @@
 
 Kaynaklar: [9, Bölüm 3, 9, 10].
 
-## 4.2 Redüktör seçimi
+## 5.2 Redüktör seçimi
 
 Motorlar düşük torkta yüksek devirle çalışır. Eklemler ise yüksek tork ve düşük devir ister. Redüktör bu ikisini eşleştirir. $N$ çevrim oranı ve $\eta$ verim olmak üzere:
 
@@ -45,7 +48,7 @@ Son formül önemlidir: Yükün ataleti motora **$N^2$ oranında küçülerek** 
 | Sonsuz vida | 10–100 | Orta | 0.4–0.7 | Kendiliğinden kilitlenir, verimi düşüktür |
 | Kayış-kasnak | 1–5 | Düşük | 0.95+ | Motoru eklemden uzağa yerleştirmeye yarar |
 
-## 4.3 Eklem torku hesabı
+## 5.3 Eklem torku hesabı
 
 **En kötü durum**, kolun tamamen **yatay** uzandığı konumdur. Bu konumda yerçekimi kolları maksimumdur. Buna hızlanma sırasında oluşan dinamik tork da eklenir [2, Bölüm 7], [1, Bölüm 6]:
 
@@ -57,7 +60,7 @@ J_i = \sum_{k \,>\, i}\left(I_{c,k} + m_k (x_k - x_i)^2\right), \qquad
 
 Toplamlar $i$. eklemin **dışında kalan** bütün kütleleri kapsar: uzuvlar, sonraki eklemlerin motorları ve yük. Uzuvlar ince çubuk kabul edilir: $I_c = mL^2/12$.
 
-**Girdiler** (`k04_tork.py` dosyasının başından değiştirilebilir):
+**Girdiler** (`k05_tork.py` dosyasının başından değiştirilebilir):
 
 | | Uzuv 1 | Uzuv 2 | Uzuv 3 |
 |---|---|---|---|
@@ -83,7 +86,7 @@ Yük + tutucu kütlesi 0.50 kg, emniyet katsayısı $SF = 1.5$, redüktör verim
 - **Eklem 2** için 7 N·m gerekiyor. N = 50 ile NEMA 17 step motor ya da küçük bir BLDC yetiyor.
 - **Eklem 3** için 1 N·m gerekiyor. Bu değeri büyük bir hobi servo veya akıllı servo doğrudan karşılayabilir.
 
-## 4.4 Sürücü seçimi
+## 5.4 Sürücü seçimi
 
 | Motor | Sürücü | Dikkat edilecek nokta |
 |---|---|---|
@@ -116,4 +119,4 @@ Eklem 1. Yük ona en uzak noktada (0.65 m) duruyor, yani kaldıraç kolu en uzun
 [1] Craig · [2] Spong vd. · [9] Hughes & Drury. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
 
 ---
-[← 3 · Yörünge](03-yorunge-planlama.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [5 · Kontrol →](05-kontrol.md)
+[← 4 · Yörünge](04-yorunge-planlama.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [6 · Kontrol →](06-kontrol.md)

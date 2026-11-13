@@ -1,6 +1,9 @@
-# 3 · Eklem Uzayı ve Kartezyen Yörünge Planlama
+# 4 · Eklem Uzayı ve Kartezyen Yörünge Planlama
 
-> **Çıktı türü:** Grafik · **Kod:** [`kod/k03_yorunge.py`](../kod/k03_yorunge.py)
+> **Çıktı türü:** Grafik · **Kod:** [`kod/k04_yorunge.py`](../kod/k04_yorunge.py)
+
+> 📋 **Syllabus:** K5'in yörünge kısmı (trapezoidal hız, kübik polinom) · **Dönem:** P3–P4 (30 Kasım – 20 Aralık) · **Tahmini süre:** K5 içinde · **Öncelikli:** Kişi 4 (kinematik ve hareket planlama)  
+> **Ön koşul:** Konu 2–3 · **Ay sonu hedefi:** Basit bir yörünge üretir · **Syllabus çıktısı:** Simülasyon senaryosu 3: eklem uzayında yörünge takibi (T3–T5) · [Proje planı](../plan.html)
 
 > ### 🎯 Kısaca
 > Kolun A noktasından B noktasına **hangi yoldan** ve **hangi hızla** gideceğini planlamak.
@@ -16,7 +19,7 @@
 
 **Yol (path)** yalnızca geometridir: hangi noktalardan geçileceğini söyler. **Yörünge (trajectory)** bu yola zamanı da ekler: her an konum, hız ve ivme bellidir [3, Bölüm 9], [8].
 
-## 3.1 İki yaklaşım
+## 4.1 İki yaklaşım
 
 | | Eklem uzayı | Kartezyen uzay |
 |---|---|---|
@@ -26,7 +29,7 @@
 | Tekillik riski | Yok | Var: yol tekillikten geçerse eklem hızları patlar |
 | Kullanım | Serbest hareket (MoveJ / PTP) | Kaynak, boyama, yerleştirme (MoveL / LIN) |
 
-## 3.2 Zaman ölçekleme polinomları
+## 4.2 Zaman ölçekleme polinomları
 
 $s(t)$, 0'dan 1'e giden bir parametredir ve yol $q(t) = q_A + s(t)(q_B - q_A)$ şeklinde tanımlanır. $\tau = t/T$ normalize zamanı göstermek üzere:
 
@@ -46,7 +49,7 @@ Kübik polinomda ivme başta ve sonda sıfır değildir. Bu yüzden harekete ba�
 
 Endüstride bunlara ek olarak **trapez hız profili** (sabit ivme, sabit hız, sabit yavaşlama) ve **S-eğrisi** (sarsıntısı sınırlı profil) de yaygın olarak kullanılır [3, Bölüm 9.2], [4, Bölüm 4].
 
-## 3.3 Uygulama
+## 4.3 Uygulama
 
 A ve B pozları arasında $T = 2$ s'lik iki yörünge karşılaştırıldı:
 - **A:** $(0.45,\ 0.05)$ m, $\varphi = 0°$
@@ -59,7 +62,7 @@ Maks. eklem hızı (eklem uzayı, quintic) = 57.8 °/s
 Maks. eklem ivmesi: quintic = 89.0 °/s², cubic = 92.5 °/s²
 ```
 
-![Yörünge planlama](../gorseller/03_yorunge.png)
+![Yörünge planlama](../gorseller/04_yorunge.png)
 
 **Yorum:**
 1. **Sol grafik:** Eklem uzayında planlanan yörüngede uç bir **yay** çiziyor ve yol 0.485 m oluyor. Kartezyen planlamada uç tam bir **düz çizgide** gidiyor ve yol 0.461 m oluyor.
@@ -88,4 +91,4 @@ Eklem uzayı. Yolun şekli önemsiz; daha hızlı ve tekillik riski yok.
 [3] Lynch & Park · [4] Siciliano vd. · [8] Biagiotti & Melchiorri. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
 
 ---
-[← 2 · Ters kinematik](02-ters-kinematik.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [4 · Motorlar →](04-motorlar.md)
+[← 3 · Ters kinematik](03-ters-kinematik.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [5 · Motorlar →](05-motorlar.md)

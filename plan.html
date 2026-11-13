@@ -1,0 +1,135 @@
+---
+layout: default
+title: Proje Planı ve Takvim
+---
+{% assign P = site.data.plan %}
+<h1>📅 Proje Planı ve Takvim</h1>
+
+<blockquote class="meta"><p><b>Kaynak:</b> Temel Bilgiler Syllabus'u (Robotik Kol ve ortak modüller) ve Robotik Kol Projesi Hazırlık ve Uygulama Dosyası. Güncelleme: 12.11.2026, sınav takvimine göre. <b>Durum:</b> Taslak, danışman onayına sunulacak.</p></blockquote>
+
+{% include bu-hafta.html %}
+
+<h2>1. Proje özeti</h2>
+<table>
+  <thead><tr><th>Alan</th><th>Değer</th></tr></thead>
+  <tbody>
+    <tr><td>Hedef (tut-bırak, çizim, sınıflandırma ve ayıklama, eğitim kolu vb.)</td><td><i>Proje Kartı'nda belirtilecek</i></td></tr>
+    <tr><td>Serbestlik derecesi, erişim ve yük gereksinimi</td><td><i>Proje Kartı'nda belirtilecek</i></td></tr>
+    <tr><td>Ekip</td><td>5 kişi (isimler ve grup lideri Proje Kartı'na yazılacak)</td></tr>
+    <tr><td>Cihaz ihtiyacı · Risk özeti</td><td><i>Proje Kartı'nda belirtilecek</i></td></tr>
+    <tr><td>Takvim</td><td>Malzeme teslimi <b>01.12.2026 (Salı)</b> · planlanan bitiş <b>21 Mart 2027</b> · ara sınav (21–29 Kas) ve final (11–22 Oca) dönemlerinde çalışma yok</td></tr>
+  </tbody>
+</table>
+<blockquote class="uyari"><p>⚠️ Kolun <b>yük kapasitesi, erişim mesafesi ve hassasiyeti</b> kartta belirlenmeden motor ve mekanik seçimleri kesinleştirilmez. Bu sitedeki örnek kolun değerleri (0.65 m erişim, 0.5 kg yük) <b>yalnızca öğrenme amaçlıdır</b>. Kart onaylanınca <code>kod/robot_kol.py</code>, <code>kod/k05_tork.py</code> ve <code>urdf/rrr_kol.urdf</code> gerçek değerlerle güncellenmelidir.</p></blockquote>
+
+<h2>2. Dönemler ve modüller</h2>
+<p>Ortak modüller (O1–O7) beş kişilik ekibin herkesi içindir. Projeye özel modüller (K1–K7) önce ilgili gruba, sonra diğer üyelere tanıtım düzeyinde verilir. Süreler <b>tahmini bireysel çalışma saatidir</b>. Ön bilgisi olan üye, ilgili modülün yalnızca kendini sınama sorularını çözerek geçebilir.</p>
+<table class="plan">
+  <thead><tr><th>Dönem</th><th>Tarih</th><th>Ortak modüller</th><th>Robotik kol modülleri</th><th>Not</th></tr></thead>
+  <tbody>
+  {% for d in P.donemler %}
+    <tr data-bas="{{ d.bas }}" data-bit="{{ d.bit }}" {% if d.kod == "Sınav" %}class="sinav"{% endif %}>
+      <td><b>{{ d.kod }}</b></td><td class="tarih">{{ d.bas }} → {{ d.bit }}</td>
+      <td>{% for k in d.ortak %}{% assign m = P.moduller | where: "kod", k | first %}<a href="{{ m.url | relative_url }}">{{ k }}</a>{% unless forloop.last %}, {% endunless %}{% else %}—{% endfor %}</td>
+      <td>{% for k in d.kol %}{% assign m = P.moduller | where: "kod", k | first %}<a href="{{ m.url | relative_url }}">{{ k }}</a>{% unless forloop.last %}, {% endunless %}{% else %}—{% endfor %}</td>
+      <td>{{ d.aciklama }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<h3>Modül haritası: hangi modül hangi sayfada?</h3>
+<table>
+  <thead><tr><th>Modül</th><th>Ad</th><th>Dönem</th><th>Süre</th><th>Öncelikli</th></tr></thead>
+  <tbody>
+  {% for m in P.moduller %}
+    <tr><td><b>{{ m.kod }}</b></td><td><a href="{{ m.url | relative_url }}">{{ m.ad }}</a></td><td>{{ m.donem }}</td><td>{{ m.sure }} sa</td><td>{{ m.kim }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p style="color:var(--muted);font-size:.9rem">Yörünge planlama (Konu 4) K5'in içindedir: trapezoidal hız ve kübik polinom. Tutucu (Konu 7) ve algılama (Konu 9) K6'nın tutucu kontrolü ve el-göz kalibrasyonu başlıklarına bağlıdır. Algılama, proje hedefine bağlı bir konudur.</p>
+
+<h2>3. İş grupları (5 kişilik ekip)</h2>
+<p>Her gruba bir sorumlu kişi atanır. Kişi adları ve grup lideri Proje Kartı'na yazılır.</p>
+<table>
+  <thead><tr><th>Kişi</th><th>Grup</th><th>Sorumluluk</th><th>Çıktı</th></tr></thead>
+  <tbody>{% for e in P.ekip %}<tr><td><b>{{ e.kisi }}</b></td><td>{{ e.grup }}</td><td>{{ e.sorumluluk }}</td><td>{{ e.cikti }}</td></tr>{% endfor %}</tbody>
+</table>
+
+<h2>4. Haftalık plan</h2>
+<p><b>Malzeme öncesi (H1–H3):</b> Ara sınav nedeniyle teslim öncesi çalışma günleri 12–20 Kasım ve 30 Kasım'dır. Malzeme listesi, siparişler ve onaylar <b>en geç 20 Kasım'da</b> kapatılmalıdır. <b>Malzeme sonrası (T1–T14):</b> T1 teslim haftasıdır. Kalan simülasyon senaryoları teslimden sonra donanım işlerine paralel yürütülür.</p>
+<table class="plan">
+  <thead><tr><th>Hafta</th><th>Tarih</th><th>Hedef</th><th>Çıkış kriteri</th></tr></thead>
+  <tbody>
+  {% for h in P.haftalar %}
+    <tr data-bas="{{ h.bas }}" data-bit="{{ h.bit }}" class="{% if h.tur == 'Sınav' %}sinav{% elsif h.tur == 'Hafif' %}hafif{% endif %}">
+      <td><b>{{ h.kod }}</b><br><small>{{ h.tur }}</small></td><td class="tarih">{{ h.bas }}{% if h.bas != h.bit %}<br>{{ h.bit }}{% endif %}</td>
+      <td>{{ h.hedef }}</td><td>{{ h.cikis }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p style="color:var(--muted);font-size:.9rem">Gri satırlar sınav dönemidir, sarı satırlar hafif haftadır (yalnızca masa başı işler, elektrikli hareket testi yok). Vurgulanan satır <b>bugünün</b> haftasıdır. Resmî tatiller takvimde ayrıca düşülmemiştir, ekip kontrol eder. Bahar dönemi ara sınav tarihleri belli olunca plan güncellenmelidir.</p>
+
+<h2>5. Simülasyon planı</h2>
+<p><b>Ortam:</b> URDF modeli, ROS 2 ve MoveIt 2 ile birlikte Gazebo (veya PyBullet / MuJoCo). Seçim ekip kararıdır. Kolun ölçüleri ve eklem sınırları Proje Kartı'ndaki tasarımdan alınır. Tasarım değiştikçe URDF de güncellenir.</p>
+<table>
+  <thead><tr><th>#</th><th>Senaryo</th><th>Bu depoda başlangıç noktası</th><th>Plan haftası</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Kolun modelinin yüklenmesi ve eklemlerin elle sürülmesi</td><td><code>urdf/rrr_kol.urdf</code> + <code>ros2/display.launch.py</code> (<a href="{{ '/konular/08-yazilim.html' | relative_url }}">Konu 8</a>)</td><td>T2</td></tr>
+    <tr><td>2</td><td>Düz ve ters kinematik doğrulaması</td><td><code>kod/robot_kol.py</code>, <code>k02</code>, <code>k03</code>, <a href="{{ '/interaktif.html#ik' | relative_url }}">laboratuvar</a></td><td>T2</td></tr>
+    <tr><td>3</td><td>Eklem uzayında yörünge takibi (PID ile)</td><td><code>kod/k04_yorunge.py</code>, <code>k06_pid.py</code>, <code>eklem_sim.py</code></td><td>T3–T5</td></tr>
+    <tr><td>4</td><td>Kartezyen yörünge ve çarpışmasız hareket planlama (MoveIt 2)</td><td><code>ros2/moveit_hareket.py</code> (iskelet)</td><td>T3–T5</td></tr>
+    <tr><td>5</td><td>Tut-bırak görevi (ortamda nesne ile)</td><td>—</td><td>T10–T13</td></tr>
+    <tr><td>6</td><td>Proje hedefine özel görev (kart onaylanınca eklenir)</td><td>—</td><td>T12–T13</td></tr>
+  </tbody>
+</table>
+<p><b>Başarı ölçütü:</b> Konum hatası, yörünge sapması ve görev başarı oranı tabloya yazılır, kayıtlar saklanır (<a href="{{ '/ortak/o6-simulasyon-veri.html' | relative_url }}">O6 şablonu</a>). <b>Not:</b> Simülasyonda ağırlık, sürtünme, boşluk ve motor sınırları gerçeğe göre idealdir. Gerçek kolda bu parametreler yeniden ayarlanır.</p>
+
+<h2>6. Ölçme ve geçiş kriterleri</h2>
+<table>
+  <thead><tr><th>Aşama</th><th>Kriter</th><th>Kayıt</th></tr></thead>
+  <tbody>
+    <tr><td>Elektrik testi öncesi</td><td><a href="{{ '/ortak/o2-elektrik-guc.html' | relative_url }}">O2</a> ve proje güvenlik modülünün (<a href="{{ '/konular/10-guvenlik.html' | relative_url }}">K7</a>) çıktısı tamam. Güvenlik kontrol listesi grup lideri tarafından onaylı</td><td>Haftalık Form, güvenlik kontrol listesi</td></tr>
+    <tr><td>Montaj öncesi</td><td>Proje için ilk iki modülün çıktıları teslim edildi</td><td>Takip çizelgesi, T2</td></tr>
+    <tr><td>Hareket testi öncesi</td><td>Cihaz Eğitim ve Yetki Formu tamam, acil durdurma testi geçti</td><td>Form kayıtları</td></tr>
+    <tr><td>Her ay</td><td>Aylık ilerleme raporu</td><td>Takip çizelgesi, özet</td></tr>
+  </tbody>
+</table>
+<p>Bir modülün çıktısı eksikse ilgili kişi bir sonraki haftada tamamlar. <b>Güvenlik modülleri eksikse ilgili test yapılmaz.</b></p>
+
+<h2>7. Gerçekçi riskler</h2>
+<table>
+  <thead><tr><th>Risk</th><th>Önlem</th><th>İlgili sayfa</th></tr></thead>
+  <tbody>
+    <tr><td>Motor torkunun yetersiz çıkması</td><td>En kötü durum (yatay kol) + emniyet katsayısı ile hesap. Ağır parçaları tabana yakın yerleştir</td><td><a href="{{ '/konular/05-motorlar.html' | relative_url }}">Konu 5</a></td></tr>
+    <tr><td>Yük altında sarkma ve titreşim</td><td>Rijit uzuv tasarımı, düşük kazançla başla, D terimi ve filtre</td><td><a href="{{ '/konular/06-kontrol.html' | relative_url }}">Konu 6</a></td></tr>
+    <tr><td>Mekanik boşluk (backlash)</td><td>Düşük boşluklu redüktör, yön değişiminde ölü bölge ölçümü</td><td><a href="{{ '/konular/05-motorlar.html' | relative_url }}">Konu 5</a></td></tr>
+    <tr><td>Kalibrasyon hataları</td><td>Sıfır noktası prosedürü, sınır anahtarı, tekrarlanabilirlik ölçümü</td><td><a href="{{ '/ortak/o6-simulasyon-veri.html' | relative_url }}">O6</a></td></tr>
+    <tr><td>Sıkışma ve ezilme riski</td><td>Yavaş mod, e-stop, güvenlik mesafesi, ilk testler yüksüz</td><td><a href="{{ '/konular/10-guvenlik.html' | relative_url }}">Konu 10</a></td></tr>
+    <tr><td>3B baskı parçalarının kırılması</td><td>Yedek baskı, kritik yükte metal parça</td><td>—</td></tr>
+  </tbody>
+</table>
+<p>Yedek motor, sürücü ve basılı parça payı bütçeye eklenmelidir. Dosyadaki öneri, bütçenin %15–20'sinin yedek parça ve arıza payı olarak ayrılmasıdır. Karar danışmanındır.</p>
+
+<h2>8. Kayıt ve onay hatırlatmaları</h2>
+<ul>
+  <li>Cihaz kullanımı (3B yazıcı, tezgâh) için <b>Cihaz Eğitim ve Yetki Formu</b>, olay ve kaza için <b>Olay ve Kaza Kayıt Formu</b>, ödünç parça için <b>Malzeme Ödünç ve Teslim Formu</b> kullanılır.</li>
+  <li>Dış yazışma, sponsorluk ve kurum adıyla yapılacak her iş <b>Dış İlişki Onay Formu</b> ile danışman onayına sunulur. Yarışma katılımı danışman ve kulüp başkanının onayına tabidir.</li>
+  <li><b>Aylık ilerleme raporu</b> her ayın sonunda hazırlanır. Kasım raporu 20 Kasım'a alınmıştır.</li>
+  <li>Haftalık ilerleme, çalışma saatleri ve durum <b>Haftalık Çalışma Takip Çizelgesi</b>'nde tutulur (<a href="{{ '/sablonlar/haftalik_rapor.html' | relative_url }}">haftalık rapor şablonu</a>, <a href="{{ '/ortak/o7-muhendislik-pratigi.html' | relative_url }}">O7</a>).</li>
+</ul>
+
+<script>
+(function () {
+  var b = new Date(); b.setHours(12, 0, 0, 0);
+  var g = function (s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2], 12); };
+  var tr = function (s) { var d = g(s); return d.getDate() + "." + String(d.getMonth() + 1).padStart(2, "0") + "." + d.getFullYear(); };
+  document.querySelectorAll("tr[data-bas]").forEach(function (r) {
+    if (b >= g(r.dataset.bas) && b <= g(r.dataset.bit)) r.classList.add("simdi");
+  });
+  document.querySelectorAll("td.tarih").forEach(function (td) {
+    td.innerHTML = td.innerHTML.replace(/\d{4}-\d{2}-\d{2}/g, function (m) { return tr(m); });
+  });
+})();
+</script>

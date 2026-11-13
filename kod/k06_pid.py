@@ -1,5 +1,5 @@
 """
-Konu 5 — Tek eklem PID konum kontrolü simülasyonu.
+Konu 6 — Tek eklem PID konum kontrolü simülasyonu.
 
 Model (redüktör sonrası eklem tarafı):
     J*q'' + b*q' + m*g*l*cos(q) = tau      ,  |tau| <= tau_maks
@@ -67,4 +67,4 @@ ax[2].set_ylabel("tork [N·m]"); ax[2].set_xlabel("t [s]")
 ax[2].axhline(tau_maks, color="gray", ls=":"); ax[2].axhline(-tau_maks, color="gray", ls=":")
 for a in ax: a.grid(alpha=0.3)
 plt.tight_layout()
-plt.savefig(CIKTI / "05_pid.png", dpi=130)
+plt.savefig(CIKTI / "06_pid.png", dpi=130)

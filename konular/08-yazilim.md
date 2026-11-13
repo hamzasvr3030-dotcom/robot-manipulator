@@ -1,6 +1,9 @@
-# 7 · Yazılım: URDF, ROS 2, MoveIt 2 Temelleri, Python
+# 8 · Yazılım: URDF, ROS 2, MoveIt 2 Temelleri, Python
 
 > **Çıktı türü:** Depo · **Dosyalar:** [`urdf/rrr_kol.urdf`](../urdf/rrr_kol.urdf), [`ros2/display.launch.py`](../ros2/display.launch.py), [`ros2/moveit_hareket.py`](../ros2/moveit_hareket.py)
+
+> 📋 **Syllabus:** K6 · Hareket planlama ve yazılım · **Dönem:** P4–P5 (7 Aralık – 10 Ocak) · **Tahmini süre:** 8 saat · **Öncelikli:** Kişi 4 ve Kişi 5  
+> **Ön koşul:** [O3 · Yazılım altyapısı](../ortak/o3-yazilim-altyapisi.md), [O5 · ROS 2](../ortak/o5-ros2.md) · **Ay sonu hedefi:** Modeli yükler, hareket planlar · **Syllabus çıktısı:** Simülasyonda çarpışmasız hareket planı · [Proje planı](../plan.html)
 
 > ### 🎯 Kısaca
 > Gerçek bir robot yazılımı tek bir programdan oluşmaz. Kamera, planlayıcı, motor sürücüsü gibi **birçok küçük program** birbirleriyle konuşur.
@@ -16,7 +19,7 @@
 > | **Service** | Telefonla soru sorup cevap almak | "Tutucuyu kapat" → "Tamam" |
 > | **Action** | Kargo takibi: İş uzun sürer, arada "yolda" bilgisi gelir, istersen iptal edersin | "Şu poza git" |
 
-## 7.1 ROS 2 nedir?
+## 8.1 ROS 2 nedir?
 
 **ROS 2 (Robot Operating System 2)** bir işletim sistemi değil, robot yazılımı için bir **ara katman (middleware)** ve araç ekosistemidir [13], [16]. Temel kavramları:
 
@@ -31,11 +34,11 @@
 
 ROS 2, haberleşme katmanı olarak **DDS** kullanır. Kurulum için önerilen ortam: **Ubuntu 24.04 + ROS 2 Jazzy** (LTS) [13].
 
-## 7.2 URDF — robotun tarifi
+## 8.2 URDF — robotun tarifi
 
 **URDF (Unified Robot Description Format)**, robotu XML ile tanımlar. Bir robot **link**'lerden (uzuvlar: görsel, çarpışma ve atalet bilgileri) ve **joint**'lerden (eklemler: tip, eksen, sınırlar) oluşur [14].
 
-Bu depodaki [`urdf/rrr_kol.urdf`](../urdf/rrr_kol.urdf) dosyası, `kod/robot_kol.py` ile **aynı kolu** tanımlar. Kütleler de Konu 4'teki girdilerle aynıdır.
+Bu depodaki [`urdf/rrr_kol.urdf`](../urdf/rrr_kol.urdf) dosyası, `kod/robot_kol.py` ile **aynı kolu** tanımlar. Kütleler de Konu 5'teki girdilerle aynıdır.
 
 ```xml
 <joint name="joint2" type="revolute">
@@ -46,14 +49,14 @@ Bu depodaki [`urdf/rrr_kol.urdf`](../urdf/rrr_kol.urdf) dosyası, `kod/robot_kol
 </joint>
 ```
 
-| | DH (Konu 1) | URDF |
+| | DH (Konu 2) | URDF |
 |---|---|---|
 | Parametre | 4 parametre, katı kurallar | Her eklem için serbest `origin xyz rpy` + `axis` |
 | Amaç | Kinematik analiz | Simülasyon, görselleştirme, planlama |
 
 Büyük projelerde URDF doğrudan yazılmaz, **xacro** makrolarıyla üretilir.
 
-## 7.3 Modeli RViz'de görmek
+## 8.3 Modeli RViz'de görmek
 
 ```bash
 # Ubuntu 24.04 + ROS 2 Jazzy
@@ -68,7 +71,7 @@ RViz açıldığında şu ayarları yap:
 2. **Add → RobotModel** ekle ve Description Topic olarak `/robot_description` seç.
 3. Açılan kaydırıcılarla eklemleri oynat.
 
-## 7.4 MoveIt 2 ile hareket planlama
+## 8.4 MoveIt 2 ile hareket planlama
 
 **MoveIt 2**, ROS 2'nin hareket planlama çatısıdır [15]. Şu işleri yapar:
 - IK (KDL, TRAC-IK, pick_ik)
@@ -102,7 +105,7 @@ RViz açıldığında şu ayarları yap:
 
 > ℹ️ ROS 2 ve MoveIt dosyaları bu depoda resmî dokümantasyona göre yazıldı, ancak ROS kurulu bir makinede **test edilmedi**. URDF'nin XML yapısı ve eklem zinciri Python ile doğrulandı.
 
-## 7.5 ROS'suz Python ile çalışmak
+## 8.5 ROS'suz Python ile çalışmak
 
 Bu depodaki `kod/` klasörü yalnızca **numpy ve matplotlib** kullanır. Daha kapsamlı çalışmalar için şu kütüphaneler kullanılabilir:
 - **Robotics Toolbox for Python** (Corke): DH/URDF modelleri, IK, yörünge, Swift ve PyPlot görselleştirme [5]
@@ -131,4 +134,4 @@ Topic. Veri sürekli akıyor; her görüntü için ayrıca soru sormaya gerek yo
 [3] Lynch & Park · [5] Corke · [13] ROS 2 Dokümantasyonu · [14] URDF eğitimleri · [15] MoveIt 2 Dokümantasyonu · [16] Macenski vd. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
 
 ---
-[← 6 · Tutucu](06-tutucu.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [8 · Algılama →](08-algilama.md)
+[← 7 · Tutucu](07-tutucu.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [9 · Algılama →](09-algilama.md)

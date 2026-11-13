@@ -1,14 +1,14 @@
 # Kaynakça
 
-Konu sayfalarındaki köşeli parantezli numaralar ([1], [2] …) bu listeye atıf yapar. Biçim IEEE'ye yakındır.
+Konu ve ders sayfalarındaki köşeli parantezli numaralar ([1], [2] …) bu listeye atıf yapar. Syllabus'un kaynak önerileri ([3] Modern Robotics, [10] Feedback Systems, [13] ROS 2, [15] MoveIt 2, [19] OpenCV, [34] Gazebo) bu listededir. Biçim IEEE'ye yakındır.
 
 ## Ders kitapları — robotik
 
 **[1]** J. J. Craig, *Introduction to Robotics: Mechanics and Control*, 4th ed. Pearson, 2018.
-— Konu 0–5. Değiştirilmiş DH gösterimini kullanır.
+— Konu 1–6. Değiştirilmiş DH gösterimini kullanır.
 
 **[2]** M. W. Spong, S. Hutchinson, M. Vidyasagar, *Robot Modeling and Control*, 2nd ed. Wiley, 2020.
-— Konu 0–5. Standart DH gösterimini kullanır; bu depodaki gösterim de budur.
+— Konu 1–6. Standart DH gösterimini kullanır; bu depodaki gösterim de budur.
 
 **[3]** K. M. Lynch, F. C. Park, *Modern Robotics: Mechanics, Planning, and Control*. Cambridge University Press, 2017.
 — Ücretsiz PDF, videolar ve kod: <https://hades.mech.northwestern.edu/index.php/Modern_Robotics>
@@ -79,6 +79,32 @@ Konu sayfalarındaki köşeli parantezli numaralar ([1], [2] …) bu listeye at�
 **[26]** ISO 12100:2010 *Safety of machinery — General principles for design — Risk assessment and risk reduction*. ISO, 2010.
 
 **[27]** S. Haddadin, A. Albu-Schäffer, G. Hirzinger, "Requirements for safe robots: Measurements, analysis and new insights," *Int. J. Robotics Research*, vol. 28, no. 11–12, pp. 1507–1527, 2009. doi: 10.1177/0278364909343970
+
+## Ortak dersler (O1–O7)
+
+**[29]** E. Kreyszig, *Advanced Engineering Mathematics*, 10th ed. Wiley, 2011.
+— O1: vektör, matris, türev ve integral.
+
+**[30]** J. R. Taylor, *An Introduction to Error Analysis: The Study of Uncertainties in Physical Measurements*, 2nd ed. University Science Books, 1997.
+— O1, O6: ortalama, standart sapma, ölçüm belirsizliği.
+
+**[31]** P. Horowitz, W. Hill, *The Art of Electronics*, 3rd ed. Cambridge University Press, 2015.
+— O2: güç kaynakları, regülatörler, kablolama.
+
+**[32]** S. Chacon, B. Straub, *Pro Git*, 2nd ed. Apress, 2014. Ücretsiz çevrimiçi: <https://git-scm.com/book/tr/v2>
+— O3: Git dalları, birleştirme, iş akışı.
+
+**[33]** W. Shotts, *The Linux Command Line*, 2nd ed. No Starch Press, 2019. Ücretsiz çevrimiçi: <https://linuxcommand.org/tlcl.php>
+— O3: Linux komut satırı.
+
+**[34]** Open Robotics, *Gazebo Documentation*. <https://gazebosim.org/docs>
+— O6: simülasyon ortamı.
+
+**[35]** Google DeepMind, *MuJoCo Documentation*. <https://mujoco.readthedocs.io>
+— O6: fizik motoru.
+
+**[36]** NASA, *NASA Systems Engineering Handbook*, NASA/SP-2016-6105 Rev2, 2016.
+— O7: gereksinim yazımı, doğrulama ve test planı.
 
 ---
 

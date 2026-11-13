@@ -1,6 +1,9 @@
-# 2 · Ters Kinematik: Analitik ve Sayısal Çözüm
+# 3 · Ters Kinematik: Analitik ve Sayısal Çözüm
 
-> **Çıktı türü:** Kod · **Kod:** [`kod/robot_kol.py`](../kod/robot_kol.py) (`ters_kinematik_analitik`, `ters_kinematik_sayisal`), [`kod/k02_ters_kinematik.py`](../kod/k02_ters_kinematik.py)
+> **Çıktı türü:** Kod · **Kod:** [`kod/robot_kol.py`](../kod/robot_kol.py) (`ters_kinematik_analitik`, `ters_kinematik_sayisal`), [`kod/k03_ters_kinematik.py`](../kod/k03_ters_kinematik.py)
+
+> 📋 **Syllabus:** K3 · Ters kinematik · **Dönem:** P2 (16–20 Kasım) · **Tahmini süre:** 5 saat · **Öncelikli:** Kişi 4 (kinematik ve hareket planlama)  
+> **Ön koşul:** [O1 · Matematik ve fizik](../ortak/o1-matematik-fizik.md) · **Ay sonu hedefi:** 2–3 eklemli kol için çözer · **Syllabus çıktısı:** Ters kinematik çözücü ve test noktaları · [Proje planı](../plan.html)
 
 > ### 🎯 Kısaca
 > **Soru:** "Elimi şu noktaya götürmek istiyorum. Eklemleri kaç dereceye çevirmeliyim?"
@@ -23,7 +26,7 @@
 - **Birden çok** çözüm olabilir: dirsek yukarı ve dirsek aşağı. 6 eksenli kollarda bu sayı 8'e çıkabilir.
 - Artık serbestlikli kollarda çözüm sayısı **sonsuzdur** [1, Bölüm 4], [2, Bölüm 5].
 
-## 2.1 Analitik (kapalı form) çözüm — geometrik yöntem
+## 3.1 Analitik (kapalı form) çözüm — geometrik yöntem
 
 Yöntem, problemi **bilek noktasına** indirgemeye dayanır. Uçtan $L_3$ kadar geriye gidilince geriye 2 uzuvlu bir kol kalır.
 
@@ -53,7 +56,7 @@ q_3 = \varphi - q_1 - q_2
 
 6 eksenli endüstriyel kollarda son üç eksen tek noktada kesişir (küresel bilek). Bu durumda aynı fikir uygulanır ve problem *konum* ile *yönelim* olarak iki parçaya ayrılır (Pieper çözümü) [1, Bölüm 4.6], [4, Bölüm 2.12].
 
-## 2.2 Sayısal çözüm — sönümlü en küçük kareler (DLS)
+## 3.2 Sayısal çözüm — sönümlü en küçük kareler (DLS)
 
 Kapalı formu olmayan kollarda (örneğin bileği kesişmeyen ya da 7 eksenli kollarda) IK **iteratif** olarak çözülür. Her adımda hata $e = x_{hedef} - f(q)$ hesaplanır ve Jacobian ile bir düzeltme yapılır:
 
@@ -68,7 +71,7 @@ Sönüm katsayısı $\lambda$ küçük seçilirse yakınsama hızlı olur ama te
 
 Sayısal yöntem başlangıç tahminine $q_0$ en yakın çözüme yakınsar. **Hangi çözümü bulacağımızı $q_0$ belirler.**
 
-## 2.3 Sonuçlar
+## 3.3 Sonuçlar
 
 Hedef: $x = 0.35$ m, $y = 0.25$ m, $\varphi = -20°$
 
@@ -81,7 +84,7 @@ Sayısal (DLS, q0=[10. 10. 10.]°): q = [7.2166 92.3603 -119.5769] °  (14 itera
 (0.8, 0.0) hedefi: Hedef çalışma uzayı dışında (cos q2 = 2.250)
 ```
 
-![Ters kinematik](../gorseller/02_ters_kinematik.png)
+![Ters kinematik](../gorseller/03_ters_kinematik.png)
 
 **Yorum:**
 - İki analitik çözüm de hedefe makine hassasiyetinde ($10^{-16}$ m) ulaşıyor.
@@ -120,4 +123,4 @@ Diğer çözüme (örneğin dirsek yukarı) yakınsayabilir. Hangi çözümün b
 [1] Craig · [2] Spong vd. · [4] Siciliano vd. · [7] Buss · [28] Wampler. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
 
 ---
-[← 1 · Düz kinematik](01-duz-kinematik.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [3 · Yörünge →](03-yorunge-planlama.md)
+[← 2 · Düz kinematik](02-duz-kinematik.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [4 · Yörünge →](04-yorunge-planlama.md)

@@ -1,4 +1,4 @@
-"""Konu 3 — Eklem uzayı ve kartezyen yörünge planlama karşılaştırması."""
+"""Konu 4 — Eklem uzayı ve kartezyen yörünge planlama karşılaştırması."""
 from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
@@ -76,4 +76,4 @@ ax.plot(t, np.degrees(qdd_cubic[0]), "--", label="q1 ivmesi — cubic", color="#
 ax.set_title("Quintic vs cubic: ivme sürekliliği"); ax.set_xlabel("t [s]"); ax.set_ylabel("[°/s²]")
 ax.grid(alpha=0.3); ax.legend(fontsize=8)
 plt.tight_layout()
-plt.savefig(CIKTI / "03_yorunge.png", dpi=130)
+plt.savefig(CIKTI / "04_yorunge.png", dpi=130)

@@ -1,19 +1,29 @@
 - grup: Başla
   sayfalar:
     - { n: "⌂", ad: "Ana sayfa", url: "/" }
+    - { n: "📅", ad: "Proje planı ve takvim", url: "/plan.html" }
     - { n: "🎮", ad: "İnteraktif Laboratuvar", url: "/interaktif.html" }
-- grup: Konular
+- grup: Ortak dersler (tüm takımlar)
   sayfalar:
-    - { n: "0", ad: "Temeller", url: "/konular/00-temeller.html" }
-    - { n: "1", ad: "Düz kinematik", url: "/konular/01-duz-kinematik.html" }
-    - { n: "2", ad: "Ters kinematik", url: "/konular/02-ters-kinematik.html" }
-    - { n: "3", ad: "Yörünge planlama", url: "/konular/03-yorunge-planlama.html" }
-    - { n: "4", ad: "Motorlar ve tork", url: "/konular/04-motorlar.html" }
-    - { n: "5", ad: "Kontrol (PID)", url: "/konular/05-kontrol.html" }
-    - { n: "6", ad: "Tutucu ve sensörler", url: "/konular/06-tutucu.html" }
-    - { n: "7", ad: "Yazılım: ROS 2, URDF", url: "/konular/07-yazilim.html" }
-    - { n: "8", ad: "Algılama ve kamera", url: "/konular/08-algilama.html" }
-    - { n: "9", ad: "Güvenlik", url: "/konular/09-guvenlik.html" }
+    - { n: "O1", ad: "Matematik ve fizik", url: "/ortak/o1-matematik-fizik.html" }
+    - { n: "O2", ad: "Elektrik ve güç", url: "/ortak/o2-elektrik-guc.html" }
+    - { n: "O3", ad: "Yazılım altyapısı", url: "/ortak/o3-yazilim-altyapisi.html" }
+    - { n: "O4", ad: "Kontrol ve PID", url: "/ortak/o4-kontrol-pid.html" }
+    - { n: "O5", ad: "ROS 2 temelleri", url: "/ortak/o5-ros2.html" }
+    - { n: "O6", ad: "Simülasyon ve veri", url: "/ortak/o6-simulasyon-veri.html" }
+    - { n: "O7", ad: "Mühendislik pratiği", url: "/ortak/o7-muhendislik-pratigi.html" }
+- grup: Robotik kol konuları
+  sayfalar:
+    - { n: "1", ad: "Temeller", url: "/konular/01-temeller.html" }
+    - { n: "2", ad: "Düz kinematik", url: "/konular/02-duz-kinematik.html" }
+    - { n: "3", ad: "Ters kinematik", url: "/konular/03-ters-kinematik.html" }
+    - { n: "4", ad: "Yörünge planlama", url: "/konular/04-yorunge-planlama.html" }
+    - { n: "5", ad: "Motorlar ve tork", url: "/konular/05-motorlar.html" }
+    - { n: "6", ad: "Kontrol (PID)", url: "/konular/06-kontrol.html" }
+    - { n: "7", ad: "Tutucu ve sensörler", url: "/konular/07-tutucu.html" }
+    - { n: "8", ad: "Yazılım: ROS 2, URDF", url: "/konular/08-yazilim.html" }
+    - { n: "9", ad: "Algılama ve kamera", url: "/konular/09-algilama.html" }
+    - { n: "10", ad: "Güvenlik", url: "/konular/10-guvenlik.html" }
 - grup: Başvuru
   sayfalar:
     - { n: "📖", ad: "Terimler sözlüğü", url: "/SOZLUK.html" }

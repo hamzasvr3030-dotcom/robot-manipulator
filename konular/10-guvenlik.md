@@ -1,6 +1,9 @@
-# 9 · Güvenlik: Sıkışma/Ezilme Riski, Acil Durdurma, Güç Kesme
+# 10 · Güvenlik: Sıkışma/Ezilme Riski, Acil Durdurma, Güç Kesme
 
 > **Çıktı türü:** Liste
+
+> 📋 **Syllabus:** K7 · Güvenlik (zorunlu) · **Dönem:** P3 (30 Kasım – 6 Aralık), ilk elektrik testinden (07–13 Aralık) önce · **Tahmini süre:** 3 saat · **Öncelikli:** Kişi 2 ve Kişi 5  
+> **Ön koşul:** [O2 · Elektrik ve güç](../ortak/o2-elektrik-guc.md) · **Ay sonu hedefi:** Güvenlik kontrol listesini hazırlar · **Syllabus çıktısı:** Güvenlik kontrol listesi (İSG görüşüne tabi) · [Proje planı](../plan.html)
 
 > ### 🎯 Kısaca
 > Robot **güçlüdür, hızlıdır ve seni fark etmez**. Güvenlik, robotun insana zarar vermemesini garanti altına alan kuralların bütünüdür. Üç altın kural:
@@ -12,7 +15,7 @@
 
 > ⚠️ Bu liste eğitim amaçlıdır ve kendi başına bir uygunluk değerlendirmesi yerine geçmez. Gerçek bir robot hücresi devreye alınmadan önce ilgili standartlara göre **risk değerlendirmesi** yapılmalıdır. Bu değerlendirmenin yetkin bir kişi tarafından yapılması gerekir.
 
-## 9.1 Temel tehlikeler
+## 10.1 Temel tehlikeler
 
 | Tehlike | Nasıl oluşur? | Örnek |
 |---|---|---|
@@ -24,7 +27,7 @@
 | **Yerçekimiyle düşme** | Güç kesilince kol kendi ağırlığıyla çöker | Fren olmayan bir eklemin düşmesi |
 | **Elektrik** | Yüksek gerilimli sürücü ve kablolar | Kapasitörlerde kalan yük |
 
-## 9.2 Durdurma kategorileri (IEC 60204-1)
+## 10.2 Durdurma kategorileri (IEC 60204-1)
 
 Bu kategoriler IEC 60204-1 [24] ve ISO 13850 [23]'te tanımlıdır:
 
@@ -36,7 +39,7 @@ Bu kategoriler IEC 60204-1 [24] ve ISO 13850 [23]'te tanımlıdır:
 
 Acil durdurma yalnızca **Stop 0 veya Stop 1** olabilir [23], [24].
 
-## 9.3 Güvenlik kontrol listesi
+## 10.3 Güvenlik kontrol listesi
 
 ### A. Tasarım
 - [ ] Risk değerlendirmesi yapıldı: tehlikeler belirlendi, riskler tahmin edildi, önlemler tanımlandı [26].
@@ -106,4 +109,4 @@ Stop 2'de motorlara güç gitmeye devam eder. Yazılım veya sürücü arızalan
 [21] ISO 10218-1/-2:2025 · [22] ISO/TS 15066 · [23] ISO 13850 · [24] IEC 60204-1 · [25] ISO 13849-1 · [26] ISO 12100 · [27] Haddadin vd. Tam künyeler: [KAYNAKLAR.md](../KAYNAKLAR.md)
 
 ---
-[← 8 · Algılama](08-algilama.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [Kaynakça →](../KAYNAKLAR.md)
+[← 9 · Algılama](09-algilama.md) · [🏠 Ana sayfa](../README.md) · [📖 Sözlük](../SOZLUK.md) · [Kaynakça →](../KAYNAKLAR.md)
